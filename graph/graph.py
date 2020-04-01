@@ -47,13 +47,14 @@ class Graph:
             nodeId = int(nodeId)
         except ValueError:
             raise GraphException('Node id must be an integer!')
-
+        """
         ok = True
         for n in self.nodes:
             if n.id == nodeId:
                 ok = False
-
-        if ok:
+        """
+        nd = self.getNodeById(nodeId)
+        if not nd:  #if it is not found, then we have to add it
             newNode = Node(nodeId)
             self.nodes.append(newNode)
         else:
