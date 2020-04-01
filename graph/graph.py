@@ -3,33 +3,38 @@ from .graph_exception import GraphException
 
 class Node:
 
-    def __init__(self, id): #the neighbors will be represented as a list of edges where the source node is "self" node
-        self.id = id        #and the destination node will be all his neighbors at a time
-        self.neighbors = [] #example: the graph has edges between node 1 and node 2, node 2 and node 3, node 1 and node 3;
-                            #         node 1 will have the id 1 and list neighnors will be [Edge(1,2), Edge(1,3)]
-#Note that the id DOES NOT represent the index in the list of nodes, because when I add nodes to the list I do not
-#correlate the id with the index (example: If a want to add the node with the id 2 (and the list is empty),
-# it will be put first in the list, so his index in the list will be 1)
+    def __init__(self, id):  #  the neighbors will be represented as a list of edges where the source node is "self" node
+        self.id = id         #  and the destination node will be all his neighbors at a time
+        self.neighbors = []  #  example: the graph has edges between node 1 and node 2, node 2 and node 3, node 1 and node 3;
+                             #          node 1 will have the id 1 and list neighnors will be [Edge(1,2), Edge(1,3)]
+#  Note that the id DOES NOT represent the index in the list of nodes, because when I add nodes to the list I do not
+#  correlate the id with the index (example: If a want to add the node with the id 2 (and the list is empty),
+#  it will be put first in the list, so his index in the list will be 1)
 
 class Edge:
 
-    def __init__(self, source, dest, cost=-1):  #cost is optional, if it does not receive any value,
-        self.source = source                    # it will receive the default value (-1) and will be considered at no cost
+    def __init__(self, source, dest, cost=-1):  # cost is optional, if it does not receive any value,
+        self.source = source                    #  it will receive the default value (-1) and will be considered at no cost
         self.dest = dest
 
 
 class Graph:
     """"This is a class that represents a directed or undirected graph with the help of neighbors list"""
 
-    def __init__(self, isDirected):     #isDirected will receive a bool value, True means the graph is directed,
-        self.isDirected = isDirected    #False means the contrary
-        self.nodes = []                 #the list of nodes in the order of their addition
+    def __init__(self, isDirected):     #  isDirected will receive a bool value, True means the graph is directed,
+        self.isDirected = isDirected    #  False means the contrary
+        self.nodes = []                 #  the list of nodes in the order of their addition
 
 
-    def getNodeById(self, id):  #this function is nedeed because the id of a node is not equal to its index in the list
-                                #of nodes and I have to search through the list to find a node by id
+    def getNodeById(self, id):  #  this function is nedeed because the id of a node is not equal to its index in the list
+                                #  of nodes and I have to search through the list to find a node by id
 
         """Function that returns an object of class Node with the Id id"""
+
+        try:
+            id = int(id)
+        except:
+            raise GraphException('Node id must be a positive integer.')
 
         nd = None
         for n in self.nodes:
@@ -47,21 +52,31 @@ class Graph:
             nodeId = int(nodeId)
         except ValueError:
             raise GraphException('Node id must be an integer!')
-        """
-        ok = True
-        for n in self.nodes:
-            if n.id == nodeId:
-                ok = False
-        """
+
         nd = self.getNodeById(nodeId)
-        if not nd:  #if it is not found, then we have to add it
+        if not nd:  # if it is not found, then we have to add it
             newNode = Node(nodeId)
             self.nodes.append(newNode)
         else:
-            raise GraphException('Node alreeady exists!')
+            raise GraphException('Node already exists!')
 
 
     def addEdge(self, src, dest, cost=-1):
+        try:
+            cost = int(cost)
+        except:
+            raise GraphException('The cost must be a positive integer.')
+
+        try:
+            src = int(src)
+        except:
+            raise GraphException('The source node id must be a positive integer.')
+
+        try:
+            dest = int(dest)
+        except:
+            raise GraphException('The destination node id must be a positive integer.')
+
         for n in self.nodes:
             if n.id == src:
                 ok = True
@@ -107,6 +122,16 @@ class Graph:
 
 
     def removeEdge(self, src, dest):
+        try:
+            src = int(src)
+        except:
+            raise GraphException('The source node id must be a positive integer.')
+
+        try:
+            dest = int(dest)
+        except:
+            raise GraphException('The destination node id must be a positive integer.')
+
         if not self.isDirected:
             for n in self.nodes:
                 if n.id == src:

@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     myGraph.printGraph()
 
-    print("\n")
+    print()
 
     myGraph.removeNode(3)
 
