@@ -1,7 +1,12 @@
 from graph.graph import Graph
+from gui.GraphGeneratorApp import GraphGeneratorApp
+
 
 if __name__ == '__main__':
-    myGraph = Graph(False)
+
+    GraphGeneratorApp().run()
+
+    '''myGraph = Graph(False)
     myGraph.addNode(1)
     myGraph.addNode(2)
     myGraph.addNode(3)
@@ -18,4 +23,4 @@ if __name__ == '__main__':
 
     myGraph.removeNode(3)
 
-    myGraph.printGraph()
+    myGraph.printGraph()'''

@@ -1,0 +1,56 @@
+#:kivy 2.0.0
+
+<NodeWidget>:
+     size: 50, 50
+     canvas.after:
+          Color:
+               rgba: 0, 0, 0, 1
+          Ellipse:
+               size: self.size
+               pos: self.pos
+
+<MainViewWidget>:
+     canvas.before:
+          Color:
+               rgba: 1, 1, 1, 1
+          Rectangle:
+          # self here refers to the widget i.e FloatLayout
+               pos: self.pos[0], self.pos[1]
+               size: self.size[0], self.size[1]
+
+     GridLayout:
+          size: root.width - 20, root.height - 20
+          pos: 10, 10
+          cols: 1
+          rows: 1
+
+          BoxLayout:
+               orientation: 'vertical'
+               BoxLayout:
+                    Splitter:
+                         sizable_from: 'right'
+                         Button:
+                              text: 'something1'
+
+                    FloatLayout:
+                         id: graph_canvas
+                         canvas.before:
+                              Color:
+                                   rgba: 0.8, 0.9, 0.9, 1
+                              Rectangle:
+                              # self here refers to the widget i.e FloatLayout
+                                   pos: self.pos[0] + 6, self.pos[1] + 6
+                                   size: self.size[0] - 9, self.size[1] - 9
+
+                              Color:
+                                   rgba: 0, 0, 0, 1
+                              Line:
+                                   width: 2
+                                   rectangle: self.x + 6, self.y + 6, self.width - 9, self.height - 9
+
+
+                     #         Color:
+                       #            rgba: 0.9, 0.4, 1, 1
+                     #         Ellipse:
+                     #              pos: self.pos[0] + 50, self.pos[1] + 50
+                     #              size: 50, 50
