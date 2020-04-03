@@ -19,7 +19,7 @@ class Edge:
 
 
 class Graph:
-    """"This is a class that represents a directed or undirected graph with the help of neighbors list"""
+    """This is a class that represents a directed or undirected graph with the help of neighbors list"""
 
     def __init__(self, isDirected):     #  isDirected will receive a bool value, True means the graph is directed,
         self.isDirected = isDirected    #  False means the contrary
