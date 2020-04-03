@@ -1,10 +1,10 @@
 from graph.graph import Graph
-from gui.GraphGeneratorApp import GraphGeneratorApp
+from gui.GraphViewerApp import GraphViewerApp
 
 
 if __name__ == '__main__':
 
-    GraphGeneratorApp().run()
+    GraphViewerApp().run()
 
     '''myGraph = Graph(False)
     myGraph.addNode(1)

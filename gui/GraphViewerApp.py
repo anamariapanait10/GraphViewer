@@ -9,7 +9,7 @@ kivy.require('2.0.0')
 
 maxid = 0
 
-graphManager = GraphManager()
+graphManager = GraphManager(False)
 
 
 class NodeWidget(Widget):
@@ -50,7 +50,7 @@ class MainViewWidget(Widget):
     def text_event(self, event, text):
         graphManager.parse_graph_data(text)
 
-class GraphGeneratorApp(App):
+class GraphViewerApp(App):
     def build(self):
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
         mainViewWidget = MainViewWidget()
