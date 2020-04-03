@@ -6,7 +6,7 @@
           Color:
                rgba: 0, 0, 0, 1
           Ellipse:
-               size: self.size
+               size: 50, 50
                pos: self.pos
 
 <MainViewWidget>:
@@ -26,31 +26,27 @@
 
           BoxLayout:
                orientation: 'vertical'
+
+               # If you put something here it will appear above the slider
+
                BoxLayout:
                     Splitter:
                          sizable_from: 'right'
                          Button:
                               text: 'something1'
 
-                    FloatLayout:
+                    RelativeLayout:
                          id: graph_canvas
                          canvas.before:
                               Color:
                                    rgba: 0.8, 0.9, 0.9, 1
                               Rectangle:
                               # self here refers to the widget i.e FloatLayout
-                                   pos: self.pos[0] + 6, self.pos[1] + 6
-                                   size: self.size[0] - 9, self.size[1] - 9
+                                   pos: self.parent.pos[0] - 6, self.parent.pos[1] - 6
+                                   size: self.size[0] - 6, self.size[1] - 6
 
                               Color:
                                    rgba: 0, 0, 0, 1
                               Line:
                                    width: 2
-                                   rectangle: self.x + 6, self.y + 6, self.width - 9, self.height - 9
-
-
-                     #         Color:
-                       #            rgba: 0.9, 0.4, 1, 1
-                     #         Ellipse:
-                     #              pos: self.pos[0] + 50, self.pos[1] + 50
-                     #              size: 50, 50
+                                   rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 6, self.width - 6, self.height - 6
