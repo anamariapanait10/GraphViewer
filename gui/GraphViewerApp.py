@@ -58,3 +58,4 @@ class GraphViewerApp(App):
         mainViewWidget.ids.input_nodes.bind(text=mainViewWidget.text_event)
 
         return mainViewWidget
+

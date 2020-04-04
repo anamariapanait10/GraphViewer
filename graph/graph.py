@@ -43,6 +43,23 @@ class Graph:
                 break
         return nd
 
+    def getEdgeByIds(self, sourceId, destId):
+        """This method returns an edge by id of the source and destination nodes if exists and creates it if not"""
+
+        source = self.getNodeById(sourceId)
+
+        e = None
+        for edg in source.neighbors:
+            if(edg.dest == destId):
+                e = edg
+
+        if(e == None):  # if edge does not exists, I create it
+            self.addEdge(sourceId, destId)
+            for edg in source.neighbors:
+                if (edg.dest == destId):
+                    e = edg
+
+        return e;
 
     def addNode(self, nodeId):
         """This method adds a node to the graph.
@@ -54,14 +71,13 @@ class Graph:
             raise GraphException('Node id must be an integer!')
 
         nd = self.getNodeById(nodeId)
-        if not nd:  # if it is not found, then we have to add it
+        if nd == None:  # if it is not found, then we have to add it
             newNode = Node(nodeId)
             self.nodes.append(newNode)
-        else:
-            raise GraphException('Node already exists!')
+        #else:
+        #   raise GraphException('Node already exists!')
 
-
-    def addEdge(self, src, dest, cost=-1):
+    def addEdge(self, src, dest, cost=-1):  #note that src and dest are ids of the nodes
         try:
             cost = int(cost)
         except:
@@ -86,8 +102,8 @@ class Graph:
                         break
                 if ok:
                     n.neighbors.append(Edge(src, dest, cost))
-                else:
-                    raise GraphException('Edge already exists!')
+                #else:
+                #    raise GraphException('Edge already exists!')
 
             if n.id == dest and not self.isDirected:
                 ok = True
@@ -98,6 +114,24 @@ class Graph:
                 if ok:
                     n.neighbors.append(Edge(dest, src, cost))
 
+    def addNeighbourNode(self, nodeId, neighborNodeId):    # nodeId is a node that already exists
+        """This method adds a neighbor to a node"""        # neibourNodeId does not necessarily exists
+
+        nd = self.getNodeById(nodeId)
+        neighbor = self.getNodeById(neighborNodeId)
+
+        if(neighbor == None):  #if node with the id neighbourNodeId does not exists, then I add it to the list of nodes
+            self.addNode(neighborNodeId)
+            neighbor = self.getNodeById(neighborNodeId)
+        """
+        isInList = False
+        for edge in nd.neighbors:
+            if edge.dest == neighborNodeId:
+                isInList = True
+
+        if isInList == False:   # if the node is not in list, then I add it
+        """
+        self.addEdge(nodeId, neighborNodeId)
 
     def removeNode(self, nodeId):
         nd = self.getNodeById(nodeId)
