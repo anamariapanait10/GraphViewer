@@ -114,6 +114,7 @@ class Graph:
                 if ok:
                     n.neighbors.append(Edge(dest, src, cost))
 
+
     def addNeighbourNode(self, nodeId, neighborNodeId):    # nodeId is a node that already exists
         """This method adds a neighbor to a node"""        # neibourNodeId does not necessarily exists
 
@@ -132,6 +133,7 @@ class Graph:
         if isInList == False:   # if the node is not in list, then I add it
         """
         self.addEdge(nodeId, neighborNodeId)
+
 
     def removeNode(self, nodeId):
         nd = self.getNodeById(nodeId)
@@ -192,3 +194,5 @@ class Graph:
                 print(e.dest, end=" ")
 
             print()
+        print()
+
