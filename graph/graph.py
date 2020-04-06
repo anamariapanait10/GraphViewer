@@ -61,7 +61,7 @@ class Graph:
 
         return e;
 
-    def addNode(self, nodeId):
+    def addNode(self, nodeId, exists = False): # exists variable tells me if the node existed before calling this method
         """This method adds a node to the graph.
             :param nodeId id of the new node
         """
@@ -74,8 +74,9 @@ class Graph:
         if nd == None:  # if it is not found, then we have to add it
             newNode = Node(nodeId)
             self.nodes.append(newNode)
-        #else:
-        #   raise GraphException('Node already exists!')
+        else:
+            exists = True
+            #  raise GraphException('Node already exists!')
 
     def addEdge(self, src, dest, cost=-1):  #note that src and dest are ids of the nodes
         try:
@@ -113,26 +114,6 @@ class Graph:
                         break
                 if ok:
                     n.neighbors.append(Edge(dest, src, cost))
-
-
-    def addNeighbourNode(self, nodeId, neighborNodeId):    # nodeId is a node that already exists
-        """This method adds a neighbor to a node"""        # neibourNodeId does not necessarily exists
-
-        nd = self.getNodeById(nodeId)
-        neighbor = self.getNodeById(neighborNodeId)
-
-        if(neighbor == None):  #if node with the id neighbourNodeId does not exists, then I add it to the list of nodes
-            self.addNode(neighborNodeId)
-            neighbor = self.getNodeById(neighborNodeId)
-        """
-        isInList = False
-        for edge in nd.neighbors:
-            if edge.dest == neighborNodeId:
-                isInList = True
-
-        if isInList == False:   # if the node is not in list, then I add it
-        """
-        self.addEdge(nodeId, neighborNodeId)
 
 
     def removeNode(self, nodeId):

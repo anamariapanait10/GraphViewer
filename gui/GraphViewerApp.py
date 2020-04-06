@@ -59,7 +59,7 @@ def recalculatePositions():
 class MainViewWidget(Widget):
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            node_widget.maxid += 1
+            #node_widget.maxid += 1
             nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
             ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
 
@@ -75,17 +75,26 @@ class MainViewWidget(Widget):
             if ny > self.ids.graph_canvas.size[1] - 30:
                 ny = self.ids.graph_canvas.size[1] - 30
 
-            n = node_widget.NodeWidget(node_widget.maxid, [nx, ny])
+            n = node_widget.NodeWidget(node_widget.getmaxid(), [nx, ny])
             self.ids.graph_canvas.add_widget(n)
             graphManager.addNodeFromDrawing(n)
             return True
         else:
             return super().on_touch_down(touch)
 
+    def keyIsEnter(self, text):
+        if text[len(text)-1] == '\n':   # Trebuie adaugat si spatiile/enterurile de la mijolc
+            return True
+        return False
+
     def text_event(self, event, text):
-        self.ids.graph_canvas.clear_widgets()
-        graphManager.parse_graph_data(text)
-        recalculatePositions()
+        if text != "":
+            global lastInputText
+            if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
+                self.ids.graph_canvas.clear_widgets()
+                graphManager.parse_graph_data(text)
+                recalculatePositions()
+                lastInputText = text
 
 
 class GraphViewerApp(App):

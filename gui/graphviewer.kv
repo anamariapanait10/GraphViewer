@@ -2,17 +2,24 @@
 
 <NodeWidget>:
      size: 50, 50
-     canvas.after:
+     canvas.before:
           Color:
                rgba: 0, 0, 0, 1
           Ellipse:
+               size: 55, 55
+               pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
+
+          Color:
+               rgba: 0.9, 0.9, 0.9, 1
+          Ellipse:
                size: 50, 50
                pos: self.pos
+
      Label:
           size: 50, 20
-          color: 1, 1, 1, 1
-          pos: self.parent.pos
-          text: str('nod')
+          color: 0, 0, 0, 1
+          pos: [self.parent.pos[0], self.parent.pos[1] + 14]
+          text: str(root.getmaxid())
 
 
 <MainViewWidget>:
