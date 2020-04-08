@@ -4,8 +4,12 @@ maxid = 0
 
 def getmaxid():
     global maxid
-    #maxid += 1
+    maxid += 1
     return str(maxid)
+
+def setmaxid (val):
+    global maxid
+    maxid = val
 
 class NodeWidget(Widget):
 
@@ -21,5 +25,5 @@ class NodeWidget(Widget):
 
     def getmaxid(self):
         global maxid
-        maxid += 1
+        #maxid += 1
         return str(maxid)

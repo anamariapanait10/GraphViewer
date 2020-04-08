@@ -26,10 +26,13 @@ def dist(v, u):
 
 
 def __calculateForces():
-    for v in graphManager.nodeWidgets:
+    # for v in graphManager.nodeWidgets:
+    nodeWidgets = graphManager.getNodeWidgetList()
+    for v in nodeWidgets:
         fx = 0
         fy = 0
-        for u in graphManager.nodeWidgets:
+        # for u in graphManager.nodeWidgets:
+        for u in nodeWidgets:
             if v != u:
                 fx += c3 / ((v.pos[0] - u.pos[0]) ** 2)
                 fx += c1 * log((v.pos[0] - u.pos[0]) / c2)
@@ -40,7 +43,9 @@ def __calculateForces():
 
 
 def __moveNodes():
-    for v in graphManager.nodeWidgets:
+    # for v in graphManager.nodeWidgets:
+    nodeWidgets = GraphManager.getNodeWidgetList()
+    for v in nodeWidgets:
         v.pos[0] = v.pos[0] + c4 * v.force[0]
         v.pos[1] = v.pos[1] + c4 * v.force[1]
 
