@@ -1,13 +1,15 @@
-import kivy
+#import kivy
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
 from gui.graph_manager import GraphManager
 from math import sqrt, log
+from kivy.uix.dropdown import DropDown
+from kivy.uix.button import Button
 
 from gui import node_widget
 
-kivy.require('2.0.0')
+#kivy.require('2.0.0')
 
 
 lastInputText = ""
@@ -35,16 +37,16 @@ def __calculateForces():
         for u in nodeWidgets:
             if v != u:
                 fx += c3 / ((v.pos[0] - u.pos[0]) ** 2)
-                fx += c1 * log((v.pos[0] - u.pos[0]) / c2)
+                fx += c1 * log(abs((v.pos[0] - u.pos[0]) / c2))
                 fy += c3 / ((v.pos[1] - u.pos[1]) ** 2)
-                fy += c1 * log((v.pos[1] - u.pos[1]) / c2)
+                fy += c1 * log(abs((v.pos[1] - u.pos[1]) / c2))
 
         v.force = (fx, fy)
 
 
 def __moveNodes():
     # for v in graphManager.nodeWidgets:
-    nodeWidgets = GraphManager.getNodeWidgetList()
+    nodeWidgets = graphManager.getNodeWidgetList()
     for v in nodeWidgets:
         v.pos[0] = v.pos[0] + c4 * v.force[0]
         v.pos[1] = v.pos[1] + c4 * v.force[1]
@@ -59,6 +61,13 @@ def recalculatePositions():
     for t in range(M):
         __update()
 
+
+
+class AlgDropDownList(DropDown):
+    pass
+
+class InputDropDownList(DropDown):
+    pass
 
 
 class MainViewWidget(Widget):
@@ -111,6 +120,16 @@ class GraphViewerApp(App):
         graphManager = GraphManager(False, mainViewWidget)
 
         mainViewWidget.ids.input_nodes.bind(text=mainViewWidget.text_event)
+
+        dropdown = AlgDropDownList()
+        mainViewWidget.ids.algorithm_btn.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(mainViewWidget.ids.algorithm_btn, 'Algorithms', x))
+
+        dropdown = InputDropDownList()
+        mainViewWidget.ids.input_btn.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(mainViewWidget.ids.input_btn, 'Input', x))
+
+        mainViewWidget.ids.draw_lbl.multiline = True
 
         return mainViewWidget
 

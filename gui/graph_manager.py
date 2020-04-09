@@ -10,7 +10,7 @@ class GraphManager:
     def __init__(self, isDirected, mainViewWidget):
         self.mainViewWidget = mainViewWidget
         self.graph = graph.Graph(isDirected)
-        self.nodeWidgets = []   # the list of ids of the WidgetNodes
+        self.nodeWidgets = []   # the list of WidgetNodes
         self.isDirected = isDirected
 
     def getNodeWidgetList(self):
@@ -122,10 +122,10 @@ class GraphManager:
 
                             if self.NodeWidgetExists(node) == False:
                                 node_widget.setmaxid(node)
-                                self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(node,
-                                                                                                       [random.randrange(30, 200),
-                                                                                                        random.randrange(30, 200)]))
-                                self.nodeWidgets.append(node)
+                                nodeWidget = node_widget.NodeWidget(node,[random.randrange(30, 200),
+                                                                          random.randrange(30, 200)])
+                                self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
+                                self.nodeWidgets.append(nodeWidget)
 
                         elif node != -1:
                             edge = self.isEdgeWithoutWeight(line)
@@ -135,24 +135,20 @@ class GraphManager:
                                 if alreadyExists == False:
                                     if self.NodeWidgetExists(edge[0]) == False:
                                         node_widget.setmaxid(edge[0])
-                                        self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(edge[0],
-                                                                                                           [random.randrange(30,
-                                                                                                                             200),
-                                                                                                            random.randrange(30,
-                                                                                                                             200)]))
-                                        self.nodeWidgets.append(edge[0])
+                                        nodeWidget = node_widget.NodeWidget(edge[0], [random.randrange(30, 200),
+                                                                                   random.randrange(30, 200)])
+                                        self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
+                                        self.nodeWidgets.append(nodeWidget)
 
                                 alreadyExists = False
                                 self.graph.addNode(edge[1], alreadyExists)
                                 if alreadyExists == False:
                                     if self.NodeWidgetExists(edge[1]) == False:
                                         node_widget.setmaxid(edge[1])
-                                        self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(edge[1],
-                                                                                                           [random.randrange(30,
-                                                                                                                             200),
-                                                                                                            random.randrange(30,
-                                                                                                                             200)]))
-                                        self.nodeWidgets.append(edge[1])
+                                        nodeWidget = node_widget.NodeWidget(edge[1], [random.randrange(30, 200),
+                                                                                      random.randrange(30, 200)])
+                                        self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
+                                        self.nodeWidgets.append(nodeWidget)
 
                                 self.graph.addEdge(edge[0], edge[1])
 
@@ -164,24 +160,20 @@ class GraphManager:
                                     if alreadyExists == False:
                                         if self.NodeWidgetExists(edge[0]) == False:
                                             node_widget.setmaxid(edge[0])
-                                            self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(edge[0],
-                                                                                                               [random.randrange(30,
-                                                                                                                                 200),
-                                                                                                                random.randrange(30,
-                                                                                                                                 200)]))
-                                            self.nodeWidgets.append(edge[0])
+                                            nodeWidget = node_widget.NodeWidget(edge[0], [random.randrange(30, 200),
+                                                                                          random.randrange(30, 200)])
+                                            self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
+                                            self.nodeWidgets.append(nodeWidget)
 
                                     alreadyExists = False
                                     self.graph.addNode(edge[1], alreadyExists)
                                     if alreadyExists == False:
                                         if self.NodeWidgetExists(edge[1]) == False:
                                             node_widget.setmaxid(edge[1])
-                                            self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(edge[1],
-                                                                                                               [random.randrange(30,
-                                                                                                                                 200),
-                                                                                                                random.randrange(30,
-                                                                                                                                 200)]))
-                                            self.nodeWidgets.append(edge[1])
+                                            nodeWidget = node_widget.NodeWidget(edge[0], [random.randrange(30, 200),
+                                                                                          random.randrange(30, 200)])
+                                            self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
+                                            self.nodeWidgets.append(nodeWidget)
 
                                     self.graph.addEdge(edge[0], edge[1], edge[2])
 
@@ -193,29 +185,6 @@ class GraphManager:
 
                         else:
                             raise GraphException("Invalid format for the adjacency list!")
-
-        """
-        edges = data.split()
-        self.graph = graph.Graph(self.isDirected)
-        self.nodeWidgets = []
-
-        for source, dest in zip(edges[0::2], edges[1::2]):  # data[0::2] creates subset collection of elements with (index % 2 == 0)
-                                                            # zip(x,y) creates a tuple collection
-            try:
-                source = int(source)
-            except:
-                raise GraphException('The source node id must be a positive integer.')
-            try:
-                dest = int(dest)
-            except:
-                raise GraphException('The dest node id must be a positive integer.')
-
-            self.graph.addNode(source)
-            # (random.randrange(30, 200), random.randrange(30, 200))
-            node_widget.maxid += 1
-            self.mainViewWidget.ids.graph_canvas.add_widget(node_widget.NodeWidget(node_widget.getmaxid(), [random.randrange(30, 200), random.randrange(30, 200)]))
-            self.graph.addNeighbourNode(source, dest)
-        """
 
         self.graph.printGraph()
 

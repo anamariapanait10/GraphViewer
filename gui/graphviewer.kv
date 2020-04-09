@@ -21,6 +21,46 @@
           pos: [self.parent.pos[0], self.parent.pos[1] + 14]
           text: str(root.getmaxid())
 
+<AlgDropDownList>:
+     Button:
+          text: 'BFS'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('bfs')
+     Button:
+          text: 'DFS'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('dfs')
+     Button:
+          text: 'Dijkstra'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('dijkstra')
+
+
+<InputDropDownList>:
+     Button:
+          text: 'List of edges'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('edgeList')
+     Button:
+          text: 'Adjacency List'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('adjacencyList')
+     Button:
+          text: 'Adjacency Matrix'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('adjacencyMatrix')
+     Button:
+          text: 'Cost Matrix'
+          size_hint_y: None
+          height: 44
+          on_release: root.select('costMatrix')
+
 
 <MainViewWidget>:
      canvas.before:
@@ -33,37 +73,206 @@
 
      GridLayout:
           size: root.width - 20, root.height - 20
+          # row_default_height: 50
+          # row_force_default: True
           pos: 10, 10
           cols: 1
-          rows: 1
+          rows: 4
 
           BoxLayout:
                orientation: 'vertical'
+               size_hint_y: None
+               height: 50
+                # If you put something here it will appear above the slider
 
-               # If you put something here it will appear above the slider
+               GridLayout:
+                    row_default_height: 40
+                    row_force_default: True
+                    cols: 2
+                    rows: 1
+
+                    BoxLayout:
+                         orientation: 'horizontal'
+                         id: top_btns
+                         Button :
+                              size: 70, 40
+                              pos:10, 10
+                              background_color: 1, 1, 1, 1
+                              text: 'Undirected'
+                         Button :
+                              size: 70, 40
+                              pos:10, 10
+                              background_color: 1, 1, 1, 1
+                              text: 'Directed'
+
+                         Button :
+                              id: algorithm_btn
+                              size: 70, 40
+                              pos:10, 10
+                              background_color: 1, 1, 1, 1
+                              text: 'Algorithms'
+                    BoxLayout:
+                         orientation: 'horizontal'
+
+                         AnchorLayout:
+                              #cols: 2
+                              #rows: 1
+                              anchor_x: 'right'
+                              #row_default_height: 40
+                              #row_force_default: True
+
+
+                              GridLayout:
+                                   rows: 1
+                                   cols: 2
+                                   width: 200
+                                   size_hint_x: None
+                                   Button:
+                                        size: 100, 50
+                                        pos: self.pos
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Settings'
+                                        size_hint_x: None
+                              #AnchorLayout:
+                              #     anchor_x: 'right'
+                              #     size_hint_x: None
+                              #    width: 100
+                                   Button:
+                                        size: 100, 50
+                                        pos: self.pos
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Help'
+                                        size_hint_x: None
+                                        #width: 100
+
+          BoxLayout:
+               height: 1000
+
+               Splitter:
+                    sizable_from: 'right'
+
+                    BoxLayout:
+                         orientation: 'vertical'
+                         #size_hint_y: None
+
+                         BoxLayout:
+                              orientation: 'horizontal'
+                              size_hint_y: None
+                              height: 40
+
+                              Label:
+                                   size: 50, 40
+                                   text: 'Graph data'
+                                   color: 0, 0, 0, 1
+
+                              Button:
+                                   id: input_btn
+                                   size: 100, 40
+                                   background_color: 1, 1, 1, 1
+                                   text: 'Input'
+
+                         BoxLayout:
+                              orientation: 'horizontal'
+                              #size_hint_y: None
+                              height: 40
+                              TextInput:
+                                   id: input_nodes
+                                   hint_text:'Enter text'
+                                   size: 50, 300
+
+                              BoxLayout:
+                                   orientation: 'vertical'
+                                   #spacing: 50
+                                   padding: [0, 20, 0, 20]
+                                   Button:
+                                        padding: [20, 20]
+                                        size: 100, 40
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Draw'
+                                   Label:
+                                        padding: [20, 20]
+                                        id: draw_lbl
+                                        text:'Tap to add nodes, \nDouble top to remove nodes'
+                                        color: 0, 0, 0, 1
+
+                                   Button:
+                                        padding: [20, 20]
+                                        size: 100, 40
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Tree'
+
+
+
+               RelativeLayout:
+                    id: graph_canvas
+                    canvas.before:
+                         Color:
+                              rgba: 0.8, 0.9, 0.9, 1
+                         Rectangle:
+                          # self here refers to the widget i.e FloatLayout
+                              pos: self.parent.pos[0] - 6, self.parent.pos[1] - 46
+                              size: self.size[0] - 6, self.size[1] - 6
+
+                         Color:
+                              rgba: 0, 0, 0, 1
+                         Line:
+                              width: 1
+                              rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 46, self.width - 6, self.height - 6
+
+          GridLayout:
+               size_hint_y: None
+               height: 10
+               rows: 1
+               cols: 1
+
+          GridLayout:
+               row_default_height: 30
+               row_force_default: True
+               rows: 1
+               cols: 3
+               height: 30
+               width: 400
+               size_hint_x: None
+               size_hint_y: None
 
                BoxLayout:
-                    Splitter:
-                         sizable_from: 'right'
-                         TextInput:
-                              id: input_nodes
-                              hint_text:'Enter text'
-                              #pos_hint: {'center_x': 0.5, 'center_y': 0.705}
-                              #size_hint: 0.95, 0.5
-                              # on_text: app.process()
+                    orientation: 'horizontal'
+                    height: 30
+                    spacing: 20
+                    size_hint_x: None
+                    width:50
 
-                    RelativeLayout:
-                         id: graph_canvas
-                         canvas.before:
-                              Color:
-                                   rgba: 0.8, 0.9, 0.9, 1
-                              Rectangle:
-                              # self here refers to the widget i.e FloatLayout
-                                   pos: self.parent.pos[0] - 6, self.parent.pos[1] - 6
-                                   size: self.size[0] - 6, self.size[1] - 6
+                    Button :
+                         size: 50, 30
+                         size_hint_x: None
+                         pos:10, 0
+                         background_color: 1, 1, 1, 1
+                         text: '<='
 
-                              Color:
-                                   rgba: 0, 0, 0, 1
-                              Line:
-                                   width: 2
-                                   rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 6, self.width - 6, self.height - 6
+               BoxLayout:
+                    orientation: 'horizontal'
+                    height: 30
+                    spacing: 20
+                    size_hint_x: None
+                    width: 120
+                    Button :
+                         size: 50, 30
+                         pos:10, 0
+                         background_color: 1, 1, 1, 1
+                         text: '<-'
+
+                    Button :
+                         size: 50, 30
+                         pos:10, 0
+                         background_color: 1, 1, 1, 1
+                         text: '->'
+               BoxLayout:
+                    orientation: 'horizontal'
+                    height: 30
+                    spacing: 20
+                    Button :
+                         size_hint_x: None
+                         size: 50, 30
+                         pos:10, 0
+                         background_color: 1, 1, 1, 1
+                         text: '=>'
