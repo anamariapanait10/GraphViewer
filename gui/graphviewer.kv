@@ -19,7 +19,15 @@
           size: 50, 20
           color: 0, 0, 0, 1
           pos: [self.parent.pos[0], self.parent.pos[1] + 14]
-          text: str(root.getmaxid())
+          text: root.nodeId
+
+<EdgeWidget>:
+     canvas.before:
+          Color:
+               rgba: 0, 0, 0, 0.9
+          Line:
+               points: self.points
+               width: 1.5
 
 <AlgDropDownList>:
      Button:
@@ -94,22 +102,28 @@
                     BoxLayout:
                          orientation: 'horizontal'
                          id: top_btns
+                         spacing: 2
                          Button :
+                              id: undirected_btn
                               size: 70, 40
                               pos:10, 10
-                              background_color: 1, 1, 1, 1
+                              background_normal: ''
+                              background_color: 0.8, 0.8, 0.8, 1
                               text: 'Undirected'
                          Button :
+                              id: directed_btn
                               size: 70, 40
                               pos:10, 10
-                              background_color: 1, 1, 1, 1
+                              background_normal: ''
+                              background_color: 0.34, 0.34, 0.34, 1
                               text: 'Directed'
 
                          Button :
                               id: algorithm_btn
                               size: 70, 40
                               pos:10, 10
-                              background_color: 1, 1, 1, 1
+                              background_normal: ''
+                              background_color: 0.34, 0.34, 0.34, 1
                               text: 'Algorithms'
                     BoxLayout:
                          orientation: 'horizontal'
@@ -159,6 +173,8 @@
                               orientation: 'horizontal'
                               size_hint_y: None
                               height: 40
+                              padding:[10, 0, 10, 0]
+                              spacing: 20
 
                               Label:
                                    size: 50, 40
@@ -183,7 +199,9 @@
                               BoxLayout:
                                    orientation: 'vertical'
                                    #spacing: 50
-                                   padding: [0, 20, 0, 20]
+                                   padding: [10, 20, 10, 20]
+                                   size_hint_y: None
+                                   height: 200
                                    Button:
                                         padding: [20, 20]
                                         size: 100, 40

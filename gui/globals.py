@@ -1,0 +1,2 @@
+graphManager = None
+

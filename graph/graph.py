@@ -16,6 +16,7 @@ class Edge:
     def __init__(self, source, dest, cost=-1):  # cost is optional, if it does not receive any value,
         self.source = source                    #  it will receive the default value (-1) and will be considered at no cost
         self.dest = dest
+        self.cost = cost
 
 
 class Graph:
@@ -61,7 +62,7 @@ class Graph:
 
         return e;
 
-    def addNode(self, nodeId, exists = False): # exists variable tells me if the node existed before calling this method
+    def addNode(self, nodeId): # exists variable tells me if the node existed before calling this method
         """This method adds a node to the graph.
             :param nodeId id of the new node
         """
@@ -74,8 +75,9 @@ class Graph:
         if nd == None:  # if it is not found, then we have to add it
             newNode = Node(nodeId)
             self.nodes.append(newNode)
+            return False
         else:
-            exists = True
+            return True
             #  raise GraphException('Node already exists!')
 
     def addEdge(self, src, dest, cost=-1):  #note that src and dest are ids of the nodes

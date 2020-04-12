@@ -2,10 +2,12 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
+from gui import globals
 from gui.graph_manager import GraphManager
 from math import sqrt, log
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
+from kivy.uix.behaviors import ButtonBehavior
 
 from gui import node_widget
 
@@ -15,7 +17,7 @@ from gui import node_widget
 lastInputText = ""
 
 mainViewWidget = None
-graphManager = None
+
 
 c1 = 2
 c2 = 1
@@ -29,7 +31,7 @@ def dist(v, u):
 
 def __calculateForces():
     # for v in graphManager.nodeWidgets:
-    nodeWidgets = graphManager.getNodeWidgetList()
+    nodeWidgets = globals.graphManager.getNodeWidgetList()
     for v in nodeWidgets:
         fx = 0
         fy = 0
@@ -46,7 +48,7 @@ def __calculateForces():
 
 def __moveNodes():
     # for v in graphManager.nodeWidgets:
-    nodeWidgets = graphManager.getNodeWidgetList()
+    nodeWidgets = globals.graphManager.getNodeWidgetList()
     for v in nodeWidgets:
         v.pos[0] = v.pos[0] + c4 * v.force[0]
         v.pos[1] = v.pos[1] + c4 * v.force[1]
@@ -62,12 +64,63 @@ def recalculatePositions():
         __update()
 
 
-
 class AlgDropDownList(DropDown):
     pass
 
 class InputDropDownList(DropDown):
     pass
+
+class UndirectedButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(UndirectedButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.undirected_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            #print(mainViewWidget.ids.undirected_btn.background_normal)
+            mainViewWidget.ids.undirected_btn.background_normal: ''
+            mainViewWidget.ids.undirected_btn.background_color = (0.8, 0.8, 0.8, 1)
+            globals.graphManager.setisDirected(False)
+
+            # The directed and undirected buttons can't be pressed at the same time
+            mainViewWidget.ids.directed_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+        else:   # if it is pressed
+            mainViewWidget.ids.undirected_btn.background_normal: ''
+            mainViewWidget.ids.undirected_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The directed and undirected buttons can't be unpressed at the same time
+            mainViewWidget.ids.directed_btn.background_color = (0.8, 0.8, 0.8, 1)
+            globals.graphManager.setisDirected(True)
+
+        # update the graph after that
+        #graphManager.update_graph()
+
+
+class DirectedButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(DirectedButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.directed_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            #print(mainViewWidget.ids.directed_btn.background_normal)
+            mainViewWidget.ids.directed_btn.background_normal: ''
+            mainViewWidget.ids.directed_btn.background_color = (0.8, 0.8, 0.8, 1)
+            globals.graphManager.setisDirected(True)
+
+            # The directed and undirected buttons can't be pressed at the same time
+            mainViewWidget.ids.undirected_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+        else:   # if it is pressed
+            mainViewWidget.ids.directed_btn.background_normal: ''
+            mainViewWidget.ids.directed_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The directed and undirected buttons can't be unpressed at the same time
+            mainViewWidget.ids.undirected_btn.background_color = (0.8, 0.8, 0.8, 1)
+            globals.graphManager.setisDirected(False)
+
+            # update the graph after that
+            #graphManager.update_graph()
+
 
 
 class MainViewWidget(Widget):
@@ -89,9 +142,13 @@ class MainViewWidget(Widget):
             if ny > self.ids.graph_canvas.size[1] - 30:
                 ny = self.ids.graph_canvas.size[1] - 30
 
-            n = node_widget.NodeWidget(node_widget.getmaxid(), [nx, ny])
+            n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
             self.ids.graph_canvas.add_widget(n)
-            graphManager.addNodeFromDrawing(n)
+            if self.ids.input_nodes.text != "" and self.ids.input_nodes.text[len(self.ids.input_nodes.text) - 1] == '\n':
+                self.ids.input_nodes.text += str(n.nr)
+            else:
+                self.ids.input_nodes.text += "\n" + str(n.nr)
+            globals.graphManager.addNodeFromDrawing(n)
             return True
         else:
             return super().on_touch_down(touch)
@@ -106,18 +163,19 @@ class MainViewWidget(Widget):
             global lastInputText
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
-                graphManager.parse_graph_data(text)
-                recalculatePositions()
+                globals.graphManager.parse_graph_data(text)
+                #recalculatePositions()
                 lastInputText = text
 
 
 class GraphViewerApp(App):
     def build(self):
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
+
         global mainViewWidget
         mainViewWidget = MainViewWidget()
-        global graphManager
-        graphManager = GraphManager(False, mainViewWidget)
+
+        globals.graphManager = GraphManager(False, mainViewWidget)
 
         mainViewWidget.ids.input_nodes.bind(text=mainViewWidget.text_event)
 
@@ -128,6 +186,9 @@ class GraphViewerApp(App):
         dropdown = InputDropDownList()
         mainViewWidget.ids.input_btn.bind(on_release=dropdown.open)
         dropdown.bind(on_select=lambda instance, x: setattr(mainViewWidget.ids.input_btn, 'Input', x))
+
+        mainViewWidget.ids.undirected_btn.bind(on_press=UndirectedButton.on_press)
+        mainViewWidget.ids.directed_btn.bind(on_press=DirectedButton.on_press)
 
         mainViewWidget.ids.draw_lbl.multiline = True
 
