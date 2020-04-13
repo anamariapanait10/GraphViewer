@@ -70,13 +70,108 @@ class AlgDropDownList(DropDown):
 class InputDropDownList(DropDown):
     pass
 
+
+class ListOfEdgesButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(ListOfEdgesButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.listOfEdges_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            mainViewWidget.ids.listOfEdges_btn.background_normal: ''
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+
+            # The buttons from the dropdown list can't be pressed at the same time
+            mainViewWidget.ids.adjancyList_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.adjancyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+        """
+        else:   # if it is pressed
+            mainViewWidget.ids.listOfEdges_btn.background_normal: ''
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The buttons can't be unpressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.8, 0.8, 0.8, 1)
+        """
+
+
+class AdjancyListButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(AdjancyListButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.adjancyList_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            mainViewWidget.ids.adjancyList_btn.background_normal: ''
+            mainViewWidget.ids.adjancyList_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+
+            # The buttons from the dropdown list can't be pressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.adjancyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+
+        else:   # if it is pressed
+            mainViewWidget.ids.adjancyList_btn.background_normal: ''
+            mainViewWidget.ids.adjancyList_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The buttons can't be unpressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+class AdjancyMatrixButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(AdjancyMatrixButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.adjancyMatrix_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            mainViewWidget.ids.adjancyMatrix_btn.background_normal: ''
+            mainViewWidget.ids.adjancyMatrix_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+
+            # The buttons from the dropdown list can't be pressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.adjancyList_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+
+        else:   # if it is pressed
+            mainViewWidget.ids.adjancyMatrix_btn.background_normal: ''
+            mainViewWidget.ids.adjancyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The buttons can't be unpressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+class CostMatrixButton(ButtonBehavior):
+    def __init__(self, **kwargs):
+        super(CostMatrixButton, self).__init__(**kwargs)
+
+    def on_press(self):
+        if mainViewWidget.ids.costMatrix_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
+            mainViewWidget.ids.costMatrix_btn.background_normal: ''
+            mainViewWidget.ids.costMatrix_btn.background_color = (0.8, 0.8, 0.8, 1)
+
+
+            # The buttons from the dropdown list can't be pressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.adjancyList_btn.background_color = (0.34, 0.34, 0.34, 1)
+            mainViewWidget.ids.adjancyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+
+        else:   # if it is pressed
+            mainViewWidget.ids.costMatrix_btn.background_normal: ''
+            mainViewWidget.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+            # The buttons can't be unpressed at the same time
+            mainViewWidget.ids.listOfEdges_btn.background_color = (0.8, 0.8, 0.8, 1)
+
 class UndirectedButton(ButtonBehavior):
     def __init__(self, **kwargs):
         super(UndirectedButton, self).__init__(**kwargs)
 
     def on_press(self):
         if mainViewWidget.ids.undirected_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
-            #print(mainViewWidget.ids.undirected_btn.background_normal)
+            # print(mainViewWidget.ids.undirected_btn.background_normal)
             mainViewWidget.ids.undirected_btn.background_normal: ''
             mainViewWidget.ids.undirected_btn.background_color = (0.8, 0.8, 0.8, 1)
             globals.graphManager.setisDirected(False)
@@ -92,8 +187,8 @@ class UndirectedButton(ButtonBehavior):
             mainViewWidget.ids.directed_btn.background_color = (0.8, 0.8, 0.8, 1)
             globals.graphManager.setisDirected(True)
 
-        # update the graph after that
-        #graphManager.update_graph()
+        globals.graphManager.parse_graph_data(mainViewWidget.ids.input_nodes.text)
+        globals.graphManager.update_canvas()
 
 
 class DirectedButton(ButtonBehavior):
@@ -118,8 +213,8 @@ class DirectedButton(ButtonBehavior):
             mainViewWidget.ids.undirected_btn.background_color = (0.8, 0.8, 0.8, 1)
             globals.graphManager.setisDirected(False)
 
-            # update the graph after that
-            #graphManager.update_graph()
+        globals.graphManager.parse_graph_data(mainViewWidget.ids.input_nodes.text)
+        globals.graphManager.update_canvas()
 
 
 
@@ -130,11 +225,11 @@ class MainViewWidget(Widget):
             nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
             ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
 
-            if nx < 30:
-                nx = 30
+            if nx < 10:
+                nx = 10
 
-            if ny < 30:
-                ny = 30
+            if ny < 10:
+                ny = 10
 
             if nx > self.ids.graph_canvas.size[0] - 30:
                 nx = self.ids.graph_canvas.size[0] - 30
@@ -189,6 +284,10 @@ class GraphViewerApp(App):
 
         mainViewWidget.ids.undirected_btn.bind(on_press=UndirectedButton.on_press)
         mainViewWidget.ids.directed_btn.bind(on_press=DirectedButton.on_press)
+        # mainViewWidget.ids.listOfEdges_btn.bind(on_press=ListOfEdgesButton.on_press)
+        # mainViewWidget.ids.adjancyList_btn.bind(on_press=AdjancyListButton.on_press)
+        # mainViewWidget.ids.adjancyMatrix_btn.bind(on_press=AdjancyMatrixButton.on_press)
+        # mainViewWidget.ids.costMatrix_btn.bind(on_press=CostMatrixButton.on_press)
 
         mainViewWidget.ids.draw_lbl.multiline = True
 

@@ -49,24 +49,36 @@
 
 <InputDropDownList>:
      Button:
+          id: listOfEdges_btn
           text: 'List of edges'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.8, 0.8, 0.8, 1
           on_release: root.select('edgeList')
      Button:
+          id: adjancyList_btn
           text: 'Adjacency List'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('adjacencyList')
      Button:
+          id: adjancyMatrix_btn
           text: 'Adjacency Matrix'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('adjacencyMatrix')
      Button:
+          id: costMatrix_btn
           text: 'Cost Matrix'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('costMatrix')
 
 

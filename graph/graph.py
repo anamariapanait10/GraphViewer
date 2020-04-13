@@ -13,8 +13,8 @@ class Node:
 
 class Edge:
 
-    def __init__(self, source, dest, cost=-1):  # cost is optional, if it does not receive any value,
-        self.source = source                    #  it will receive the default value (-1) and will be considered at no cost
+    def __init__(self, source, dest, cost=0):  # cost is optional, if it does not receive any value,
+        self.source = source                    #  it will receive the default value (0) and will be considered at no cost
         self.dest = dest
         self.cost = cost
 
@@ -80,7 +80,7 @@ class Graph:
             return True
             #  raise GraphException('Node already exists!')
 
-    def addEdge(self, src, dest, cost=-1):  #note that src and dest are ids of the nodes
+    def addEdge(self, src, dest, cost=0):  #note that src and dest are ids of the nodes
         try:
             cost = int(cost)
         except:

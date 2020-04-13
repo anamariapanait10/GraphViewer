@@ -34,7 +34,7 @@ class GraphManager:
     def NodeWidgetExists(self, nodeId): # verify if a NodeWidget exists
         exists = False
         for node in self.nodeWidgets:
-            if node == nodeId:
+            if node.nr == nodeId:
                 exists = True
 
         return exists
@@ -51,7 +51,7 @@ class GraphManager:
                     number = int(text[index])
                     index += 1
                     while index < len(text) and text[index].isdigit():
-                        number = number * 10 + text[index]
+                        number = number * 10 + int(text[index])
                         index += 1
                     finished  = True
                 else:   #it it finds another number then it is not isolated
@@ -72,14 +72,14 @@ class GraphManager:
                     source = int(text[index])
                     index += 1
                     while index < len(text) and text[index].isdigit():
-                        source = source * 10 + text[index]
+                        source = source * 10 + int(text[index])
                         index += 1
                     foundSource = True
                 elif foundDest == False:
                     dest = int(text[index])
                     index += 1
                     while index < len(text) and text[index].isdigit():
-                        dest = dest * 10 + text[index]
+                        dest = dest * 10 + int(text[index])
                         index += 1
                     foundDest = True
                 else:
@@ -99,14 +99,14 @@ class GraphManager:
                     source = int(text[index])
                     index += 1
                     while index < len(text) and text[index].isdigit():
-                        source = source * 10 + text[index]
+                        source = source * 10 + int(text[index])
                         index += 1
                     foundSource = True
                 elif foundDest == False:
                     dest = int(text[index])
                     index += 1
                     while index < len(text) and text[index].isdigit():
-                        dest = dest * 10 + text[index]
+                        dest = dest * 10 + int(text[index])
                         index += 1
                     foundDest = True
                 elif foundCost == False:
@@ -123,6 +123,13 @@ class GraphManager:
 
         return [source, dest, cost]
 
+    def update_canvas(self):
+        self.mainViewWidget.ids.graph_canvas.clear_widgets()
+        for edge in self.edgeWidgets:
+            self.mainViewWidget.ids.graph_canvas.add_widget(edge)
+        for node in self.nodeWidgets:
+            self.mainViewWidget.ids.graph_canvas.add_widget(node)
+
     def parse_graph_data(self, data):
         """Data is a string in the format "node_1_Id node_2_Id" which holds all the necessary data for creating the graph."""
 
@@ -131,6 +138,12 @@ class GraphManager:
             self.graph = graph.Graph(self.isDirected)
             self.nodeWidgets = []
             self.edgeWidgets = []
+
+            coords = [10, 10,
+                      self.mainViewWidget.ids.graph_canvas.size[0] - 50,
+                      self.mainViewWidget.ids.graph_canvas.size[1] - 50]
+            # boundary coordonates for spawning the nodes
+
             if lines != None:
                 for line in lines:
                     if line != "":
@@ -141,65 +154,69 @@ class GraphManager:
                             self.graph.addNode(node)
 
                             if self.NodeWidgetExists(node) == False:
-                                nodeWidget = node_widget.NodeWidget(node,[random.randrange(30, 200),
-                                                                          random.randrange(30, 200)])
+                                nodeWidget = node_widget.NodeWidget(node,[random.randrange(coords[0], coords[2]),
+                                                                               random.randrange(coords[1], coords[3])])
                                 self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidget)
                                 self.nodeWidgets.append(nodeWidget)
 
                         elif node == 0:
                             edge = self.isEdgeWithoutWeight(line)
                             if edge != -1 and edge != 0:
-                                alreadyExists = self.graph.addNode(edge[0])
-                                if alreadyExists == False:
-                                    if self.NodeWidgetExists(edge[0]) == False:
-                                        nodeWidgetSource = node_widget.NodeWidget(edge[0], [random.randrange(30, 200),
-                                                                                   random.randrange(30, 200)])
+                                alreadyExistsSource = self.graph.addNode(edge[0])
+                                if alreadyExistsSource == False:
+                                    nodeWidgetSource = node_widget.NodeWidget(edge[0], [random.randrange(coords[0], coords[2]),
+                                                                               random.randrange(coords[1], coords[3])])
 
-                                        self.nodeWidgets.append(nodeWidgetSource)
+                                    self.nodeWidgets.append(nodeWidgetSource)
 
-                                alreadyExists = self.graph.addNode(edge[1])
-                                if alreadyExists == False:
-                                    if self.NodeWidgetExists(edge[1]) == False:
-                                        nodeWidgetDest = node_widget.NodeWidget(edge[1], [random.randrange(30, 200),
-                                                                                      random.randrange(30, 200)])
-                                        self.nodeWidgets.append(nodeWidgetDest)
+                                alreadyExistsDest = self.graph.addNode(edge[1])
+                                if alreadyExistsDest == False:
+                                    nodeWidgetDest = node_widget.NodeWidget(edge[1], [random.randrange(coords[0], coords[2]),
+                                                                               random.randrange(coords[1], coords[3])])
+                                    self.nodeWidgets.append(nodeWidgetDest)
 
                                 self.graph.addEdge(edge[0], edge[1])
                                 edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(edge[0]),
                                                                     self.getNodeWidgetById(edge[1]))
-                                self.mainViewWidget.ids.graph_canvas.add_widget(edgeWidget)
+
+                                #self.mainViewWidget.ids.graph_canvas.add_widget(edgeWidget)
                                 self.edgeWidgets.append(edgeWidget)
 
                                 # I added the nodes on the canvas after the edge because I want to draw them on top of it
-                                self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetSource)
-                                self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetDest)
+                                #if alreadyExistsSource == False:
+                                #    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetSource)
+                                #if alreadyExistsDest == False:
+                                #    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetDest)
+
+                                # self.update_canvas()
 
                             elif edge == 0:
                                 edge = self.isWeightedEdge(line)
                                 if edge != -1:
-                                    alreadyExists = self.graph.addNode(edge[0])
-                                    if alreadyExists == False:
-                                        if self.NodeWidgetExists(edge[0]) == False:
-                                            nodeWidgetSource = node_widget.NodeWidget(edge[0], [random.randrange(30, 200),
-                                                                                          random.randrange(30, 200)])
-                                            self.nodeWidgets.append(nodeWidgetSource)
+                                    alreadyExistsSource = self.graph.addNode(edge[0])
+                                    if alreadyExistsSource == False:
+                                        nodeWidgetSource = node_widget.NodeWidget(edge[0], [random.randrange(coords[0], coords[2]),
+                                                                               random.randrange(coords[1], coords[3])])
+                                        self.nodeWidgets.append(nodeWidgetSource)
 
-                                    alreadyExists = self.graph.addNode(edge[1])
-                                    if alreadyExists == False:
-                                        if self.NodeWidgetExists(edge[1]) == False:
-                                            nodeWidgetDest = node_widget.NodeWidget(edge[1], [random.randrange(30, 200),
-                                                                                          random.randrange(30, 200)])
-                                            self.nodeWidgets.append(nodeWidgetDest)
+                                    alreadyExistsDest = self.graph.addNode(edge[1])
+                                    if alreadyExistsDest == False:
+                                        nodeWidgetDest = node_widget.NodeWidget(edge[1], [random.randrange(coords[0], coords[2]),
+                                                                               random.randrange(coords[1], coords[3])])
+                                        self.nodeWidgets.append(nodeWidgetDest)
 
                                     self.graph.addEdge(edge[0], edge[1], edge[2])
                                     edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(edge[0]),
                                                                         self.getNodeWidgetById(edge[1]), edge[2])
-                                    self.mainViewWidget.ids.graph_canvas.add_widget(edgeWidget)
+                                    #self.mainViewWidget.ids.graph_canvas.add_widget(edgeWidget)
                                     self.edgeWidgets.append(edgeWidget)
 
                                     # I added the nodes on the canvas after the edge because I want to draw them on top of it
-                                    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetSource)
-                                    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetDest)
+                                    #if alreadyExistsSource == False:
+                                    #    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetSource)
+                                    #if alreadyExistsDest == False:
+                                    #    self.mainViewWidget.ids.graph_canvas.add_widget(nodeWidgetDest)
+                                    # self.update_canvas()
 
                                 else:
                                     raise GraphException("Invalid format for the adjacency list!")
@@ -210,6 +227,7 @@ class GraphManager:
                         else:
                             raise GraphException("Invalid format for the adjacency list!")
 
+        self.update_canvas()
         self.graph.printGraph()
 
     def addNodeFromDrawing(self, node):
