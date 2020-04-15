@@ -1,7 +1,12 @@
 #:kivy 2.0.0
+#:import Factory kivy.factory.Factory
 
 <NodeWidget>:
      size: 50, 50
+     # drag_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+     # drag_timeout: 10000000
+     # drag_distance: 0
+
      canvas.before:
           Color:
                rgba: 0, 0, 0, 1
@@ -29,21 +34,51 @@
                points: self.points
                width: 1.5
 
+<MyPopUpWidget>:
+     BoxLayout:
+          orientation: 'vertical'
+          Label:
+               text: 'Node radius'
+               color: 1, 1, 1, 1
+          Label:
+               text: 'Edge ideal length'
+               color: 1, 1, 1, 1
+          Label:
+               text: 'Node background'
+               color: 1, 1, 1, 1
+          Label:
+               text: 'Node color'
+               color: 1, 1, 1, 1
+          Label:
+               text: 'Edge color'
+               color: 1, 1, 1, 1
+          Button:
+               text: 'Apply'
+
 <AlgDropDownList>:
      Button:
+          id: bfs_btn
           text: 'BFS'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('bfs')
      Button:
+          id: dfs_btn
           text: 'DFS'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('dfs')
      Button:
+          id: dijkstra_btn
           text: 'Dijkstra'
           size_hint_y: None
           height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('dijkstra')
 
 
@@ -57,7 +92,7 @@
           background_color: 0.8, 0.8, 0.8, 1
           on_release: root.select('edgeList')
      Button:
-          id: adjancyList_btn
+          id: adjacencyList_btn
           text: 'Adjacency List'
           size_hint_y: None
           height: 44
@@ -65,7 +100,7 @@
           background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('adjacencyList')
      Button:
-          id: adjancyMatrix_btn
+          id: adjacencyMatrix_btn
           text: 'Adjacency Matrix'
           size_hint_y: None
           height: 44
@@ -134,8 +169,8 @@
                               id: algorithm_btn
                               size: 70, 40
                               pos:10, 10
-                              background_normal: ''
-                              background_color: 0.34, 0.34, 0.34, 1
+                              #background_normal: ''
+                              #background_color: 0.34, 0.34, 0.34, 1
                               text: 'Algorithms'
                     BoxLayout:
                          orientation: 'horizontal'
@@ -154,15 +189,13 @@
                                    width: 200
                                    size_hint_x: None
                                    Button:
+                                        id: settings_btn
                                         size: 100, 50
                                         pos: self.pos
                                         background_color: 1, 1, 1, 1
                                         text: 'Settings'
                                         size_hint_x: None
-                              #AnchorLayout:
-                              #     anchor_x: 'right'
-                              #     size_hint_x: None
-                              #    width: 100
+
                                    Button:
                                         size: 100, 50
                                         pos: self.pos

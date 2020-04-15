@@ -1,4 +1,5 @@
 from kivy.properties import StringProperty
+from kivy.uix.behaviors import DragBehavior
 from kivy.uix.widget import Widget
 from gui import globals
 
@@ -54,6 +55,15 @@ class NodeWidget(Widget):
         self.nr = nr  # this is the id of the node
         self.nodeId = str(nr)
         self.force = (0, 0)
+
+    def on_touch_down(self, touch):
+        pass
+
+    def on_touch_move(self, touch):
+        pass
+
+    def on_touch_up(self, touch):
+        pass
 
     def getId(self):
         return self.nr
