@@ -1,7 +1,6 @@
 #import kivy
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.config import Config
 from gui.graph_manager import GraphManager
 from gui.force_layout import *
 from gui import node_widget
@@ -15,21 +14,7 @@ from kivy.config import Config
 
 lastInputText = ""
 
-
-#TODO = change the name of the buttons to adjacency
-
-
-
 class MainViewWidget(Widget):
-
-    # To monitor changes, we can bind to color property changes
-    def on_color(instance, value):
-        print
-        "RGBA = ", str(value)  # or instance.color
-        print
-        "HSV = ", str(instance.hsv)
-        print
-        "HEX = ", str(instance.hex_color)
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
@@ -51,10 +36,21 @@ class MainViewWidget(Widget):
 
             n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
             self.ids.graph_canvas.add_widget(n)
-            if self.ids.input_nodes.text != "" and self.ids.input_nodes.text[len(self.ids.input_nodes.text) - 1] == '\n':
-                self.ids.input_nodes.text += str(n.nr)
+            #TODO = check it there are more than one space at the end
+
+            text = self.ids.input_nodes.text
+            length = len(text)
+            if text != "" and text[length - 1] == '\n':
+                while text[length - 1] == '\n':
+                    text = text[:length-1]
+                    length -= 1
+                self.ids.input_nodes.text = text + "\n" + str(n.nr)
             else:
-                self.ids.input_nodes.text += "\n" + str(n.nr)
+                if text == "":
+                    self.ids.input_nodes.text = str(n.nr)
+                else:
+                    self.ids.input_nodes.text += "\n" + str(n.nr)
+
             globals.graphManager.addNodeFromDrawing(n)
             return True
         else:
@@ -86,10 +82,6 @@ class GraphViewerApp(App):
         globals.graphManager = GraphManager(False, globals.mainViewWidget)
         globals.mainViewWidget.ids.input_nodes.bind(text=globals.mainViewWidget.text_event)
 
-       # clr_picker = ColorPicker()
-       # globals.mainViewWidget.add_widget(clr_picker)
-      #  clr_picker.bind(color=globals.mainViewWidget.on_color)
-
         dropdown = AlgDropDownList()
         globals.mainViewWidget.ids.algorithm_btn.bind(on_release=dropdown.open)
         dropdown.bind(on_select=lambda instance, x: setattr(globals.mainViewWidget.ids.algorithm_btn, 'Algorithms', x))
@@ -114,10 +106,10 @@ class GraphViewerApp(App):
 
         globals.mainViewWidget.ids.draw_lbl.multiline = True
 
-        globals.mainViewWidget.ids.settings_btn.bind(on_press=SettingsButton.on_press)
+        globals.mainViewWidget.ids.settings_btn.bind(on_release=SettingsButton.on_release)
 
-       # globals.scatter = Scatter(do_rotation=False, do_scale=False)
-        #globals.mainViewWidget.ids.graph_canvas.bind(on_motion=Draw.on_motion)
+        globals.NodeWidgetBackgroundColor = [0.9, 0.9, 0.9, 1]
+        globals.NodeWidgetColor = [0, 0, 0, 1]
 
         return globals.mainViewWidget
 

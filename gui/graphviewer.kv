@@ -3,57 +3,118 @@
 
 <NodeWidget>:
      size: 50, 50
-     # drag_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-     # drag_timeout: 10000000
-     # drag_distance: 0
 
      canvas.before:
           Color:
-               rgba: 0, 0, 0, 1
+               rgba: root.getNodeWidgetColor()
           Ellipse:
                size: 55, 55
                pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
 
           Color:
-               rgba: 0.9, 0.9, 0.9, 1
+               rgba: root.getNodeWidgetBackgroundColor()
           Ellipse:
                size: 50, 50
                pos: self.pos
 
      Label:
           size: 50, 20
-          color: 0, 0, 0, 1
+          color: root.getNodeWidgetColor()
           pos: [self.parent.pos[0], self.parent.pos[1] + 14]
           text: root.nodeId
 
 <EdgeWidget>:
      canvas.before:
           Color:
-               rgba: 0, 0, 0, 0.9
+               rgba: root.getEdgeWidgetColor()
           Line:
                points: self.points
                width: 1.5
 
 <MyPopUpWidget>:
+
+     cols: 2
+     rows: 6
+     row_default_height: 60
+     row_force_default: True
+     padding: [0, 20, 0, 0]
+     spacing: 3
+
+     Label:
+          text: 'Node radius'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+
      BoxLayout:
-          orientation: 'vertical'
+          orientation: 'horizontal'
           Label:
-               text: 'Node radius'
-               color: 1, 1, 1, 1
+               id: nodeRadius_lbl
+               text: str(radiusSlider.value)
+          Slider:
+               id: radiusSlider
+               min: 2
+               max: 50
+               step: 1
+               orientation: 'horizontal'
+               on_value: root.new_radius(*args)
+
+
+     Label:
+          text: 'Edge ideal length'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+
+     BoxLayout:
+          orientation: 'horizontal'
           Label:
-               text: 'Edge ideal length'
-               color: 1, 1, 1, 1
-          Label:
-               text: 'Node background'
-               color: 1, 1, 1, 1
-          Label:
-               text: 'Node color'
-               color: 1, 1, 1, 1
-          Label:
-               text: 'Edge color'
-               color: 1, 1, 1, 1
+               id: edgeLength_lbl
+               text: str(edgeSlider.value)
+          Slider:
+               id: edgeSlider
+               min: 5
+               max: 150
+               step: 1
+               orientation: 'horizontal'
+               on_value: root.new_length(*args)
+
+
+     Label:
+          text: 'Node background'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+
+     Button:
+          id: changeColor_btn1
+          text: 'Change color'
+          size: 50, 10
+
+     Label:
+          text: 'Node color'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+     Button:
+          id: changeColor_btn2
+          text: 'Change color'
+          size_hint: 0.4, 0.1
+
+     Label:
+          text: 'Edge color'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+     Button:
+          id: changeColor_btn3
+          text: 'Change color'
+          size_hint: 0.4, 0.1
+
+     BoxLayout:
+
+     BoxLayout:
+          padding:[0, 20, 0, 0]
           Button:
                text: 'Apply'
+               size: 100, 50
+               pos_hint: {'right': 1}
+               on_release: root.closePopUp()
 
 <AlgDropDownList>:
      Button:
@@ -80,6 +141,72 @@
           background_normal: ''
           background_color: 0.34, 0.34, 0.34, 1
           on_release: root.select('dijkstra')
+
+<ChangeColorDropDownList>:
+     Button:
+          id: white_btn
+          text: 'white'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.8, 0.8, 0.8, 1
+     Button:
+          id: black_btn
+          text: 'black'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: red_btn
+          text: 'red'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: yellow_btn
+          text: 'yellow'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: orange_btn
+          text: 'orange'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: blue_btn
+          text: 'blue'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: purple_btn
+          text: 'purple'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: green_btn
+          text: 'green'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: pink_btn
+          text: 'pink'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+
 
 
 <InputDropDownList>:

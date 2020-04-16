@@ -43,6 +43,25 @@ def getnextid():
 
         nextid += 1
 
+colors = { 'white': [0.9, 0.9, 0.9, 1], 'black': [0, 0, 0, 1], 'red': [1, 0, 0, 1], 'yellow': [0.937, 0.87, 0.32, 1],
+           'orange': [1, 0.62, 0.088, 1], 'blue': [0.199, 0.7, 1, 1], 'purple': [0.75, 0.5, 1, 1],
+           'green': [0.099, 1, 0.66, 1], 'pink': [1, 0.5, 0.875, 1] }
+
+
+def changeNodeWidgetBackgroundColor(color):
+    for c in colors:
+        if c == color:
+            globals.NodeWidgetBackgroundColor = colors[c]
+            break
+    globals.graphManager.update_canvas()
+
+def changeNodeWidgetColor(color):
+    for c in colors:
+        if c == color:
+            globals.NodeWidgetColor = colors[c]
+            break
+    globals.graphManager.update_canvas()
+
 
 class NodeWidget(Widget):
 
@@ -70,3 +89,10 @@ class NodeWidget(Widget):
 
     def getNextId(self):
         return getnextid()
+
+    def getNodeWidgetBackgroundColor(self):
+        return globals.NodeWidgetBackgroundColor
+
+    def getNodeWidgetColor(self):
+        return globals.NodeWidgetColor
+
