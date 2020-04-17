@@ -4,9 +4,7 @@ import random
 from  math import sqrt
 from gui import node_widget
 from gui import edge_widget
-
-radiusOfNodeWidget = 25
-minimumDistanceBetweenNodeWidgets = 5
+from gui import globals
 
 class GraphManager:
 
@@ -36,6 +34,29 @@ class GraphManager:
                 break
         return nd
 
+    def deleteNodeWidgetById(self, nodeId):
+        for nodeWidget in self.nodeWidgets[:]:
+            if nodeWidget.nr == nodeId:
+                self.nodeWidgets.remove(nodeWidget)
+                break
+
+    def deleteNodeWidget(self, x1, y1): # the x and y are the coordinates of the touch and if they collide with a node, it will be deleted
+        for nodeWidget in self.nodeWidgets:
+            x2 = nodeWidget.pos[0]
+            y2 = nodeWidget.pos[1]
+            dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+            if dist <= globals.radiusOfNodeWidget:
+                self.mainViewWidget.ids.graph_canvas.remove(nodeWidget)
+                self.graph.removeNode(nodeWidget.nr)
+                self.nodeWidgets.remove(nodeWidget)
+
+    def deleteEdgeWidget(self, x, y): # the x and y are the coordinates of the touch and if they collide with an edge, it will be deleted
+        for edgeWidget in self.edgeWidgets:
+            if edgeWidget.collide_point(x, y):
+                self.mainViewWidget.ids.graph_canvas.remove(edgeWidget)
+                self.graph.removeEdge(edgeWidget.node1.nr, edgeWidget.node2.nr)
+                self.edgeWidgets.remove(edgeWidget)
+
     def NodeWidgetExists(self, nodeId): # verify if a NodeWidget exists
         exists = False
         for nodeWidget in self.nodeWidgets:
@@ -46,7 +67,10 @@ class GraphManager:
 
     def setisDirected(self, TrueOrFalse):
         self.isDirected = TrueOrFalse
+        self.graph.setIsDirected(TrueOrFalse)
 
+    def getIsDirected(self):
+        return self.isDirected
 
     def isIsolatedNode(self,  text):    # returns -1 for invalid format, 0 it it is not isolated and the id if it is
         finished = False
@@ -133,7 +157,12 @@ class GraphManager:
         for edge in self.edgeWidgets:
             self.mainViewWidget.ids.graph_canvas.add_widget(edge)
         for node in self.nodeWidgets:
-            self.mainViewWidget.ids.graph_canvas.add_widget(node)
+            self.deleteNodeWidgetById(node.nr)
+            new_node = self.updateColorNodeWidget(node)
+            new_node.setLabelId(node.nr)
+            del node
+            self.nodeWidgets.append(new_node)
+            self.mainViewWidget.ids.graph_canvas.add_widget(new_node)
 
     def nodeWidgetsDontOverlap(self):   # This function generates random coordinates for the NodeWidget until
                                         #  the nodeWidget does not overlap the other nodeWidgets
@@ -151,14 +180,21 @@ class GraphManager:
                 x2 = nodeWidget.pos[0]
                 y2 = nodeWidget.pos[1]
                 dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-                if dist < 2 * radiusOfNodeWidget + minimumDistanceBetweenNodeWidgets:
+                if dist < 2 * globals.radiusOfNodeWidget + globals.minimumDistanceBetweenNodeWidgets:
                     GoodCoords = False
                     break
 
             if GoodCoords == True:
                 return [x1, y1]
 
+    def updateColorNodeWidget(self, node):
+        new_node = node_widget.NodeWidget(node.id, [node.pos[0], node.pos[1]])
+        new_node.setBackgroundColor()
+        new_node.setColor()
+        return new_node
+
     def addNodeWidget(self, nodeId):
+
         if self.NodeWidgetExists(nodeId) == False:
             self.graph.addNode(nodeId)
             pos = self.nodeWidgetsDontOverlap()

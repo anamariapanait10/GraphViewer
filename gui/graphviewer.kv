@@ -2,119 +2,173 @@
 #:import Factory kivy.factory.Factory
 
 <NodeWidget>:
-     size: 50, 50
+     size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
 
      canvas.before:
           Color:
                rgba: root.getNodeWidgetColor()
           Ellipse:
-               size: 55, 55
+               size: root.getNodeRadius() + 5, root.getNodeRadius() + 5 # it used to be 55, 55
                pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
 
           Color:
                rgba: root.getNodeWidgetBackgroundColor()
           Ellipse:
-               size: 50, 50
+               size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
                pos: self.pos
 
      Label:
-          size: 50, 20
+          id: nodeId_lbl
+          size: 10, 10
           color: root.getNodeWidgetColor()
-          pos: [self.parent.pos[0], self.parent.pos[1] + 14]
+          pos: [self.parent.pos[0] + root.getNodeRadius() / 2 - 5, self.parent.pos[1] + root.getNodeRadius() / 2 - 5]
           text: root.nodeId
+
 
 <EdgeWidget>:
      canvas.before:
           Color:
                rgba: root.getEdgeWidgetColor()
+
           Line:
                points: self.points
                width: 1.5
+          Triangle:
+               points: [0, 0, 0, 0, 0, 0] if root.getIsDirected() == False else root.getTrianglePoints()
+
+<LabelB>:
+     bcolor: 1, 1, 1, 1
+     canvas.before:
+          Color:
+               rgba: self.bcolor
+          Rectangle:
+               pos: self.pos
+               size: self.size
+
 
 <MyPopUpWidget>:
 
-     cols: 2
-     rows: 6
-     row_default_height: 60
+     cols: 3
+     rows: 7
+     row_default_height: 40
      row_force_default: True
      padding: [0, 20, 0, 0]
-     spacing: 3
+     spacing: 10
 
      Label:
           text: 'Node radius'
-          size_hint: 0.6, 0.2
+          size_hint: 10, 0.2
+          #width: 120
           color: 1, 1, 1, 1
-
-     BoxLayout:
+     Label:
+          id: nodeRadius_lbl
+          text: str(radiusSlider.value)
+          size: 40, 40
+          size_hint_x: None
+     Slider:
+          id: radiusSlider
+          min: 20
+          max: 70
+          step: 1
           orientation: 'horizontal'
-          Label:
-               id: nodeRadius_lbl
-               text: str(radiusSlider.value)
-          Slider:
-               id: radiusSlider
-               min: 2
-               max: 50
-               step: 1
-               orientation: 'horizontal'
-               on_value: root.new_radius(*args)
+          value: root.getRadiusSliderValue()
+          on_value: root.new_radius(*args)
+          size_hint_x: None
+          width: 150
 
 
      Label:
           text: 'Edge ideal length'
           size_hint: 0.6, 0.2
           color: 1, 1, 1, 1
-
-     BoxLayout:
+     Label:
+          id: edgeLength_lbl
+          text: str(edgeSlider.value)
+          size: 40, 40
+          size_hint_x: None
+     Slider:
+          id: edgeSlider
+          min: 5
+          max: 150
+          step: 1
           orientation: 'horizontal'
-          Label:
-               id: edgeLength_lbl
-               text: str(edgeSlider.value)
-          Slider:
-               id: edgeSlider
-               min: 5
-               max: 150
-               step: 1
-               orientation: 'horizontal'
-               on_value: root.new_length(*args)
-
+          value: root.getEdgeSliderValue()
+          on_value: root.new_length(*args)
+          size_hint_x: None
+          width: 150
 
      Label:
           text: 'Node background'
           size_hint: 0.6, 0.2
           color: 1, 1, 1, 1
-
+     LabelB:
+          id: nodeWidgetBackground_lbl
+          bcolor: root.getNodeWidgetBackgroundColor()
+          size: 40, 40
+          size_hint_x: None
      Button:
           id: changeColor_btn1
           text: 'Change color'
-          size: 50, 10
+          size: 150, 10
+          #background_normal: ''
+          size_hint_x: None
+
 
      Label:
           text: 'Node color'
           size_hint: 0.6, 0.2
           color: 1, 1, 1, 1
+     LabelB:
+          id: nodeWidgetColor_lbl
+          bcolor: root.getNodeWidgetColor()
+          size: 40, 40
+          size_hint_x: None
      Button:
           id: changeColor_btn2
           text: 'Change color'
-          size_hint: 0.4, 0.1
+          #size_hint: 0.4, 0.1
+          #background_normal: ''
+          size_hint_x: None
+          size: 150, 40
+
 
      Label:
           text: 'Edge color'
-          size_hint: 0.6, 0.2
+          size_hint_y: None
+          size: 100, 30
           color: 1, 1, 1, 1
+     LabelB:
+          id: edgeWidgetColor_lbl
+          bcolor: root.getEdgeWidgetColor()
+          size: 40, 40
+          size_hint_x: None
      Button:
           id: changeColor_btn3
           text: 'Change color'
-          size_hint: 0.4, 0.1
+         # background_normal: ''
+         # size_hint: 0.4, 0.1
+          size_hint_x: None
+          size: 150, 40
 
      BoxLayout:
-
      BoxLayout:
-          padding:[0, 20, 0, 0]
+     BoxLayout:
+     BoxLayout:
+     BoxLayout:
+          #Button:
+           #    text: 'Cancel'
+            #   size_hint_x: None
+             #  size: 100, 50
+              # pos_hint: {'center': 1}
+              # on_release: root.closePopUp()
+     BoxLayout:
+          padding:[50, 0, 0, 0]
           Button:
                text: 'Apply'
+               size_hint_x: None
                size: 100, 50
-               pos_hint: {'right': 1}
                on_release: root.closePopUp()
+
 
 <AlgDropDownList>:
      Button:
@@ -149,7 +203,7 @@
           size_hint_y: None
           height: 44
           background_normal: ''
-          background_color: 0.8, 0.8, 0.8, 1
+          background_color: 0.34, 0.34, 0.34, 1
      Button:
           id: black_btn
           text: 'black'
@@ -327,7 +381,7 @@
                                         size: 100, 50
                                         pos: self.pos
                                         background_color: 1, 1, 1, 1
-                                        text: 'Help'
+                                        text: 'Save'
                                         size_hint_x: None
                                         #width: 100
 
@@ -398,16 +452,17 @@
                     canvas.before:
                          Color:
                               rgba: 0.8, 0.9, 0.9, 1
-                         Rectangle:
+                         RoundedRectangle:
                           # self here refers to the widget i.e FloatLayout
                               pos: self.parent.pos[0] - 6, self.parent.pos[1] - 46
                               size: self.size[0] - 6, self.size[1] - 6
+                              radius: 15, 15, 15, 15
 
                          Color:
-                              rgba: 0, 0, 0, 1
+                              rgba: 0, 0, 0, 0.7
                          Line:
                               width: 1
-                              rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 46, self.width - 6, self.height - 6
+                              rounded_rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 46, self.width - 6, self.height - 6, 15
 
           GridLayout:
                size_hint_y: None

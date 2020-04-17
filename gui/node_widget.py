@@ -43,37 +43,48 @@ def getnextid():
 
         nextid += 1
 
-colors = { 'white': [0.9, 0.9, 0.9, 1], 'black': [0, 0, 0, 1], 'red': [1, 0, 0, 1], 'yellow': [0.937, 0.87, 0.32, 1],
-           'orange': [1, 0.62, 0.088, 1], 'blue': [0.199, 0.7, 1, 1], 'purple': [0.75, 0.5, 1, 1],
-           'green': [0.099, 1, 0.66, 1], 'pink': [1, 0.5, 0.875, 1] }
-
 
 def changeNodeWidgetBackgroundColor(color):
-    for c in colors:
+    for c in globals.colors:
         if c == color:
-            globals.NodeWidgetBackgroundColor = colors[c]
+            globals.NodeWidgetBackgroundColor = globals.colors[c]
             break
     globals.graphManager.update_canvas()
 
 def changeNodeWidgetColor(color):
-    for c in colors:
+    for c in globals.colors:
         if c == color:
-            globals.NodeWidgetColor = colors[c]
+            globals.NodeWidgetColor = globals.colors[c]
             break
     globals.graphManager.update_canvas()
+
+def changeNodeRadius(new_radius):
+    globals.radiusOfNodeWidget = new_radius
 
 
 class NodeWidget(Widget):
 
     nodeId = StringProperty()
 
-    def __init__(self, nr, pos):
+    def __init__(self, nr, pos, backgroundColor='white', color = 'black'):
         super().__init__()
         self.size = [50, 50]
         self.pos = pos
         self.nr = nr  # this is the id of the node
         self.nodeId = str(nr)
         self.force = (0, 0)
+        self.backgroundColor = backgroundColor
+        self.color = color
+
+    def setLabelId(self, nodeId):
+        self.nodeId = str(nodeId)
+        self.ids.nodeId_lbl.text = str(nodeId)
+
+    def setBackgroundColor(self):
+        self.backgroundColor = globals.popUpWidget.getNodeWidgetColor()
+
+    def setColor(self):
+        self.color = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def on_touch_down(self, touch):
         pass
@@ -96,3 +107,5 @@ class NodeWidget(Widget):
     def getNodeWidgetColor(self):
         return globals.NodeWidgetColor
 
+    def getNodeRadius(self):
+        return globals.radiusOfNodeWidget

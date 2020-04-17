@@ -3,18 +3,16 @@ from kivy.properties import ListProperty
 from gui import globals
 
 
-colors = { 'white': [0.9, 0.9, 0.9, 1], 'black': [0, 0, 0, 1], 'red': [1, 0, 0, 1], 'yellow': [0.937, 0.87, 0.32, 1],
-           'orange': [1, 0.62, 0.088, 1], 'blue': [0.199, 0.7, 1, 1], 'purple': [0.75, 0.5, 1, 1],
-           'green': [0.099, 1, 0.66, 1], 'pink': [1, 0.5, 0.875, 1] }
-
 
 def changeEdgeWidgetColor(color):
-    for c in colors:
+    for c in globals.colors:
         if c == color:
-            globals.EdgeWidgetColor = colors[c]
+            globals.EdgeWidgetColor = globals.colors[c]
             break
     globals.graphManager.update_canvas()
 
+def changeEdgeLength(new_length):
+    globals.lengthOfEdgeWidget = new_length
 
 class EdgeWidget(Widget):
 
@@ -27,6 +25,15 @@ class EdgeWidget(Widget):
         self.node1 = node1
         self.node2 = node2
 
+    def getIsDirected(self):
+        return globals.graphManager.getIsDirected()
+
+    def getTrianglePoints(self):
+        # self.node2 is the dest
+        # I have to make a vector to the node1 and node2
+        # then fix the first vertex of the triangle to
+        pass
+
     def updateCoords(self):
         n1 = globals.graphManager.getNodeWidgetById(self.node1.nr)
         n2 = globals.graphManager.getNodeWidgetById(self.node2.nr)
@@ -35,5 +42,9 @@ class EdgeWidget(Widget):
                        self.node2.pos[0] + self.node2.size[0] / 2, self.node2.pos[1] + self.node2.size[1] / 2]
 
 
+
     def getEdgeWidgetColor(self):
         return globals.EdgeWidgetColor
+
+    def getEdgeLength(self):
+        return globals.lengthOfEdgeWidget

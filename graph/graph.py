@@ -27,6 +27,9 @@ class Graph:
         self.nodes = []                 #  the list of nodes in the order of their addition
 
 
+    def setIsDirected(self, TrueOrFalse):
+        self.isDirected = TrueOrFalse
+
     def getNodeById(self, id):  #  this function is nedeed because the id of a node is not equal to its index in the list
                                 #  of nodes and I have to search through the list to find a node by id
 

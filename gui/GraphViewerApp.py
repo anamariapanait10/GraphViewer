@@ -6,6 +6,9 @@ from gui.force_layout import *
 from gui import node_widget
 from gui.buttons_behavior import *
 from kivy.config import Config
+from kivy.uix.label import Label
+from kivy.properties import ListProperty
+from kivy.factory import Factory
 
 
 
@@ -18,41 +21,45 @@ class MainViewWidget(Widget):
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            #node_widget.maxid += 1
-            nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
-            ny = touch.pos[1] -  self.ids.graph_canvas.pos[1] - 25
-
-            if nx < 10:
-                nx = 10
-
-            if ny < 10:
-                ny = 10
-
-            if nx > self.ids.graph_canvas.size[0] - 30:
-                nx = self.ids.graph_canvas.size[0] - 30
-
-            if ny > self.ids.graph_canvas.size[1] - 30:
-                ny = self.ids.graph_canvas.size[1] - 30
-
-            n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
-            self.ids.graph_canvas.add_widget(n)
-            #TODO = check it there are more than one space at the end
-
-            text = self.ids.input_nodes.text
-            length = len(text)
-            if text != "" and text[length - 1] == '\n':
-                while text[length - 1] == '\n':
-                    text = text[:length-1]
-                    length -= 1
-                self.ids.input_nodes.text = text + "\n" + str(n.nr)
+            if touch.is_double_tap:
+                globals.graphManager.deleteNodeWidget(touch.pos[0], touch.pos[1])
+                globals.graphManager.deleteEdgeWidget(touch.pos[0], touch.pos[1])
             else:
-                if text == "":
-                    self.ids.input_nodes.text = str(n.nr)
-                else:
-                    self.ids.input_nodes.text += "\n" + str(n.nr)
+                nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
+                ny = touch.pos[1] -  self.ids.graph_canvas.pos[1] - 25
 
-            globals.graphManager.addNodeFromDrawing(n)
-            return True
+                # print("nx =" + str(nx) + " ny = " + str(ny))
+
+                if nx < 9:
+                    nx = 9
+
+                if ny < 8:
+                    ny = 8
+
+                if nx > self.ids.graph_canvas.size[0] - 55:
+                    nx = self.ids.graph_canvas.size[0] - 55
+
+                if ny > self.ids.graph_canvas.size[1] - 55:
+                    ny = self.ids.graph_canvas.size[1] - 55
+
+                n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
+                self.ids.graph_canvas.add_widget(n)
+
+                text = self.ids.input_nodes.text
+                length = len(text)
+                if text != "" and text[length - 1] == '\n':
+                    while text[length - 1] == '\n':
+                        text = text[:length-1]
+                        length -= 1
+                    self.ids.input_nodes.text = text + "\n" + str(n.nr)
+                else:
+                    if text == "":
+                        self.ids.input_nodes.text = str(n.nr)
+                    else:
+                        self.ids.input_nodes.text += "\n" + str(n.nr)
+
+                globals.graphManager.addNodeFromDrawing(n)
+                return True
         else:
             return super().on_touch_up(touch)
 
@@ -67,16 +74,20 @@ class MainViewWidget(Widget):
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
                 globals.graphManager.parse_graph_data(text)
-                recalculatePositions()
+              #  recalculatePositions()
 
                 lastInputText = text
+
+
+class LabelB(Label):
+  bcolor = ListProperty([1,1,1,1])
 
 
 class GraphViewerApp(App):
     def build(self):
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
 
-        self.icon = '/home/ana/Downloads/Sigla.png'    # set the app icon
+        self.icon = '../GraphViewer/images/Sigla.png'    # set the app icon
 
         globals.mainViewWidget = MainViewWidget()
         globals.graphManager = GraphManager(False, globals.mainViewWidget)
@@ -110,6 +121,9 @@ class GraphViewerApp(App):
 
         globals.NodeWidgetBackgroundColor = [0.9, 0.9, 0.9, 1]
         globals.NodeWidgetColor = [0, 0, 0, 1]
+        globals.EdgeWidgetColor = [0, 0, 0, 1]
+
+        Factory.register('KivyB', module='LabelB')
 
         return globals.mainViewWidget
 

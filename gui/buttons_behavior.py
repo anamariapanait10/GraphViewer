@@ -5,24 +5,45 @@ from kivy.uix.popup import Popup
 from kivy.uix.gridlayout import GridLayout
 from gui import node_widget
 from gui import edge_widget
+from kivy.properties import NumericProperty
 
 class MyPopUpWidget(GridLayout):
 
     def closePopUp(self):
         globals.popUpWindow.dismiss()
+        globals.graphManager.update_canvas()
 
     def new_radius(self, *args):
         self.ids.nodeRadius_lbl.text = str(int(args[1]))
+        node_widget.changeNodeRadius(int(args[1]))
+        self.ids.radiusSlider.value = int(args[1])
 
     def new_length(self, *args):
         self.ids.edgeLength_lbl.text = str(int(args[1]))
+        edge_widget.changeEdgeLength(int(args[1]))
+        self.ids.edgeSlider.value = int(args[1])
+
+    def getNodeWidgetBackgroundColor(self):
+        return globals.NodeWidgetBackgroundColor
+
+    def getNodeWidgetColor(self):
+        return globals.NodeWidgetColor
+
+    def getEdgeWidgetColor(self):
+        return globals.EdgeWidgetColor
+
+    def getEdgeSliderValue(self):
+        return globals.lengthOfEdgeWidget
+
+    def getRadiusSliderValue(self):
+        return globals.radiusOfNodeWidget
 
 
 class SettingsButton(ButtonBehavior):
 
     def on_release(self):
         globals.popUpWidget = MyPopUpWidget()
-        globals.popUpWindow = Popup(title="Settings", content=globals.popUpWidget, size_hint=(None, None), size=(500, 500))
+        globals.popUpWindow = Popup(title="Settings", content=globals.popUpWidget, size_hint=(None, None), size=(450, 425))
         globals.popUpWindow.open()
 
         dropdown1 = ChangeColorDropDownList()
@@ -37,7 +58,6 @@ class SettingsButton(ButtonBehavior):
         globals.changeColorDropDownList.ids.purple_btn.bind(on_press=PurpleButton.dropdown1)
         globals.changeColorDropDownList.ids.green_btn.bind(on_press=GreenButton.dropdown1)
         globals.changeColorDropDownList.ids.pink_btn.bind(on_press=PinkButton.dropdown1)
-
 
         dropdown2 = ChangeColorDropDownList()
         globals.popUpWidget.ids.changeColor_btn2.bind(on_release=dropdown2.open)
@@ -252,7 +272,7 @@ class DfsButton(ButtonBehavior):
             globals.algDropDownList.ids.dfs_btn.background_color = (0.34, 0.34, 0.34, 1)
 
 
-class WhiteButton(ButtonBehavior):
+class WhiteButton():
 
     def onPress(self):
         if globals.changeColorDropDownList.ids.white_btn.background_color != [0.8, 0.8, 0.8, 1]: # if is not pressed
@@ -274,17 +294,19 @@ class WhiteButton(ButtonBehavior):
         white = WhiteButton()
         white.onPress()
         node_widget.changeNodeWidgetBackgroundColor('white')
-
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         white = WhiteButton()
         white.onPress()
         node_widget.changeNodeWidgetColor('white')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         white = WhiteButton()
         white.onPress()
         edge_widget.changeEdgeWidgetColor('white')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class BlackButton():
@@ -296,29 +318,40 @@ class BlackButton():
             globals.changeColorDropDownList.ids.black_btn.background_color = (0.8, 0.8, 0.8, 1)
 
             # The other buttons can't be pressed at the same time
+            globals.changeColorDropDownList.ids.white_btn.background_normal: ''
             globals.changeColorDropDownList.ids.white_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.red_btn.background_normal: ''
             globals.changeColorDropDownList.ids.red_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.yellow_btn.background_normal: ''
             globals.changeColorDropDownList.ids.yellow_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.orange_btn.background_normal: ''
             globals.changeColorDropDownList.ids.orange_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.blue_btn.background_normal: ''
             globals.changeColorDropDownList.ids.blue_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.purple_btn.background_normal: ''
             globals.changeColorDropDownList.ids.purple_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.green_btn.background_normal: ''
             globals.changeColorDropDownList.ids.green_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.changeColorDropDownList.ids.pink_btn.background_normal: ''
             globals.changeColorDropDownList.ids.pink_btn.background_color = (0.34, 0.34, 0.34, 1)
 
     def dropdown1(self):
         black = BlackButton()
         black.onPress()
         node_widget.changeNodeWidgetBackgroundColor('black')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         black = BlackButton()
         black.onPress()
         node_widget.changeNodeWidgetColor('black')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         black = BlackButton()
         black.onPress()
         edge_widget.changeEdgeWidgetColor('black')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class RedButton():
@@ -343,16 +376,19 @@ class RedButton():
         red = RedButton()
         red.onPress()
         node_widget.changeNodeWidgetBackgroundColor('red')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         red = RedButton()
         red.onPress()
         node_widget.changeNodeWidgetColor('red')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         red = RedButton()
         red.onPress()
         edge_widget.changeEdgeWidgetColor('red')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 class YellowButton():
 
@@ -376,16 +412,19 @@ class YellowButton():
         yellow = YellowButton()
         yellow.onPress()
         node_widget.changeNodeWidgetBackgroundColor('yellow')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         yellow = YellowButton()
         yellow.onPress()
         node_widget.changeNodeWidgetColor('yellow')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         yellow = YellowButton()
         yellow.onPress()
         edge_widget.changeEdgeWidgetColor('yellow')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class OrangeButton():
@@ -410,16 +449,19 @@ class OrangeButton():
         orange = OrangeButton()
         orange.onPress()
         node_widget.changeNodeWidgetBackgroundColor('orange')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         orange = OrangeButton()
         orange.onPress()
         node_widget.changeNodeWidgetColor('orange')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         orange = OrangeButton()
         orange.onPress()
         edge_widget.changeEdgeWidgetColor('orange')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 class BlueButton():
 
@@ -443,16 +485,19 @@ class BlueButton():
         blue = BlueButton()
         blue.onPress()
         node_widget.changeNodeWidgetBackgroundColor('blue')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         blue = BlueButton()
         blue.onPress()
         node_widget.changeNodeWidgetColor('blue')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         blue = BlueButton()
         blue.onPress()
         edge_widget.changeEdgeWidgetColor('blue')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class PurpleButton():
@@ -477,16 +522,19 @@ class PurpleButton():
         purple = PurpleButton()
         purple.onPress()
         node_widget.changeNodeWidgetBackgroundColor('purple')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         purple = PurpleButton()
         purple.onPress()
         node_widget.changeNodeWidgetColor('purple')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         purple = PurpleButton()
         purple.onPress()
         edge_widget.changeEdgeWidgetColor('purple')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class GreenButton():
@@ -511,16 +559,19 @@ class GreenButton():
         green = GreenButton()
         green.onPress()
         node_widget.changeNodeWidgetBackgroundColor('green')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         green = GreenButton()
         green.onPress()
         node_widget.changeNodeWidgetColor('green')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         green = GreenButton()
         green.onPress()
         edge_widget.changeEdgeWidgetColor('green')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
 
 
 class PinkButton():
@@ -545,13 +596,16 @@ class PinkButton():
         pink = PinkButton()
         pink.onPress()
         node_widget.changeNodeWidgetBackgroundColor('pink')
+        globals.popUpWidget.ids.nodeWidgetBackground_lbl.bcolor = globals.popUpWidget.getNodeWidgetBackgroundColor()
 
     def dropdown2(self):
         pink = PinkButton()
         pink.onPress()
         node_widget.changeNodeWidgetColor('pink')
+        globals.popUpWidget.ids.nodeWidgetColor_lbl.bcolor = globals.popUpWidget.getNodeWidgetColor()
 
     def dropdown3(self):
         pink = PinkButton()
         pink.onPress()
         edge_widget.changeEdgeWidgetColor('pink')
+        globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
