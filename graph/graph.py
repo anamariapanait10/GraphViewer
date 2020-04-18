@@ -63,7 +63,7 @@ class Graph:
                 if (edg.dest == destId):
                     e = edg
 
-        return e;
+        return e
 
     def addNode(self, nodeId): # exists variable tells me if the node existed before calling this method
         """This method adds a node to the graph.
@@ -181,4 +181,19 @@ class Graph:
 
             print()
         print()
+
+    def edgeExists(self, sourceId, destId):
+        """This method returns True if an edge exists between sourceId and destId"""
+
+        source = self.getNodeById(sourceId)
+
+        e = None
+        for edg in source.neighbors:
+            if (edg.dest == destId):
+                e = edg
+
+        if e:
+            return True
+
+        return False
 

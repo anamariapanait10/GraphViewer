@@ -38,8 +38,8 @@ class EdgeWidget(Widget):
         n1 = globals.graphManager.getNodeWidgetById(self.node1.nr)
         n2 = globals.graphManager.getNodeWidgetById(self.node2.nr)
 
-        self.points = [self.node1.pos[0] + self.node1.size[0] / 2, self.node1.pos[1] + self.node1.size[1] / 2,
-                       self.node2.pos[0] + self.node2.size[0] / 2, self.node2.pos[1] + self.node2.size[1] / 2]
+        self.points = [n1.pos[0] + n1.size[0] / 2, n1.pos[1] + n1.size[1] / 2,
+                       n2.pos[0] + n2.size[0] / 2, n2.pos[1] + n2.size[1] / 2]
 
 
 

@@ -34,14 +34,14 @@ class GraphManager:
                 break
         return nd
 
-    def deleteNodeWidgetById(self, nodeId):
+    def deleteNodeWidgetById(self, nodeId): # functia doar scoate din lista nodeWidgets nodul cu idul nodeId
         for nodeWidget in self.nodeWidgets[:]:
             if nodeWidget.nr == nodeId:
                 self.nodeWidgets.remove(nodeWidget)
                 break
 
     def deleteNodeWidget(self, x1, y1): # the x and y are the coordinates of the touch and if they collide with a node, it will be deleted
-        for nodeWidget in self.nodeWidgets:
+        for nodeWidget in self.nodeWidgets[:]:
             x2 = nodeWidget.pos[0]
             y2 = nodeWidget.pos[1]
             dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
@@ -51,7 +51,7 @@ class GraphManager:
                 self.nodeWidgets.remove(nodeWidget)
 
     def deleteEdgeWidget(self, x, y): # the x and y are the coordinates of the touch and if they collide with an edge, it will be deleted
-        for edgeWidget in self.edgeWidgets:
+        for edgeWidget in self.edgeWidgets[:]:
             if edgeWidget.collide_point(x, y):
                 self.mainViewWidget.ids.graph_canvas.remove(edgeWidget)
                 self.graph.removeEdge(edgeWidget.node1.nr, edgeWidget.node2.nr)
@@ -154,13 +154,18 @@ class GraphManager:
 
     def update_canvas(self):
         self.mainViewWidget.ids.graph_canvas.clear_widgets()
+
         for edge in self.edgeWidgets:
             self.mainViewWidget.ids.graph_canvas.add_widget(edge)
-        for node in self.nodeWidgets:
+
+
+        for node in self.nodeWidgets[:]:
             self.deleteNodeWidgetById(node.nr)
-            new_node = self.updateColorNodeWidget(node)
+            new_node = node_widget.NodeWidget(node.nr, [node.pos[0], node.pos[1]])
+            new_node.setBackgroundColor()
+            new_node.setColor()
             new_node.setLabelId(node.nr)
-            del node
+            # del node
             self.nodeWidgets.append(new_node)
             self.mainViewWidget.ids.graph_canvas.add_widget(new_node)
 
@@ -168,8 +173,8 @@ class GraphManager:
                                         #  the nodeWidget does not overlap the other nodeWidgets
         # boundary coordonates for spawning the nodes
         coords = [10, 10,
-                  self.mainViewWidget.ids.graph_canvas.size[0] - 50,
-                  self.mainViewWidget.ids.graph_canvas.size[1] - 50]
+                  int(self.mainViewWidget.ids.graph_canvas.size[0] - 50),
+                  int(self.mainViewWidget.ids.graph_canvas.size[1] - 50)]
 
         while(True):    # TODO= Put a boundary...
             x1 = random.randrange(coords[0], coords[2])
@@ -186,12 +191,6 @@ class GraphManager:
 
             if GoodCoords == True:
                 return [x1, y1]
-
-    def updateColorNodeWidget(self, node):
-        new_node = node_widget.NodeWidget(node.id, [node.pos[0], node.pos[1]])
-        new_node.setBackgroundColor()
-        new_node.setColor()
-        return new_node
 
     def addNodeWidget(self, nodeId):
 
@@ -262,3 +261,15 @@ class GraphManager:
 
     def addNodeFromDrawing(self, node):
         self.nodeWidgets.append(node)
+
+    def randomizePositions(self):
+        coords = [10, 10,
+                  int(self.mainViewWidget.ids.graph_canvas.size[0] - 50),
+                  int(self.mainViewWidget.ids.graph_canvas.size[1] - 50)]
+        for v in self.nodeWidgets:
+            x1 = random.randrange(coords[0], coords[2])
+            y1 = random.randrange(coords[1], coords[3])
+
+            v.pos = [x1, y1]
+
+        self.update_canvas()

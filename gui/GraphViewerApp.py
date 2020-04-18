@@ -9,59 +9,84 @@ from kivy.config import Config
 from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
-
-
+from kivy.clock import Clock
+from datetime import datetime
 
 #kivy.require('2.0.0')
 
+def millis():
+    return datetime.now().microsecond / 1000
 
 lastInputText = ""
 
+def isOnNode(touch):
+    for nodeWidget in globals.graphManager.nodeWidgets:
+        x2 = nodeWidget.pos[0] + globals.radiusOfNodeWidget / 2 + globals.mainViewWidget.ids.graph_canvas.pos[0]
+        y2 = nodeWidget.pos[1] + globals.radiusOfNodeWidget / 2 + globals.mainViewWidget.ids.graph_canvas.pos[1]
+        dist = sqrt((x2 - touch.pos[0]) ** 2 + (y2 - touch.pos[1]) ** 2)
+        if dist <= globals.radiusOfNodeWidget:
+            return True
+
+    return False
+
 class MainViewWidget(Widget):
+
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
             if touch.is_double_tap:
-                globals.graphManager.deleteNodeWidget(touch.pos[0], touch.pos[1])
-                globals.graphManager.deleteEdgeWidget(touch.pos[0], touch.pos[1])
+                self.on_double_press(touch)
             else:
-                nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
-                ny = touch.pos[1] -  self.ids.graph_canvas.pos[1] - 25
-
-                # print("nx =" + str(nx) + " ny = " + str(ny))
-
-                if nx < 9:
-                    nx = 9
-
-                if ny < 8:
-                    ny = 8
-
-                if nx > self.ids.graph_canvas.size[0] - 55:
-                    nx = self.ids.graph_canvas.size[0] - 55
-
-                if ny > self.ids.graph_canvas.size[1] - 55:
-                    ny = self.ids.graph_canvas.size[1] - 55
-
-                n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
-                self.ids.graph_canvas.add_widget(n)
-
-                text = self.ids.input_nodes.text
-                length = len(text)
-                if text != "" and text[length - 1] == '\n':
-                    while text[length - 1] == '\n':
-                        text = text[:length-1]
-                        length -= 1
-                    self.ids.input_nodes.text = text + "\n" + str(n.nr)
-                else:
-                    if text == "":
-                        self.ids.input_nodes.text = str(n.nr)
-                    else:
-                        self.ids.input_nodes.text += "\n" + str(n.nr)
-
-                globals.graphManager.addNodeFromDrawing(n)
-                return True
+                if not isOnNode(touch):
+                    self.on_single_press(touch)
         else:
             return super().on_touch_up(touch)
+
+
+    def on_double_press(self, touch):
+        globals.graphManager.deleteNodeWidget(touch.pos[0], touch.pos[1])
+        globals.graphManager.deleteEdgeWidget(touch.pos[0], touch.pos[1])
+        globals.graphManager.update_canvas()
+        print("Double press")
+
+    def on_single_press(self, touch):
+
+        print("Single press")
+        nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
+        ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
+
+        # print("nx =" + str(nx) + " ny = " + str(ny))
+
+        if nx < 9:
+            nx = 9
+
+        if ny < 8:
+            ny = 8
+
+        if nx > self.ids.graph_canvas.size[0] - 55:
+            nx = self.ids.graph_canvas.size[0] - 55
+
+        if ny > self.ids.graph_canvas.size[1] - 55:
+            ny = self.ids.graph_canvas.size[1] - 55
+
+        n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
+        self.ids.graph_canvas.add_widget(n)
+
+        text = self.ids.input_nodes.text
+        length = len(text)
+        if text != "" and text[length - 1] == '\n':
+            while text[length - 1] == '\n':
+                text = text[:length - 1]
+                length -= 1
+            self.ids.input_nodes.text = text + "\n" + str(n.nr)
+        else:
+            if text == "":
+                self.ids.input_nodes.text = str(n.nr)
+            else:
+                self.ids.input_nodes.text += "\n" + str(n.nr)
+
+        globals.graphManager.addNodeFromDrawing(n)
+        recalculatePositions()
 
     def keyIsEnter(self, text):
         if text[len(text)-1] == '\n':   # Trebuie adaugat si spatiile/enterurile de la mijolc
@@ -74,9 +99,13 @@ class MainViewWidget(Widget):
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
                 globals.graphManager.parse_graph_data(text)
-              #  recalculatePositions()
+                recalculatePositions()
 
                 lastInputText = text
+
+    # def updateForces(self):
+    #     for i in range(5):
+    #         update()
 
 
 class LabelB(Label):

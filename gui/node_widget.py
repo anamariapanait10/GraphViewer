@@ -72,7 +72,7 @@ class NodeWidget(Widget):
         self.pos = pos
         self.nr = nr  # this is the id of the node
         self.nodeId = str(nr)
-        self.force = (0, 0)
+        self.force = [0, 0]
         self.backgroundColor = backgroundColor
         self.color = color
 
@@ -81,10 +81,10 @@ class NodeWidget(Widget):
         self.ids.nodeId_lbl.text = str(nodeId)
 
     def setBackgroundColor(self):
-        self.backgroundColor = globals.popUpWidget.getNodeWidgetColor()
+        self.backgroundColor = globals.NodeWidgetBackgroundColor
 
     def setColor(self):
-        self.color = globals.popUpWidget.getNodeWidgetBackgroundColor()
+        self.color = globals.NodeWidgetColor
 
     def on_touch_down(self, touch):
         pass
