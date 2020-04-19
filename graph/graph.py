@@ -182,18 +182,5 @@ class Graph:
             print()
         print()
 
-    def edgeExists(self, sourceId, destId):
-        """This method returns True if an edge exists between sourceId and destId"""
-
-        source = self.getNodeById(sourceId)
-
-        e = None
-        for edg in source.neighbors:
-            if (edg.dest == destId):
-                e = edg
-
-        if e:
-            return True
-
         return False
 

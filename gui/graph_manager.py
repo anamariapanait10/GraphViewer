@@ -1,7 +1,7 @@
 from graph import graph
 from graph.graph_exception import GraphException
 import random
-from  math import sqrt
+from math import sqrt
 from gui import node_widget
 from gui import edge_widget
 from gui import globals
@@ -40,6 +40,12 @@ class GraphManager:
                 self.nodeWidgets.remove(nodeWidget)
                 break
 
+    def deleteEdgeWidgetById(self, node1Id, node2Id):
+        for edgeWidget in self.edgeWidgets[:]:
+            if edgeWidget.node1.nr == node1Id and edgeWidget.node2.nr == node2Id:
+                self.edgeWidgets.remove(edgeWidget)
+                break
+
     def deleteNodeWidget(self, x1, y1): # the x and y are the coordinates of the touch and if they collide with a node, it will be deleted
         for nodeWidget in self.nodeWidgets[:]:
             x2 = nodeWidget.pos[0]
@@ -72,58 +78,22 @@ class GraphManager:
     def getIsDirected(self):
         return self.isDirected
 
-    def isIsolatedNode(self,  text):    # returns -1 for invalid format, 0 it it is not isolated and the id if it is
-        finished = False
-        for index in range(len(text)):
-            if text[index].isdigit():
-                if finished == False:
-                    number = int(text[index])
-                    index += 1
-                    while index < len(text) and text[index].isdigit():
-                        number = number * 10 + int(text[index])
-                        index += 1
-                    finished  = True
-                else:   #it it finds another number then it is not isolated
-                    return 0
-            elif text[index] != ' ' and text[index] != '\n':
-                return -1
 
-        if finished == True:
-            return number
+    def interpretLine(self, text):  # returns -1 for invalid syntax
+                                    # and a list otherwise:
+                                    # [nodeId] for isolated nodes
+                                    # [node1Id, node2Id] for unweighted edge
+                                    # [nodeId, node2Id, cost] for weighted edge
 
-
-    def isEdgeWithoutWeight(self, text):    # returns -1 for invalid sintax, 0 if it is not an edge without weight
-        foundSource = False
-        foundDest = False
-        for index in range(len(text)):
-            if text[index].isdigit():
-                if foundSource == False:
-                    source = int(text[index])
-                    index += 1
-                    while index < len(text) and text[index].isdigit():
-                        source = source * 10 + int(text[index])
-                        index += 1
-                    foundSource = True
-                elif foundDest == False:
-                    dest = int(text[index])
-                    index += 1
-                    while index < len(text) and text[index].isdigit():
-                        dest = dest * 10 + int(text[index])
-                        index += 1
-                    foundDest = True
-                else:
-                    return 0
-            elif text[index] != ' ' and text[index] != '\n':
-                return -1
-
-        return [source, dest]
-
-    def isWeightedEdge(self, text):
         foundSource = False
         foundDest = False
         foundCost = False
-        for index in range(len(text)):
+        index = 0
+
+        while index < len(text):
+
             if text[index].isdigit():
+
                 if foundSource == False:
                     source = int(text[index])
                     index += 1
@@ -131,6 +101,7 @@ class GraphManager:
                         source = source * 10 + int(text[index])
                         index += 1
                     foundSource = True
+
                 elif foundDest == False:
                     dest = int(text[index])
                     index += 1
@@ -138,6 +109,7 @@ class GraphManager:
                         dest = dest * 10 + int(text[index])
                         index += 1
                     foundDest = True
+
                 elif foundCost == False:
                     cost = int(text[index])
                     index += 1
@@ -145,22 +117,41 @@ class GraphManager:
                         cost = cost * 10 + int(text[index])
                         index += 1
                     foundDest = True
+
                 else:
                     return -1
+
             elif text[index] != ' ' and text[index] != '\n':
                 return -1
 
-        return [source, dest, cost]
+            else:
+                index += 1
+
+        if foundSource == False: # if the condition is True, then it is an empty line
+            return []   #TODO: deal with this case
+        elif foundSource == True and foundDest == False: # if the condition is True, then it is an isolated node
+            return [source]
+        elif foundCost == False:  # if the condition is True, then it is an unweighted edge
+            return [source, dest]
+        else:    # if the condition is True, then it is an weighted edge
+            return [source, dest, cost]
+
 
     def update_canvas(self):
         self.mainViewWidget.ids.graph_canvas.clear_widgets()
 
-        for edge in self.edgeWidgets:
+        for edge in self.edgeWidgets[:]:
+            #self.deleteEdgeWidgetById(edge.node1.nr, edge.node2.nr) # this method only removes the edge from de edgeWidgets list
+            #new_edge = edge_widget.EdgeWidget(edge.node1, edge.node2)
+            edge.setEdgeWidgetColor()
+            # del edge
+            #self.edgeWidgets.append(new_edge)
+            #self.mainViewWidget.ids.graph_canvas.add_widget(new_edge)
             self.mainViewWidget.ids.graph_canvas.add_widget(edge)
 
 
         for node in self.nodeWidgets[:]:
-            self.deleteNodeWidgetById(node.nr)
+            self.deleteNodeWidgetById(node.nr) # this method only removes the node from de nodeWidgets list
             new_node = node_widget.NodeWidget(node.nr, [node.pos[0], node.pos[1]])
             new_node.setBackgroundColor()
             new_node.setColor()
@@ -218,10 +209,10 @@ class GraphManager:
             self.edgeWidgets.append(edgeWidget)
 
     def parse_graph_data(self, data):
-        """Data is a string in the format "node_1_Id node_2_Id" which holds all the necessary data for creating the graph."""
+        """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
 
         if data != "":
-            lines = data.split('\n') # edges or isolated nodes
+            lines = data.split('\n')
             self.graph = graph.Graph(self.isDirected)
             self.nodeWidgets = []
             self.edgeWidgets = []
@@ -230,31 +221,20 @@ class GraphManager:
                 for line in lines:
                     if line != "":
 
-                        node = self.isIsolatedNode(line)
+                        value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
+                                             # an empty string or invalid sintax
+                                             # see function description for more information
 
-                        if  node != 0 and node != -1:
-                            self.addNodeWidget(node)
-
-                        elif node == 0:
-                            edge = self.isEdgeWithoutWeight(line)
-
-                            if edge != -1 and edge != 0:
-                                self.addWidgetEdge(edge[0], edge[1])
-
-                            elif edge == 0:
-                                edge = self.isWeightedEdge(line)
-
-                                if edge != -1:
-                                    self.addWidgetEdge(edge[0], edge[1], edge[2])
-
-                                else:
-                                    raise GraphException("Invalid format for the adjacency list!")
-
-                            else:
-                                raise GraphException("Invalid format for the adjacency list!")
-
-                        else:
+                        if value == -1:
                             raise GraphException("Invalid format for the adjacency list!")
+                        elif len(value) == 0:
+                            pass
+                        elif len(value) == 1:
+                            self.addNodeWidget(value[0])
+                        elif len(value) == 2:
+                            self.addWidgetEdge(value[0], value[1])
+                        elif len(value) == 3:
+                            self.addWidgetEdge(value[0], value[1], value[2])
 
         self.update_canvas()
         self.graph.printGraph()

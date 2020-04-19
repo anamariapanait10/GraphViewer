@@ -24,6 +24,7 @@ class EdgeWidget(Widget):
         self.cost = cost
         self.node1 = node1
         self.node2 = node2
+        self.color = globals.EdgeWidgetColor
 
     def getIsDirected(self):
         return globals.graphManager.getIsDirected()
@@ -45,6 +46,9 @@ class EdgeWidget(Widget):
 
     def getEdgeWidgetColor(self):
         return globals.EdgeWidgetColor
+
+    def setEdgeWidgetColor(self):
+        self.color = globals.EdgeWidgetColor
 
     def getEdgeLength(self):
         return globals.lengthOfEdgeWidget

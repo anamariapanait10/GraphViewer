@@ -16,13 +16,13 @@ def dist(u, v):
     return sqrt((v.pos[0] - u.pos[0]) ** 2 + (v.pos[1] - u.pos[1]) ** 2)
 
 def __calculateForces():
-    # for v in graphManager.nodeWidgets:
+
     nodeWidgets = globals.graphManager.getNodeWidgetList()
     for v in nodeWidgets:
         v.force = [0, 0]
 
     for v in nodeWidgets:
-        # for u in graphManager.nodeWidgets:
+
         for u in nodeWidgets:
             if v != u:
                 d = dist(u, v)
@@ -46,7 +46,7 @@ def __calculateForces():
 
 
 def __moveNodes():
-    # for v in graphManager.nodeWidgets:
+
     nodeWidgets = globals.graphManager.getNodeWidgetList()
 
     for v in nodeWidgets:

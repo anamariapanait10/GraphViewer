@@ -21,24 +21,45 @@ lastInputText = ""
 
 def isOnNode(touch):
     for nodeWidget in globals.graphManager.nodeWidgets:
-        x2 = nodeWidget.pos[0] + globals.radiusOfNodeWidget / 2 + globals.mainViewWidget.ids.graph_canvas.pos[0]
-        y2 = nodeWidget.pos[1] + globals.radiusOfNodeWidget / 2 + globals.mainViewWidget.ids.graph_canvas.pos[1]
+        x2 = nodeWidget.pos[0] + globals.radiusOfNodeWidget + globals.mainViewWidget.ids.graph_canvas.pos[0]
+        y2 = nodeWidget.pos[1] + globals.radiusOfNodeWidget + globals.mainViewWidget.ids.graph_canvas.pos[1]
         dist = sqrt((x2 - touch.pos[0]) ** 2 + (y2 - touch.pos[1]) ** 2)
         if dist <= globals.radiusOfNodeWidget:
-            return True
+            return nodeWidget
 
-    return False
+    return None
 
 class MainViewWidget(Widget):
 
+    grabedNode = None
+
+    def on_touch_down(self, touch):
+        if self.ids.graph_canvas.collide_point(*touch.pos):
+            self.grabedNode = isOnNode(touch)
+            if self.grabedNode != None:
+                touch.grab(self)
+                return True
+        else:
+            return super().on_touch_down(touch)
+
+    def on_touch_move(self, touch):
+        if  self.ids.graph_canvas.collide_point(*touch.pos) and touch.grab_current is self:
+            self.ids.graph_canvas.remove_widget(self.grabedNode)
+            self.grabedNode.pos = [touch.pos[0] - globals.radiusOfNodeWidget, touch.pos[1] - globals.radiusOfNodeWidget]
+            self.ids.graph_canvas.add_widget(self.grabedNode)
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
+
+            if touch.grab_current is self:
+                touch.ungrab(self)
+
             if touch.is_double_tap:
                 self.on_double_press(touch)
             else:
                 if not isOnNode(touch):
                     self.on_single_press(touch)
+
         else:
             return super().on_touch_up(touch)
 
@@ -47,11 +68,11 @@ class MainViewWidget(Widget):
         globals.graphManager.deleteNodeWidget(touch.pos[0], touch.pos[1])
         globals.graphManager.deleteEdgeWidget(touch.pos[0], touch.pos[1])
         globals.graphManager.update_canvas()
-        print("Double press")
+        # print("Double press")
 
     def on_single_press(self, touch):
 
-        print("Single press")
+        # print("Single press")
         nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
         ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
 
@@ -109,7 +130,7 @@ class MainViewWidget(Widget):
 
 
 class LabelB(Label):
-  bcolor = ListProperty([1,1,1,1])
+    bcolor = ListProperty([1,1,1,1])
 
 
 class GraphViewerApp(App):

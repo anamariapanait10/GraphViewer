@@ -307,6 +307,7 @@ class WhiteButton():
         white.onPress()
         edge_widget.changeEdgeWidgetColor('white')
         globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
+        globals.graphManager.update_canvas()
 
 
 class BlackButton():
@@ -352,7 +353,7 @@ class BlackButton():
         black.onPress()
         edge_widget.changeEdgeWidgetColor('black')
         globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
-
+        globals.graphManager.update_canvas()
 
 class RedButton():
 
@@ -389,6 +390,8 @@ class RedButton():
         red.onPress()
         edge_widget.changeEdgeWidgetColor('red')
         globals.popUpWidget.ids.edgeWidgetColor_lbl.bcolor = globals.popUpWidget.getEdgeWidgetColor()
+        globals.graphManager.update_canvas()
+
 
 class YellowButton():
 
