@@ -1,4 +1,3 @@
-from graph.graph import Graph
 from gui.GraphViewerApp import GraphViewerApp
 
 

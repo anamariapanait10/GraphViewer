@@ -1,15 +1,13 @@
 #import kivy
 from kivy.app import App
 from kivy.uix.widget import Widget
-from gui.graph_manager import GraphManager
-from gui.force_layout import *
-from gui import node_widget
+from graph.graph_manager import GraphManager
+from graph.force_layout import *
 from gui.buttons_behavior import *
 from kivy.config import Config
 from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
-from kivy.clock import Clock
 from datetime import datetime
 
 #kivy.require('2.0.0')
@@ -65,14 +63,15 @@ class MainViewWidget(Widget):
 
 
     def on_double_press(self, touch):
-        globals.graphManager.deleteNodeWidget(touch.pos[0], touch.pos[1])
-        globals.graphManager.deleteEdgeWidget(touch.pos[0], touch.pos[1])
+        nodeToBeDeletedFromText = globals.graphManager.deleteNodeWidgetByCoords(touch.pos[0], touch.pos[1])
+        globals.graphManager.deleteEdgeWidgetByCoords(touch.pos[0], touch.pos[1])
         globals.graphManager.update_canvas()
-        # print("Double press")
+        globals.graphManager.update_text(globals.mainViewWidget.ids.input_nodes.text, nodeToBeDeletedFromText)
+        print("Double press")
 
     def on_single_press(self, touch):
 
-        # print("Single press")
+        print("Single press")
         nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
         ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
 
@@ -99,12 +98,12 @@ class MainViewWidget(Widget):
             while text[length - 1] == '\n':
                 text = text[:length - 1]
                 length -= 1
-            self.ids.input_nodes.text = text + "\n" + str(n.nr)
+            self.ids.input_nodes.text = text + "\n" + str(n.Id)
         else:
             if text == "":
-                self.ids.input_nodes.text = str(n.nr)
+                self.ids.input_nodes.text = str(n.Id)
             else:
-                self.ids.input_nodes.text += "\n" + str(n.nr)
+                self.ids.input_nodes.text += "\n" + str(n.Id)
 
         globals.graphManager.addNodeFromDrawing(n)
         recalculatePositions()
@@ -130,7 +129,7 @@ class MainViewWidget(Widget):
 
 
 class LabelB(Label):
-    bcolor = ListProperty([1,1,1,1])
+    bcolor = ListProperty(globals.colors['white'])
 
 
 class GraphViewerApp(App):
@@ -140,7 +139,7 @@ class GraphViewerApp(App):
         self.icon = '../GraphViewer/images/Sigla.png'    # set the app icon
 
         globals.mainViewWidget = MainViewWidget()
-        globals.graphManager = GraphManager(False, globals.mainViewWidget)
+        globals.graphManager = GraphManager(False)
         globals.mainViewWidget.ids.input_nodes.bind(text=globals.mainViewWidget.text_event)
 
         dropdown = AlgDropDownList()
@@ -169,9 +168,9 @@ class GraphViewerApp(App):
 
         globals.mainViewWidget.ids.settings_btn.bind(on_release=SettingsButton.on_release)
 
-        globals.NodeWidgetBackgroundColor = [0.9, 0.9, 0.9, 1]
-        globals.NodeWidgetColor = [0, 0, 0, 1]
-        globals.EdgeWidgetColor = [0, 0, 0, 1]
+        globals.NodeWidgetBackgroundColor = globals.colors['white'] # it used to be [0.9, 0.9, 0.9, 1]
+        globals.NodeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
+        globals.EdgeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
 
         Factory.register('KivyB', module='LabelB')
 
