@@ -11,7 +11,7 @@ class SettingsButton(ButtonBehavior):
 
     def on_release(self):
         globals.popupWidget = popup_widget.PopupWidget()
-        globals.popupWindow = Popup(title="Settings", content=globals.popupWidget, size_hint=(None, None), size=(450, 425))
+        globals.popupWindow = Popup(title="Settings", content=globals.popupWidget, size_hint=(None, None), size=(450, 425), auto_dismiss=False)
         globals.popupWindow.open()
 
         dropdown1 = ChangeColorDropDownList()
@@ -124,6 +124,7 @@ class ListOfEdgesButton(ButtonBehavior):
             globals.adjacencyListBtn = False
             globals.adjacencyMatrixBtn = False
             globals.costMatrixBtn = False
+            globals.mainViewWidget.ids.input_nodes.hint_text = "node1Id  node2Id\nnode3Id  node4Id"
 
 
 class AdjacencyListButton(ButtonBehavior):

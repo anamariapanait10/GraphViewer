@@ -148,7 +148,7 @@ class GraphManager:
 
         globals.mainViewWidget.ids.graph_canvas.clear_widgets()
 
-        for edge in self.edgeWidgets[:]:
+        for edge in self.edgeWidgets:
             #self.deleteEdgeWidgetById(edge.node1.Id, edge.node2.Id) # this method only removes the edge from de edgeWidgets list
             #new_edge = edge_widget.EdgeWidget(edge.node1, edge.node2)
             #new_edge.updateEdgeWidgetColor()
@@ -156,7 +156,7 @@ class GraphManager:
             #self.edgeWidgets.append(new_edge)
            # globals.mainViewWidget.ids.graph_canvas.add_widget(new_edge)
             if self.isDirected == True:
-                edge.ids.triangle.points = edge.getTrianglePoints()
+                edge.trianglePoints = edge.getTrianglePoints()
             globals.mainViewWidget.ids.graph_canvas.add_widget(edge)
 
 

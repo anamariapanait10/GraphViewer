@@ -34,8 +34,7 @@
                points: self.points
                width: 1.5
           Triangle:
-               id: triangle
-               points: [0, 0, 0, 0, 0, 0]
+               points: self.trianglePoints
 
 <LabelB>:
      bcolor: 1, 1, 1, 1
@@ -321,7 +320,7 @@
           BoxLayout:
                orientation: 'vertical'
                size_hint_y: None
-               height: 50
+               height: 70
                 # If you put something here it will appear above the slider
 
                GridLayout:
@@ -360,12 +359,7 @@
                          orientation: 'horizontal'
 
                          AnchorLayout:
-                              #cols: 2
-                              #rows: 1
                               anchor_x: 'right'
-                              #row_default_height: 40
-                              #row_force_default: True
-
 
                               GridLayout:
                                    rows: 1
@@ -393,6 +387,8 @@
 
                Splitter:
                     sizable_from: 'right'
+                    min_size: 200
+                    max_size: 600
 
                     BoxLayout:
                          orientation: 'vertical'
@@ -437,27 +433,24 @@
                                    orientation: 'vertical'
                                    #spacing: 50
                                    padding: [10, 0, 10, 20]
-                                   size_hint_y: None
-                                   height: 200
+                                   #size_hint_y: None
+                                   height: 70
 
                                    Label:
-                                        padding: [20, 20]
                                         id: draw_lbl
+                                        padding: [20, 20]
                                         text:'Tap to add nodes, \nDouble top to remove nodes'
+                                        text_size: self.size
+                                        size_hint_y: None
                                         color: 0, 0, 0, 1
 
                                    Button:
                                         id: fix_nodes
                                         padding: [20, 20]
+                                        size_hint_y: None
                                         size: 100, 40
                                         background_color: 1, 1, 1, 1
                                         text: 'Fix nodes'
-
-                                   #Button:
-                                   #     padding: [20, 20]
-                                   #     size: 100, 40
-                                   #     background_color: 1, 1, 1, 1
-                                   #     text: 'Tree'
 
 
 
