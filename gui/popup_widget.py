@@ -13,6 +13,9 @@ class PopupWidget(GridLayout):
         self.ids.nodeRadius_lbl.text = str(int(args[1]))
         node_widget.changeNodeRadius(int(args[1]))
         self.ids.radiusSlider.value = int(args[1])
+        globals.graphManager.update_canvas()
+        for edge in globals.graphManager.edgeWidgets:
+            edge.updateCoords()
 
     def new_length(self, *args):
         self.ids.edgeLength_lbl.text = str(int(args[1]))

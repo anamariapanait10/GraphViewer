@@ -29,34 +29,38 @@ def isOnNode(touch):
 
 class MainViewWidget(Widget):
 
-    grabedNode = None
+    grabbedNode = None
 
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            self.grabedNode = isOnNode(touch)
-            if self.grabedNode != None:
+            print("Touch down")
+            self.grabbedNode = isOnNode(touch)
+            if self.grabbedNode != None:
                 touch.grab(self)
                 return True
         else:
             return super().on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        if  self.ids.graph_canvas.collide_point(*touch.pos) and touch.grab_current is self:
-            self.ids.graph_canvas.remove_widget(self.grabedNode)
-            self.grabedNode.pos = [touch.pos[0] - globals.radiusOfNodeWidget, touch.pos[1] - globals.radiusOfNodeWidget]
-            self.ids.graph_canvas.add_widget(self.grabedNode)
+        if self.ids.graph_canvas.collide_point(*touch.pos) and touch.grab_current is self:
+            # self.ids.graph_canvas.remove_widget(self.grabedNode)
+            self.grabbedNode.pos = [touch.pos[0] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[0],
+                                   touch.pos[1] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[1]]
+            # self.ids.graph_canvas.add_widget(self.grabedNode)
+            recalculatePositions(gn=self.grabbedNode.Id)
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-
+            print("Touch Up")
             if touch.grab_current is self:
                 touch.ungrab(self)
-
-            if touch.is_double_tap:
-                self.on_double_press(touch)
+                recalculatePositions()
             else:
-                if not isOnNode(touch):
-                    self.on_single_press(touch)
+                if touch.is_double_tap:
+                    self.on_double_press(touch)
+                else:
+                    if not isOnNode(touch):
+                        self.on_single_press(touch)
 
         else:
             return super().on_touch_up(touch)

@@ -20,8 +20,12 @@ class EdgeWidget(Widget):
 
     def __init__(self, node1, node2, cost=0): # the nodes are NodeWidget objects
         super().__init__()
-        self.points = [node1.pos[0] + node1.size[0] / 2, node1.pos[1] + node1.size[1] / 2,
-                       node2.pos[0] + node2.size[0] / 2, node2.pos[1] + node2.size[1] / 2]
+        '''self.points = [node1.pos[0] + node1.size[0] / 2, node1.pos[1] + node1.size[1] / 2,
+                       node2.pos[0] + node2.size[0] / 2, node2.pos[1] + node2.size[1] / 2]'''
+
+        self.points = [node1.pos[0] + globals.radiusOfNodeWidget / 2, node1.pos[1] + globals.radiusOfNodeWidget / 2,
+                       node2.pos[0] + globals.radiusOfNodeWidget / 2, node2.pos[1] + globals.radiusOfNodeWidget / 2]
+
         self.node1 = node1
         self.node2 = node2
         self.cost = cost
@@ -42,8 +46,8 @@ class EdgeWidget(Widget):
         nodeWidget1 = globals.graphManager.getNodeWidgetById(self.node1.Id)
         nodeWidget2 = globals.graphManager.getNodeWidgetById(self.node2.Id)
 
-        self.points = [nodeWidget1.pos[0] + nodeWidget1.size[0] / 2, nodeWidget1.pos[1] + nodeWidget1.size[1] / 2,
-                       nodeWidget2.pos[0] + nodeWidget2.size[0] / 2, nodeWidget2.pos[1] + nodeWidget2.size[1] / 2]
+        self.points = [nodeWidget1.pos[0] + globals.radiusOfNodeWidget / 2, nodeWidget1.pos[1] + globals.radiusOfNodeWidget / 2,
+                       nodeWidget2.pos[0] + globals.radiusOfNodeWidget / 2, nodeWidget2.pos[1] + globals.radiusOfNodeWidget / 2]
 
 
     def getEdgeWidgetColor(self):

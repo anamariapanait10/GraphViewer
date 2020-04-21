@@ -77,6 +77,11 @@ class ListOfEdgesButton(ButtonBehavior):
             globals.inputDropDownList.ids.adjacencyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.inputDropDownList.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.listOfEdgesBtn = True
+            globals.adjacencyListBtn = False
+            globals.adjacencyMatrixBtn = False
+            globals.costMatrixBtn = False
+
 
 class AdjacencyListButton(ButtonBehavior):
 
@@ -91,6 +96,11 @@ class AdjacencyListButton(ButtonBehavior):
             globals.inputDropDownList.ids.adjacencyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.inputDropDownList.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.listOfEdgesBtn = False
+            globals.adjacencyListBtn = True
+            globals.adjacencyMatrixBtn = False
+            globals.costMatrixBtn = False
+            globals.mainViewWidget.ids.input_nodes.hint_text = "node: neighbor1, neighbor2, ..."
 
         else:   # if it is pressed
             globals.inputDropDownList.ids.adjacencyList_btn.background_normal: ''
@@ -113,6 +123,14 @@ class AdjacencyMatrixButton(ButtonBehavior):
             globals.inputDropDownList.ids.adjacencyList_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.inputDropDownList.ids.costMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.listOfEdgesBtn = False
+            globals.adjacencyListBtn = False
+            globals.adjacencyMatrixBtn = True
+            globals.costMatrixBtn = False
+            globals.mainViewWidget.ids.input_nodes.hint_text = "0 1 1 0\n" \
+                                                               "1 0 0 1\n" \
+                                                               "0 1 0 1\n" \
+                                                               "1 1 1 0"
 
         else:   # if it is pressed
             globals.inputDropDownList.ids.adjacencyMatrix_btn.background_normal: ''
@@ -135,6 +153,15 @@ class CostMatrixButton(ButtonBehavior):
             globals.inputDropDownList.ids.adjacencyList_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.inputDropDownList.ids.adjacencyMatrix_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.listOfEdgesBtn = False
+            globals.adjacencyListBtn = False
+            globals.adjacencyMatrixBtn = False
+            globals.costMatrixBtn = True
+
+            globals.mainViewWidget.ids.input_nodes.hint_text = "0 123 78 62\n" \
+                                                               "13 0 6 198\n" \
+                                                               "26 4 0 17\n" \
+                                                               "65 143 31 0"
 
         else:   # if it is pressed
             globals.inputDropDownList.ids.costMatrix_btn.background_normal: ''

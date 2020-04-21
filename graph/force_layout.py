@@ -35,6 +35,8 @@ c3 = 250
 c4 = 1
 M = 500
 
+grabbed_node = 0
+
 def dist(u, v):
     return sqrt((v.pos[0] - u.pos[0]) ** 2 + (v.pos[1] - u.pos[1]) ** 2)
 
@@ -58,14 +60,16 @@ def __calculateForces():
                 else:
                     F = -c3 / (d ** 2)
 
-                if globals.graphManager.isDirected: # ?
+                if globals.graphManager.isDirected or u.Id == grabbed_node or v.Id == grabbed_node: # ?
                     F *= 2
 
-                u.force[0] += F * cosinus
-                u.force[1] += F * sinus
+                if u.Id != grabbed_node:
+                    u.force[0] += F * cosinus
+                    u.force[1] += F * sinus
 
-                v.force[0] -= F * cosinus
-                v.force[1] -= F * sinus
+                if v.Id != grabbed_node:
+                    v.force[0] -= F * cosinus
+                    v.force[1] -= F * sinus
 
 
 def __moveNodes():
@@ -101,16 +105,20 @@ number = 0
 def update(arg=0):
     __calculateForces()
     __moveNodes()
-    globals.graphManager.update_canvas()
+    # globals.graphManager.update_canvas()
     global number
     number += 1
     if number >= M:
         Clock.unschedule(update)
         number = 0
+        global grabbed_node
+        grabbed_node = 0
 
 
-def recalculatePositions():
+def recalculatePositions(gn=0):
     #globals.graphManager.randomizePositions()
+    global grabbed_node
+    grabbed_node = gn
     Clock.schedule_interval(update, 0.001)
 
 

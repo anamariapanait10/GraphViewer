@@ -83,7 +83,7 @@ class GraphManager:
     def getIsDirected(self):
         return self.isDirected
 
-    def interpretLine(self, text):  # returns -1 for invalid syntax
+    def interpretLine(self, line):  # returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
                                     # [ nodeId ] for isolated nodes
                                     # [ node1Id, node2Id ] for unweighted edge
@@ -94,38 +94,38 @@ class GraphManager:
         foundCost = False
         index = 0
 
-        while index < len(text):
+        while index < len(line):
 
-            if text[index].isdigit():
+            if line[index].isdigit():
 
                 if foundSource == False:
-                    source = int(text[index])
+                    source = int(line[index])
                     index += 1
-                    while index < len(text) and text[index].isdigit():
-                        source = source * 10 + int(text[index])
+                    while index < len(line) and line[index].isdigit():
+                        source = source * 10 + int(line[index])
                         index += 1
                     foundSource = True
 
                 elif foundDest == False:
-                    dest = int(text[index])
+                    dest = int(line[index])
                     index += 1
-                    while index < len(text) and text[index].isdigit():
-                        dest = dest * 10 + int(text[index])
+                    while index < len(line) and line[index].isdigit():
+                        dest = dest * 10 + int(line[index])
                         index += 1
                     foundDest = True
 
                 elif foundCost == False:
-                    cost = int(text[index])
+                    cost = int(line[index])
                     index += 1
-                    while index < len(text) and text[index].isdigit():
-                        cost = cost * 10 + int(text[index])
+                    while index < len(line) and line[index].isdigit():
+                        cost = cost * 10 + int(line[index])
                         index += 1
                     foundDest = True
 
                 else:
                     return -1
 
-            elif text[index] != ' ' and text[index] != '\n':
+            elif line[index] != ' ' and line[index] != '\n':
                 return -1
 
             else:
@@ -225,7 +225,7 @@ class GraphManager:
                 return True
         return False
 
-    def addWidgetEdge(self, node1Id, node2Id, cost=0):
+    def addEdgeWidget(self, node1Id, node2Id, cost=0):
 
         if self.edgeAlreadyExists(node1Id, node2Id) == False:
 
@@ -235,6 +235,53 @@ class GraphManager:
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
             self.edgeWidgets.append(new_edgeWidget)
 
+    def interpretAdjacencyList(self, line):# returns -1 for invalid syntax
+                                    # and a list otherwise, in the following format:
+                                    # [ nodeId, [neighbor1, neighbor2, ...]]
+
+        foundNode = False
+        foundNeighbors = False
+        index = 0
+
+        while index < len(line):
+
+            if line[index].isdigit():
+
+                if foundNode == False:
+                    node = int(line[index])
+                    index += 1
+                    while index < len(line) and line[index].isdigit():
+                        node = node * 10 + int(line[index])
+                        index += 1
+                    foundNode = True
+
+                elif foundNeighbors == False:
+                    neighbors =[]
+                    while index < len(line):
+                        neighbor = int(line[index])
+                        index += 1
+                        if line[index].isDigit() == True:
+                            while index < len(line) and line[index].isdigit():
+                                neighbor = neighbor * 10 + int(line[index])
+                                index += 1
+                            index += 1
+
+
+            elif line[index] != ' ' and line[index] != '\n' and line[index] != ',':
+                return -1
+            else:
+                index += 1
+    """
+        if foundSource == False: # if the condition is True, then it is an empty line
+            return []
+        elif foundSource == True and foundDest == False: # if the condition is True, then it is an isolated node
+            return [source]
+        elif foundCost == False:  # if the condition is True, then it is an unweighted edge
+            return [source, dest]
+        else:    # if the condition is True, then it is an weighted edge
+            return [source, dest, cost]
+
+"""
     def parse_graph_data(self, data):
         """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
 
@@ -246,21 +293,30 @@ class GraphManager:
             if lines != None:
                 for line in lines:
                     if line != "":
+                        if globals.listOfEdgesBtn == True:
+                            value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
+                                                 # an empty string or invalid sintax
+                                                 # see function description for more information
 
-                        value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
-                                             # an empty string or invalid sintax
-                                             # see function description for more information
+                            if value == -1:
+                                raise GraphException("Invalid format for the adjacency list!")
+                            elif len(value) == 0:
+                                pass
+                            elif len(value) == 1:
+                                self.addNodeWidget(value[0])
+                            elif len(value) == 2:
+                                self.addEdgeWidget(value[0], value[1])
+                            elif len(value) == 3:
+                                self.addEdgeWidget(value[0], value[1], value[2])
 
-                        if value == -1:
-                            raise GraphException("Invalid format for the adjacency list!")
-                        elif len(value) == 0:
+                        elif globals.adjacencyListBtn == True:
                             pass
-                        elif len(value) == 1:
-                            self.addNodeWidget(value[0])
-                        elif len(value) == 2:
-                            self.addWidgetEdge(value[0], value[1])
-                        elif len(value) == 3:
-                            self.addWidgetEdge(value[0], value[1], value[2])
+                            # value = self.interpretAdjacencyList(line)
+
+                        elif globals.adjacencyMatrixBtn == True:
+                            pass
+                        else: # when globals.costMatrixBtn == True
+                            pass
 
         self.update_canvas()
         self.printGraph()

@@ -417,10 +417,16 @@
                               orientation: 'horizontal'
                               #size_hint_y: None
                               height: 40
-                              TextInput:
-                                   id: input_nodes
-                                   hint_text:'Enter text'
-                                   size: 50, 300
+                              ScrollView:
+                                   id:scroller
+                                   scroll_timeout: 250
+                                   scroll_distance: 20
+                                   TextInput:
+                                        id: input_nodes
+                                        width: scroller.width
+                                        height: max(self.minimum_height, scroller.height)
+                                        hint_text:'Enter text'
+                                        size: 50, 300
 
                               BoxLayout:
                                    orientation: 'vertical'
