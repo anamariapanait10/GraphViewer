@@ -141,7 +141,7 @@ class GraphManager:
             return [source, dest, cost]
 
 
-    def update_canvas(self):
+    def update_canvas(self, arg=0):
         """This function clears all widgets from the canvas and creates new widgets with almost the same properties
          except the color and dimensions might change. I was forced to create new widgets because Kivy refreshes
          the visual properties only after next call"""
@@ -155,16 +155,21 @@ class GraphManager:
             #new_edge.id = edge.id
             #self.edgeWidgets.append(new_edge)
            # globals.mainViewWidget.ids.graph_canvas.add_widget(new_edge)
+            if self.isDirected == True:
+                edge.ids.triangle.points = edge.getTrianglePoints()
             globals.mainViewWidget.ids.graph_canvas.add_widget(edge)
 
 
         for node in self.nodeWidgets[:]:
-            self.deleteNodeWidgetById(node.Id) # this method only removes the node from de nodeWidgets list
-            new_node = node_widget.NodeWidget(node.Id, [node.pos[0], node.pos[1]])
-            new_node.setLabelId(node.Id)
+            # self.deleteNodeWidgetById(node.Id) # this method only removes the node from de nodeWidgets list
+            # new_node = node_widget.NodeWidget(node.Id, [node.pos[0], node.pos[1]])
+            node.setLabelId(node.Id)
+            node.color = globals.NodeWidgetColor
+            node.backgroundColor = globals.NodeWidgetBackgroundColor
+
             # del node
-            self.nodeWidgets.append(new_node)
-            globals.mainViewWidget.ids.graph_canvas.add_widget(new_node)
+            # self.nodeWidgets.append(new_node)
+            globals.mainViewWidget.ids.graph_canvas.add_widget(node)
 
 
     def update_text(self, text, nodeId): # this function updates the text when the user eliminates a node by double click
@@ -237,7 +242,7 @@ class GraphManager:
 
     def interpretAdjacencyList(self, line):# returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
-                                    # [ nodeId, [neighbor1, neighbor2, ...]]
+                                    # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
 
         foundNode = False
         foundNeighbors = False
@@ -258,37 +263,77 @@ class GraphManager:
                 elif foundNeighbors == False:
                     neighbors =[]
                     while index < len(line):
-                        neighbor = int(line[index])
-                        index += 1
                         if line[index].isDigit() == True:
+                            neighbor = int(line[index])
+                            index += 1
                             while index < len(line) and line[index].isdigit():
                                 neighbor = neighbor * 10 + int(line[index])
                                 index += 1
+                        elif line[index] != ' ' and line[index] != '\n' and line[index] != ',':
+                            return -1
+                        else:
+                            neighbors.append(neighbor)
                             index += 1
-
 
             elif line[index] != ' ' and line[index] != '\n' and line[index] != ',':
                 return -1
             else:
                 index += 1
-    """
-        if foundSource == False: # if the condition is True, then it is an empty line
-            return []
-        elif foundSource == True and foundDest == False: # if the condition is True, then it is an isolated node
-            return [source]
-        elif foundCost == False:  # if the condition is True, then it is an unweighted edge
-            return [source, dest]
-        else:    # if the condition is True, then it is an weighted edge
-            return [source, dest, cost]
 
-"""
-    def parse_graph_data(self, data):
+        if foundNode == False: # if the condition is True, then it is an empty line
+            return []
+        elif foundNode == True and foundNeighbors == False: # if the condition is True, then it has no neighbors
+            return [node,[]]
+        else:
+            return [node, neighbors]
+
+    def interpretAdjacencyMatrix(self, nodeId, line): # returns -1 for invalid syntax #TODO: verifica daca are nr de coloanele si linii egale
+                                              # and a list otherwise, in the following format:
+                                              # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
+        index = 0
+        neighbors = []
+        while index < len(line):
+            if line[index].isdigit():
+
+                if foundNode == False:
+                    node = int(line[index])
+                    index += 1
+                    while index < len(line) and line[index].isdigit():
+                        node = node * 10 + int(line[index])
+                        index += 1
+                    foundNode = True
+
+
+
+        return [nodeId, neighbors]
+
+    def interpretCostMatrix(self, nodeId, line): # returns -1 for invalid syntax
+                                                 # and a list otherwise, in the following format:
+                                                 # [ nodeId, [[ neighbor1Id, cost ], [ neighbor2Id, cost ] ...]]
+        index = 0
+        neighbors = []
+        while index < len(line):
+
+            if line[index].isdigit():
+                neighbors.append(index + 1)
+            elif line[index] != ' ' and line[index] != '\n' and line[index] != '0':
+                return -1
+
+            index += 1
+
+        return [nodeId, neighbors]
+
+    def parse_graph_data(self, dummy=0, data=""):
         """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
+
+        if data == "":
+            data = globals.mainViewWidget.ids.input_nodes.text
 
         if data != "":
             lines = data.split('\n')
             self.nodeWidgets = []
             self.edgeWidgets = []
+            nodeId = 1
 
             if lines != None:
                 for line in lines:
@@ -299,35 +344,71 @@ class GraphManager:
                                                  # see function description for more information
 
                             if value == -1:
-                                raise GraphException("Invalid format for the adjacency list!")
+                                raise GraphException("Invalid format for the edges list!")
                             elif len(value) == 0:
                                 pass
                             elif len(value) == 1:
                                 self.addNodeWidget(value[0])
-                            elif len(value) == 2:
-                                self.addEdgeWidget(value[0], value[1])
-                            elif len(value) == 3:
-                                self.addEdgeWidget(value[0], value[1], value[2])
+                            else:
+                                if len(value) == 2:
+                                    if value[0] != value[1]:
+                                        self.addEdgeWidget(value[0], value[1])
+                                if len(value) == 3:
+                                    if value[0] != value[1]:
+                                        self.addEdgeWidget(value[0], value[1], value[2])
 
-                        elif globals.adjacencyListBtn == True:
-                            pass
-                            # value = self.interpretAdjacencyList(line)
+                                if self.isDirected == True:
+                                    if value[0] != value[1]:
+                                        for node in self.nodeWidgets:
+                                            if node.Id == value[0]:
+                                                node.neighbors.append(self.getNodeWidgetById(value[1]))
+                                                break
+                                else:
+                                    if value[0] != value[1]:
+                                        for node in self.nodeWidgets:
+                                            if node.Id == value[0]:
+                                                node.neighbors.append(self.getNodeWidgetById(value[1]))
+                                            if node.Id == value[1]:
+                                                node.neighbors.append(self.getNodeWidgetById(value[0]))
 
-                        elif globals.adjacencyMatrixBtn == True:
-                            pass
+                        elif globals.adjacencyListBtn == True or globals.adjacencyMatrixBtn == True:
+
+                            if globals.adjacencyListBtn == True:
+                                value = self.interpretAdjacencyList(line)
+                                if value == -1:
+                                    raise GraphException("Invalid format for the adjacency list!")
+                            if globals.adjacencyMatrixBtn == True:
+                                value = self.interpretAdjacencyMatrix(nodeId, line)
+                                nodeId += 1
+                                if value == -1:
+                                    raise GraphException("Invalid format for the adjacency matrix!")
+
+                            nodeWidget = self.addNodeWidget(value[0])
+                            for node in nodeWidget[1]:
+                                if node.Id != nodeWidget.Id:
+                                    node = self.addNodeWidget(node)
+                                    self.addEdgeWidget(nodeWidget, node)
+
+                                    if self.isDirected == True:
+                                        nodeWidget.neighbors.append(node)
+                                    else:
+                                        nodeWidget.neighbors.append(node)
+                                        node.neighbors.append(nodeWidget)
+
                         else: # when globals.costMatrixBtn == True
-                            pass
+                            self.interpretCostMatrix()
 
         self.update_canvas()
         self.printGraph()
 
     def addNodeFromDrawing(self, node):
+        node.setLabelId(node.Id)
         self.nodeWidgets.append(node)
 
     def printGraph(self):
         for node in self.nodeWidgets:
             print(node.Id, end=": ")
             for neighbor in node.neighbors:
-                print(neighbor, end=" ")
+                print(neighbor.Id, end=" ")
             print()
         print()

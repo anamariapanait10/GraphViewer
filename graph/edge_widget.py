@@ -1,7 +1,7 @@
 from kivy.uix.widget import Widget
 from kivy.properties import ListProperty
 from globals import globals
-
+from math import sqrt
 
 def changeEdgeWidgetColor(color):
     for c in globals.colors:
@@ -36,11 +36,69 @@ class EdgeWidget(Widget):
 
     #TODO: find a solution for the triangle...
     def getTrianglePoints(self):
-        # I am thinking to make a vector perpendicular to the edge at a distance of 20 from the sourceNode
-        # then fix the first vertex of the triangle to the sourceNode
-        # and make the other vertexes to be at the same distance (10 I think) and on the vector
-        # in order to form a triangle that maintains its shapes regardless of the edge orientation
-        pass
+        points=[]
+
+        source_x = self.node1.pos[0]
+        source_y = self.node1.pos[1]
+
+        dest_x = self.node2.pos[0]
+        dest_y = self.node2.pos[1]
+
+        dist = sqrt((dest_x - source_x) ** 2 + (dest_y - source_y) ** 2)
+
+        if dest_x > source_x and dest_y > source_y: # if dest is in the first dial
+            sinus = (dest_y - source_y) / dist
+            cosinus = (dest_x - source_x) / dist
+            points.append(dest_x + globals.radiusOfNodeWidget * cosinus)
+            points.append(dest_y + globals.radiusOfNodeWidget * sinus)
+
+            ct = 20
+            points.append(dest_x + ct * cosinus + 10)
+            points.append(dest_y + ct * sinus + 10)
+
+            points.append(dest_x + ct * cosinus - 10)
+            points.append(dest_y + ct * sinus - 10)
+
+        elif dest_x < source_x and dest_y > source_y: # if dest is in the second dial
+            sinus = (dest_y - source_y) / dist
+            cosinus = - (dest_x - source_x) / dist
+            points.append(dest_x + globals.radiusOfNodeWidget * cosinus)
+            points.append(dest_y + globals.radiusOfNodeWidget * sinus)
+
+            ct = 20
+            points.append(dest_x + ct * cosinus + 10)
+            points.append(dest_y + ct * sinus + 10)
+
+            points.append(dest_x + ct * cosinus - 10)
+            points.append(dest_y + ct * sinus - 10)
+
+        elif dest_x < source_x and dest_y < source_y: # if dest is in the third dial
+            sinus = - (dest_y - source_y) / dist
+            cosinus = - (dest_x - source_x) / dist
+            points.append(dest_x + globals.radiusOfNodeWidget * cosinus)
+            points.append(dest_y + globals.radiusOfNodeWidget * sinus)
+
+            ct = 20
+            points.append(dest_x + ct * cosinus + 10)
+            points.append(dest_y + ct * sinus + 10)
+
+            points.append(dest_x + ct * cosinus - 10)
+            points.append(dest_y + ct * sinus - 10)
+
+        else: # if dest is in the forth dial
+            sinus = - (dest_y - source_y) / dist
+            cosinus = (dest_x - source_x) / dist
+            points.append(dest_x + globals.radiusOfNodeWidget * cosinus)
+            points.append(dest_y + globals.radiusOfNodeWidget * sinus)
+
+            ct = 20
+            points.append(dest_x + ct * cosinus + 10)
+            points.append(dest_y + ct * sinus + 10)
+
+            points.append(dest_x + ct * cosinus - 10)
+            points.append(dest_y + ct * sinus - 10)
+
+        return points
 
     def updateCoords(self):
         nodeWidget1 = globals.graphManager.getNodeWidgetById(self.node1.Id)

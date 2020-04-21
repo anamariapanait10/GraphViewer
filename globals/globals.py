@@ -4,17 +4,23 @@ from kivy.properties import ListProperty
 
 graphManager = None
 mainViewWidget = None
+
 inputDropDownList = None
 algDropDownList = None
+changeColorDropDownList = None
+
 popupWindow = ObjectProperty()
 popupWidget = None
-changeColorDropDownList = None
+
 NodeWidgetBackgroundColor = ListProperty()
 NodeWidgetColor = ListProperty()
 EdgeWidgetColor = ListProperty()
+
 radiusOfNodeWidget = 50
 lengthOfEdgeWidget = 50
 minimumDistanceBetweenNodeWidgets = 5
+
+fixNode = False
 
 listOfEdgesBtn = True
 adjacencyListBtn = False

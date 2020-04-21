@@ -1,10 +1,11 @@
 #import kivy
+from kivy.config import Config
+Config.set('graphics', 'window_state', 'maximized')
 from kivy.app import App
 from kivy.uix.widget import Widget
 from graph.graph_manager import GraphManager
 from graph.force_layout import *
 from gui.buttons_behavior import *
-from kivy.config import Config
 from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
@@ -47,14 +48,19 @@ class MainViewWidget(Widget):
             self.grabbedNode.pos = [touch.pos[0] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[0],
                                    touch.pos[1] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[1]]
             # self.ids.graph_canvas.add_widget(self.grabedNode)
-            recalculatePositions(gn=self.grabbedNode.Id)
+            if globals.fixNode == False:
+                recalculatePositions(gn=self.grabbedNode.Id)
+            else:
+                for edge in globals.graphManager.edgeWidgets:
+                    edge.updateCoords()
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
             print("Touch Up")
             if touch.grab_current is self:
                 touch.ungrab(self)
-                recalculatePositions()
+                if globals.fixNode == False:
+                    recalculatePositions()
             else:
                 if touch.is_double_tap:
                     self.on_double_press(touch)
@@ -110,7 +116,8 @@ class MainViewWidget(Widget):
                 self.ids.input_nodes.text += "\n" + str(n.Id)
 
         globals.graphManager.addNodeFromDrawing(n)
-        recalculatePositions()
+        if globals.fixNode == False:
+            recalculatePositions()
 
     def keyIsEnter(self, text):
         if text[len(text)-1] == '\n':   # Trebuie adaugat si spatiile/enterurile de la mijolc
@@ -123,7 +130,8 @@ class MainViewWidget(Widget):
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
                 globals.graphManager.parse_graph_data(text)
-                recalculatePositions()
+                if globals.fixNode == False:
+                    recalculatePositions()
 
                 lastInputText = text
 
@@ -138,6 +146,7 @@ class LabelB(Label):
 
 class GraphViewerApp(App):
     def build(self):
+
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
 
         self.icon = '../GraphViewer/images/Sigla.png'    # set the app icon
@@ -175,6 +184,8 @@ class GraphViewerApp(App):
         globals.NodeWidgetBackgroundColor = globals.colors['white'] # it used to be [0.9, 0.9, 0.9, 1]
         globals.NodeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
         globals.EdgeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
+
+        globals.mainViewWidget.ids.fix_nodes.bind(on_press=fixNodesBtn.on_press)
 
         Factory.register('KivyB', module='LabelB')
 
