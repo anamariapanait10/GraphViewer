@@ -95,13 +95,6 @@ class saveBtn(ButtonBehavior):
         pass
         # globals.mainViewWidget.export_to_png()
 
-class fixNodesBtn(ButtonBehavior):
-    def on_press(self):
-        if globals.fixNode == False:
-            globals.fixNode = True
-        else:
-            globals.fixNode = False
-
 
 class AlgDropDownList(DropDown):
     pass

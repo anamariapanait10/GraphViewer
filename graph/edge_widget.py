@@ -75,7 +75,8 @@ class EdgeWidget(Widget):
         self.points = [nodeWidget1.pos[0] + globals.radiusOfNodeWidget / 2, nodeWidget1.pos[1] + globals.radiusOfNodeWidget / 2,
                        nodeWidget2.pos[0] + globals.radiusOfNodeWidget / 2, nodeWidget2.pos[1] + globals.radiusOfNodeWidget / 2]
 
-        self.trianglePoints = self.getTrianglePoints()
+        if globals.graphManager.isDirected == True:
+            self.trianglePoints = self.getTrianglePoints()
 
 
     def getEdgeWidgetColor(self):

@@ -190,8 +190,17 @@ class GraphManager:
                         elif len(value) == 2 or len(value) == 3:
                             if value[0] != nodeId and value[1] != nodeId:
                                 new_text += line + "\n"
+                            elif value[0] == nodeId:
+                                node = self.getNodeWidgetById(value[1])
+                                if len(node.neighbors) == 1: # if it has only one neighbor, with the id nodeId, it won't have anymore after deleting
+                                    new_text += str(value[1]) + "\n"
+                            elif value[1] == nodeId:
+                                node = self.getNodeWidgetById(value[0])
+                                if len(node.neighbors) == 1:  # if it has only one neighbor, with the id nodeId, it won't have anymore after deleting
+                                    new_text += str(value[0]) + "\n"
 
                 globals.mainViewWidget.ids.input_nodes.text = new_text
+
 
     def nodeWidgetsDontOverlap(self):   # This function generates random coordinates for the NodeWidget
                                         # which do not overlap the other nodes
