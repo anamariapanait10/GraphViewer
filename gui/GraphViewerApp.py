@@ -188,6 +188,7 @@ class GraphViewerApp(App):
         globals.mainViewWidget.ids.switch.bind(active=callback)
 
         Factory.register('KivyB', module='LabelB')
+      #  Factory.register('KivyB', module='BorderLabel')
 
         return globals.mainViewWidget
 

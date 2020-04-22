@@ -1,5 +1,5 @@
 from kivy.uix.widget import Widget
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, NumericProperty
 from globals import globals
 from math import sqrt, sin, cos, pi
 
@@ -18,11 +18,11 @@ class EdgeWidget(Widget):
 
     points = ListProperty()
     trianglePoints = ListProperty()
+    labelPosition = ListProperty([0, 0])
+    cost = NumericProperty(0)
 
     def __init__(self, node1, node2, cost=0): # the nodes are NodeWidget objects
         super().__init__()
-        '''self.points = [node1.pos[0] + node1.size[0] / 2, node1.pos[1] + node1.size[1] / 2,
-                       node2.pos[0] + node2.size[0] / 2, node2.pos[1] + node2.size[1] / 2]'''
 
         self.points = [node1.pos[0] + globals.radiusOfNodeWidget / 2, node1.pos[1] + globals.radiusOfNodeWidget / 2,
                        node2.pos[0] + globals.radiusOfNodeWidget / 2, node2.pos[1] + globals.radiusOfNodeWidget / 2]
@@ -32,11 +32,13 @@ class EdgeWidget(Widget):
         self.cost = cost
         self.color = globals.EdgeWidgetColor
         self.trianglePoints = [0, 0, 0, 0, 0, 0]
+        self.labelPosition = [ (node1.pos[0] + node2.pos[0]) / 2 - 10,
+                               (node1.pos[1] + node2.pos[1]) / 2 - 10]
 
     def getIsDirected(self):
         return globals.graphManager.isDirected
 
-    #TODO: find a solution for the triangle...
+
     def getTrianglePoints(self):
         points=[]
 
@@ -77,6 +79,9 @@ class EdgeWidget(Widget):
 
         if globals.graphManager.isDirected == True:
             self.trianglePoints = self.getTrianglePoints()
+
+        self.labelPosition = [(self.points[0] + self.points[2]) / 2 - 10,
+                              (self.points[1] + self.points[3]) / 2 - 10]
 
 
     def getEdgeWidgetColor(self):

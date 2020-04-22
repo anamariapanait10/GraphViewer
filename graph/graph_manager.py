@@ -120,7 +120,7 @@ class GraphManager:
                     while index < len(line) and line[index].isdigit():
                         cost = cost * 10 + int(line[index])
                         index += 1
-                    foundDest = True
+                    foundCost = True
 
                 else:
                     return -1

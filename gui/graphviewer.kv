@@ -36,6 +36,18 @@
           Triangle:
                points: self.trianglePoints
 
+     LabelB:
+          text: str(root.cost)
+          pos: [0, 0] if root.labelPosition == [] else root.labelPosition # [(root.points[0] + root.points[2]) / 2,  (root.points[1] + root.points[3]) / 2]
+          bcolor:0, 0, 0, 1
+          color: 1, 1, 1, 1
+          size: 20, 20
+
+#          BorderLabel:
+#               text: "10"
+#               pos: root.getPositionForLabel()
+
+
 <LabelB>:
      bcolor: 1, 1, 1, 1
      canvas.before:
@@ -45,6 +57,12 @@
                pos: self.pos
                size: self.size
 
+#<BorderLabel@Label+BorderBehavior>:
+#     size_hint: None, None
+#     pos: (100,100)
+#     width: 200
+#     height: 100
+#     borders: 3, 'solid', (1,1,1,1)
 
 <PopupWidget>:
 
@@ -432,28 +450,37 @@
                               BoxLayout:
                                    orientation: 'vertical'
                                    #spacing: 50
-                                   #padding: [10, 0, 10, 20]
+                                   padding: [10, 0, 10, 20]
                                    #size_hint_y: None
-                                   height: 70
+                                   #height: 90
 
-                                   BoxLayout:
-                                        orientation: 'horizontal'
-                                        Switch:
-                                             id: switch
-                                             active: True
-                                        Label:
-                                            # padding: [20, 20]
-                                             #size_hint_y: None
-                                             size: 100, 40
-                                             color: 0, 0, 0, 1
-                                             text: 'Forces'
+                                   AnchorLayout:
+                                        anchor_x: 'left'
+                                        anchor_y: 'top'
 
-                                   Label:
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             size_hint: None, None
+                                             Label:
+                                                  #padding: [20, 20]
+                                                  size_hint: None, None
+                                                  size: 100, 10
+                                                  color: 0, 0, 0, 1
+                                                  text: 'Forces:'
+
+                                             Switch:
+                                                  id: switch
+                                                  active: True
+                                                  size_hint: None, None
+                                                  size: 60, 10
+
+                                   LabelB:
                                         id: draw_lbl
                                         padding: [20, 20]
                                         text:'Tap to add nodes, \nDouble top to remove nodes'
                                         text_size: self.size
                                         size_hint_y: None
+                                        bcolor: 0.64, 0.7, 1, 1
                                         color: 0, 0, 0, 1
 
 
