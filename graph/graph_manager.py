@@ -226,10 +226,11 @@ class GraphManager:
             if GoodCoords == True:
                 return [x1, y1]
 
-    def addNodeWidget(self, nodeId):
+    def addNodeWidget(self, nodeId, pos=0):
 
         if self.NodeWidgetExists(nodeId) == False:
-            pos = self.nodeWidgetsDontOverlap() # This function generates random positions which do not overlap the other nodes
+            if pos == 0:
+                pos = self.nodeWidgetsDontOverlap() # This function generates random positions which do not overlap the other nodes
             new_nodeWidget = node_widget.NodeWidget(nodeId, pos)
             self.nodeWidgets.append(new_nodeWidget)
 
@@ -242,9 +243,6 @@ class GraphManager:
     def addEdgeWidget(self, node1Id, node2Id, cost=0):
 
         if self.edgeAlreadyExists(node1Id, node2Id) == False:
-
-            self.addNodeWidget(node1Id) # this does nothing if it already exists
-            self.addNodeWidget(node2Id)
 
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
             self.edgeWidgets.append(new_edgeWidget)
@@ -340,6 +338,7 @@ class GraphManager:
 
         if data != "":
             lines = data.split('\n')
+            lastNodeWidgetsList = self.nodeWidgets
             self.nodeWidgets = []
             self.edgeWidgets = []
             nodeId = 1
@@ -357,13 +356,43 @@ class GraphManager:
                             elif len(value) == 0:
                                 pass
                             elif len(value) == 1:
-                                self.addNodeWidget(value[0])
+                                pos = 0
+                                for node in lastNodeWidgetsList:
+                                    if node.Id == value[0]:
+                                        pos = node.pos
+                                        break
+                                self.addNodeWidget(value[0], pos)
+
                             else:
                                 if len(value) == 2:
                                     if value[0] != value[1]:
+                                        pos = 0
+                                        for node in lastNodeWidgetsList:
+                                            if node.Id == value[0]:
+                                                pos = node.pos
+                                                break
+                                        self.addNodeWidget(value[0], pos)  # this does nothing if it already exists
+                                        pos = 0
+                                        for node in lastNodeWidgetsList:
+                                            if node.Id == value[1]:
+                                                pos = node.pos
+                                                break
+                                        self.addNodeWidget(value[1], pos)
                                         self.addEdgeWidget(value[0], value[1])
                                 if len(value) == 3:
                                     if value[0] != value[1]:
+                                        pos = 0
+                                        for node in lastNodeWidgetsList:
+                                            if node.Id == value[0]:
+                                                pos = node.pos
+                                                break
+                                        self.addNodeWidget(value[0], pos)  # this does nothing if it already exists
+                                        pos = 0
+                                        for node in lastNodeWidgetsList:
+                                            if node.Id == value[1]:
+                                                pos = node.pos
+                                                break
+                                        self.addNodeWidget(value[1], pos)
                                         self.addEdgeWidget(value[0], value[1], value[2])
 
                                 if self.isDirected == True:
