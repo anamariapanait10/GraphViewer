@@ -48,7 +48,7 @@ class MainViewWidget(Widget):
             self.grabbedNode.pos = [touch.pos[0] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[0],
                                    touch.pos[1] - globals.radiusOfNodeWidget / 2 - globals.mainViewWidget.ids.graph_canvas.pos[1]]
             # self.ids.graph_canvas.add_widget(self.grabedNode)
-            if globals.fixNode == False:
+            if globals.forces == True:
                 recalculatePositions(gn=self.grabbedNode.Id)
             else:
                 for edge in globals.graphManager.edgeWidgets:
@@ -59,7 +59,7 @@ class MainViewWidget(Widget):
             print("Touch Up")
             if touch.grab_current is self:
                 touch.ungrab(self)
-                if globals.fixNode == False:
+                if globals.forces== True:
                     recalculatePositions()
             else:
                 if touch.is_double_tap:
@@ -116,7 +116,7 @@ class MainViewWidget(Widget):
                 self.ids.input_nodes.text += "\n" + str(n.Id)
 
         globals.graphManager.addNodeFromDrawing(n)
-        if globals.fixNode == False:
+        if globals.forces == True:
             recalculatePositions()
 
     def keyIsEnter(self, text):
@@ -130,7 +130,7 @@ class MainViewWidget(Widget):
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
                 globals.graphManager.parse_graph_data(text)
-                if globals.fixNode == False:
+                if globals.forces == True:
                     recalculatePositions()
 
                 lastInputText = text
@@ -185,7 +185,7 @@ class GraphViewerApp(App):
         globals.NodeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
         globals.EdgeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]
 
-        globals.mainViewWidget.ids.fix_nodes.bind(on_press=fixNodesBtn.on_press)
+        globals.mainViewWidget.ids.switch.bind(active=callback)
 
         Factory.register('KivyB', module='LabelB')
 

@@ -20,7 +20,7 @@ radiusOfNodeWidget = 50
 lengthOfEdgeWidget = 50
 minimumDistanceBetweenNodeWidgets = 5
 
-fixNode = False
+forces = True
 
 listOfEdgesBtn = True
 adjacencyListBtn = False

@@ -432,9 +432,21 @@
                               BoxLayout:
                                    orientation: 'vertical'
                                    #spacing: 50
-                                   padding: [10, 0, 10, 20]
+                                   #padding: [10, 0, 10, 20]
                                    #size_hint_y: None
                                    height: 70
+
+                                   BoxLayout:
+                                        orientation: 'horizontal'
+                                        Switch:
+                                             id: switch
+                                             active: True
+                                        Label:
+                                            # padding: [20, 20]
+                                             #size_hint_y: None
+                                             size: 100, 40
+                                             color: 0, 0, 0, 1
+                                             text: 'Forces'
 
                                    Label:
                                         id: draw_lbl
@@ -444,13 +456,7 @@
                                         size_hint_y: None
                                         color: 0, 0, 0, 1
 
-                                   Button:
-                                        id: fix_nodes
-                                        padding: [20, 20]
-                                        size_hint_y: None
-                                        size: 100, 40
-                                        background_color: 1, 1, 1, 1
-                                        text: 'Fix nodes'
+
 
 
 

@@ -84,6 +84,12 @@ class SettingsButton(ButtonBehavior):
 
         globals.popupWidget.ids.apply_btn.bind(on_press=globals.graphManager.parse_graph_data)
 
+def callback(instance, value):
+    if value == False:
+        globals.forces = False
+    else:
+        globals.forces = True
+
 class saveBtn(ButtonBehavior):
     def on_press(self):
         pass
