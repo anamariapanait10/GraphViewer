@@ -32,7 +32,7 @@ class EdgeWidget(Widget):
         self.cost = cost
         self.color = globals.EdgeWidgetColor
         self.trianglePoints = [0, 0, 0, 0, 0, 0]
-        self.labelPosition = [ (node1.pos[0] + node2.pos[0]) / 2 - 10,
+        self.labelPosition = [(node1.pos[0] + node2.pos[0]) / 2 - 10,
                                (node1.pos[1] + node2.pos[1]) / 2 - 10]
 
     def getIsDirected(self):

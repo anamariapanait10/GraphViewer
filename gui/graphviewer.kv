@@ -37,11 +37,11 @@
                points: self.trianglePoints
 
      LabelB:
-          text: str(root.cost)
+          text: str("") if root.cost == 0 else str(root.cost)
           pos: [0, 0] if root.labelPosition == [] else root.labelPosition # [(root.points[0] + root.points[2]) / 2,  (root.points[1] + root.points[3]) / 2]
           bcolor:0, 0, 0, 1
           color: 1, 1, 1, 1
-          size: 20, 20
+          size: [0, 0] if root.cost == 0 else [20, 20]
 
 #          BorderLabel:
 #               text: "10"
@@ -53,9 +53,10 @@
      canvas.before:
           Color:
                rgba: self.bcolor
-          Rectangle:
+          RoundedRectangle:
                pos: self.pos
                size: self.size
+               radius: 5, 5, 5, 5
 
 #<BorderLabel@Label+BorderBehavior>:
 #     size_hint: None, None
