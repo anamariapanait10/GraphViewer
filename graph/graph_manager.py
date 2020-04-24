@@ -253,6 +253,7 @@ class GraphManager:
 
         foundNode = False
         foundNeighbors = False
+        neighbors = []
         index = 0
 
         while index < len(line):
@@ -268,35 +269,34 @@ class GraphManager:
                     foundNode = True
 
                 elif foundNeighbors == False:
-                    neighbors =[]
+
                     while index < len(line):
-                        if line[index].isDigit() == True:
+                        if line[index].isdigit() == True:
                             neighbor = int(line[index])
                             index += 1
                             while index < len(line) and line[index].isdigit():
                                 neighbor = neighbor * 10 + int(line[index])
                                 index += 1
-                        elif line[index] != ' ' and line[index] != '\n' and line[index] != ',':
-                            return -1
-                        else:
                             neighbors.append(neighbor)
                             index += 1
+                        elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
+                            return -1
+                    foundNeighbors == True
 
-            elif line[index] != ' ' and line[index] != '\n' and line[index] != ',':
+            elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
                 return -1
             else:
                 index += 1
 
-        if foundNode == False: # if the condition is True, then it is an empty line
+        if foundNode == False: # if the condition is True, then it is an empty line, I don't think it really needs this condition
             return []
-        elif foundNode == True and foundNeighbors == False: # if the condition is True, then it has no neighbors
-            return [node,[]]
         else:
             return [node, neighbors]
 
     def interpretAdjacencyMatrix(self, nodeId, line): # returns -1 for invalid syntax #TODO: verifica daca are nr de coloanele si linii egale
                                               # and a list otherwise, in the following format:
                                               # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
+        foundNode = False
         index = 0
         neighbors = []
         while index < len(line):
@@ -311,8 +311,15 @@ class GraphManager:
                     foundNode = True
 
 
-
         return [nodeId, neighbors]
+
+    def returnOldPosition(self, nodeId, lastNodeWidgetsList):
+        pos = 0
+        for node in lastNodeWidgetsList:
+            if node.Id == nodeId:
+                pos = node.pos
+                break
+        return pos
 
     def interpretCostMatrix(self, nodeId, line): # returns -1 for invalid syntax
                                                  # and a list otherwise, in the following format:
@@ -348,8 +355,8 @@ class GraphManager:
                     if line != "":
                         if globals.listOfEdgesBtn == True:
                             value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
-                                                 # an empty string or invalid sintax
-                                                 # see function description for more information
+                                                             # an empty string or invalid sintax
+                                                             # see function description for more information
 
                             if value == -1:
                                 raise GraphException("Invalid format for the edges list!")
@@ -366,33 +373,16 @@ class GraphManager:
                             else:
                                 if len(value) == 2:
                                     if value[0] != value[1]:
-                                        pos = 0
-                                        for node in lastNodeWidgetsList:
-                                            if node.Id == value[0]:
-                                                pos = node.pos
-                                                break
-                                        self.addNodeWidget(value[0], pos)  # this does nothing if it already exists
-                                        pos = 0
-                                        for node in lastNodeWidgetsList:
-                                            if node.Id == value[1]:
-                                                pos = node.pos
-                                                break
-                                        self.addNodeWidget(value[1], pos)
+
+                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))  # this does nothing if it already exists
+                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], lastNodeWidgetsList))
                                         self.addEdgeWidget(value[0], value[1])
+
                                 if len(value) == 3:
                                     if value[0] != value[1]:
-                                        pos = 0
-                                        for node in lastNodeWidgetsList:
-                                            if node.Id == value[0]:
-                                                pos = node.pos
-                                                break
-                                        self.addNodeWidget(value[0], pos)  # this does nothing if it already exists
-                                        pos = 0
-                                        for node in lastNodeWidgetsList:
-                                            if node.Id == value[1]:
-                                                pos = node.pos
-                                                break
-                                        self.addNodeWidget(value[1], pos)
+
+                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))
+                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], lastNodeWidgetsList))
                                         self.addEdgeWidget(value[0], value[1], value[2])
 
                                 if self.isDirected == True:
@@ -421,11 +411,14 @@ class GraphManager:
                                 if value == -1:
                                     raise GraphException("Invalid format for the adjacency matrix!")
 
-                            nodeWidget = self.addNodeWidget(value[0])
-                            for node in nodeWidget[1]:
-                                if node.Id != nodeWidget.Id:
-                                    node = self.addNodeWidget(node)
-                                    self.addEdgeWidget(nodeWidget, node)
+
+                            self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))
+                            nodeWidget = self.getNodeWidgetById(value[0])
+                            for node in value[1]:
+                                if node != nodeWidget.Id:
+                                    self.addNodeWidget(node, pos=self.returnOldPosition(node, lastNodeWidgetsList))
+                                    node = self.getNodeWidgetById(node)
+                                    self.addEdgeWidget(nodeWidget.Id, node.Id)
 
                                     if self.isDirected == True:
                                         nodeWidget.neighbors.append(node)

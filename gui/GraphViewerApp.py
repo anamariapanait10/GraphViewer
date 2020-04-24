@@ -136,10 +136,6 @@ class MainViewWidget(Widget):
 
                 lastInputText = text
 
-    # def updateForces(self):
-    #     for i in range(5):
-    #         update()
-
 
 class LabelB(Label):
     bcolor = ListProperty(globals.colors['white'])
@@ -189,7 +185,6 @@ class GraphViewerApp(App):
         globals.mainViewWidget.ids.switch.bind(active=callback)
 
         Factory.register('KivyB', module='LabelB')
-      #  Factory.register('KivyB', module='BorderLabel')
 
         return globals.mainViewWidget
 
