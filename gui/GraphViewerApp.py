@@ -32,12 +32,23 @@ def isOnNode(touch):
 class MainViewWidget(Widget):
 
     grabbedNode = None
+    lastSelectedNode = None
 
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
             print("Touch down")
             self.grabbedNode = isOnNode(touch)
             if self.grabbedNode != None:
+                if self.lastSelectedNode != None and self.grabbedNode != None:
+                    node = self.grabbedNode
+                    globals.graphManager.addEdgeWidget(self.lastSelectedNode.Id, node.Id)
+                    self.lastSelectedNode = None
+                    globals.graphManager.update_text_on_edgeAdd()
+
+                    print("Add edge")
+
+                else:
+                    self.lastSelectedNode = self.grabbedNode
                 touch.grab(self)
                 return True
         else:
@@ -64,10 +75,14 @@ class MainViewWidget(Widget):
                     recalculatePositions()
             else:
                 if touch.is_double_tap:
+                    if touch.grab_current != None:
+                        touch.ungrab(touch.grab_current)
                     self.on_double_press(touch)
                 else:
-                    if not isOnNode(touch):
+                    node = isOnNode(touch)
+                    if not node:
                         self.on_single_press(touch)
+
 
         else:
             return super().on_touch_up(touch)
@@ -77,7 +92,7 @@ class MainViewWidget(Widget):
         nodeToBeDeletedFromText = globals.graphManager.deleteNodeWidgetByCoords(touch.pos[0], touch.pos[1])
         globals.graphManager.deleteEdgeWidgetByCoords(touch.pos[0], touch.pos[1])
         globals.graphManager.update_canvas()
-        globals.graphManager.update_text(globals.mainViewWidget.ids.input_nodes.text, nodeToBeDeletedFromText)
+        globals.graphManager.update_text_on_delete(globals.mainViewWidget.ids.input_nodes.text, nodeToBeDeletedFromText)
         print("Double press")
 
     def on_single_press(self, touch):
@@ -146,7 +161,7 @@ class GraphViewerApp(App):
 
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
 
-        self.icon = '../GraphViewer/images/Sigla.png'    # set the app icon
+        self.icon = '../GraphViewer/images/Icon.png'    # set the app icon
 
         globals.mainViewWidget = MainViewWidget()
         globals.graphManager = GraphManager(False)

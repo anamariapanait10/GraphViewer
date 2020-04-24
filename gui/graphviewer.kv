@@ -455,7 +455,7 @@
 
                               BoxLayout:
                                    orientation: 'vertical'
-                                   #spacing: 50
+                                   spacing: 50
                                    padding: [10, 0, 10, 20]
                                    #size_hint_y: None
                                    #height: 90
@@ -467,10 +467,11 @@
                                         BoxLayout:
                                              orientation: 'horizontal'
                                              size_hint: None, None
+                                             spacing: 10
                                              Label:
                                                   #padding: [20, 20]
                                                   size_hint: None, None
-                                                  size: 100, 10
+                                                  size: 80, 10
                                                   color: 0, 0, 0, 1
                                                   text: 'Forces:'
 
@@ -489,8 +490,57 @@
                                         bcolor: 0.64, 0.7, 1, 1
                                         color: 0, 0, 0, 1
 
+                                   GridLayout:
+                                        row_default_height: 30
+                                        row_force_default: True
+                                        rows: 1
+                                        cols: 3
+                                        height: 30
+                                        width: 400
+                                        size_hint_x: None
+                                        size_hint_y: None
 
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 20
+                                             size_hint_x: None
+                                             width:50
 
+                                             Button :
+                                                  size: 50, 30
+                                                  size_hint_x: None
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '<='
+
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 30
+                                             size_hint_x: None
+                                             width: 120
+                                             Button :
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '<-'
+
+                                             Button :
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '->'
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 20
+                                             Button :
+                                                  size_hint_x: None
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '=>'
 
 
                RelativeLayout:
@@ -511,58 +561,6 @@
 
           GridLayout:
                size_hint_y: None
-               height: 10
+               height: 40
                rows: 1
                cols: 1
-
-          GridLayout:
-               row_default_height: 30
-               row_force_default: True
-               rows: 1
-               cols: 3
-               height: 30
-               width: 400
-               size_hint_x: None
-               size_hint_y: None
-
-               BoxLayout:
-                    orientation: 'horizontal'
-                    height: 30
-                    spacing: 20
-                    size_hint_x: None
-                    width:50
-
-                    Button :
-                         size: 50, 30
-                         size_hint_x: None
-                         pos:10, 0
-                         background_color: 1, 1, 1, 1
-                         text: '<='
-
-               BoxLayout:
-                    orientation: 'horizontal'
-                    height: 30
-                    spacing: 20
-                    size_hint_x: None
-                    width: 120
-                    Button :
-                         size: 50, 30
-                         pos:10, 0
-                         background_color: 1, 1, 1, 1
-                         text: '<-'
-
-                    Button :
-                         size: 50, 30
-                         pos:10, 0
-                         background_color: 1, 1, 1, 1
-                         text: '->'
-               BoxLayout:
-                    orientation: 'horizontal'
-                    height: 30
-                    spacing: 20
-                    Button :
-                         size_hint_x: None
-                         size: 50, 30
-                         pos:10, 0
-                         background_color: 1, 1, 1, 1
-                         text: '=>'

@@ -171,8 +171,20 @@ class GraphManager:
             # self.nodeWidgets.append(new_node)
             globals.mainViewWidget.ids.graph_canvas.add_widget(node)
 
+    def update_text_on_edgeAdd(self):
 
-    def update_text(self, text, nodeId): # this function updates the text when the user eliminates a node by double click
+        new_text = ""
+
+        for edge in self.edgeWidgets:
+            new_text += str(edge.node1.Id) + " " + str(edge.node2.Id) + "\n"
+
+        for node in self.nodeWidgets:
+            if len(node.neighbors) == 0:
+                new_text += str(node.Id) + "\n"
+
+        globals.mainViewWidget.ids.input_nodes.text = new_text
+
+    def update_text_on_delete(self, text, nodeId): # this function updates the text when the user eliminates a node by double click
         if text != "":
             lines = text.split('\n')
             if lines != None:
@@ -242,7 +254,7 @@ class GraphManager:
 
     def addEdgeWidget(self, node1Id, node2Id, cost=0):
 
-        if self.edgeAlreadyExists(node1Id, node2Id) == False:
+        if node1Id != node2Id and self.edgeAlreadyExists(node1Id, node2Id) == False:
 
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
             self.edgeWidgets.append(new_edgeWidget)

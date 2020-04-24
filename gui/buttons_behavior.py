@@ -93,8 +93,7 @@ def callback(instance, value):
 
 class saveBtn(ButtonBehavior):
     def on_press(self):
-        pass
-        # globals.mainViewWidget.export_to_png()
+        globals.mainViewWidget.export_to_png()
 
 
 class AlgDropDownList(DropDown):
