@@ -10,6 +10,7 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
 from datetime import datetime
+from kivy.base import runTouchApp
 
 #kivy.require('2.0.0')
 

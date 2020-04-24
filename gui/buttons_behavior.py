@@ -5,7 +5,7 @@ from kivy.uix.popup import Popup
 from graph import node_widget
 from graph import edge_widget
 from gui import popup_widget
-
+from graph import force_layout
 
 class SettingsButton(ButtonBehavior):
 
@@ -89,6 +89,7 @@ def callback(instance, value):
         globals.forces = False
     else:
         globals.forces = True
+        force_layout.recalculatePositions()
 
 class saveBtn(ButtonBehavior):
     def on_press(self):
