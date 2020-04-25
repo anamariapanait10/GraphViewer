@@ -165,7 +165,7 @@ class GraphManager:
             # new_node = node_widget.NodeWidget(node.Id, [node.pos[0], node.pos[1]])
             node.setLabelId(node.Id)
             node.color = globals.NodeWidgetColor
-            node.backgroundColor = globals.NodeWidgetBackgroundColor
+            #node.backgroundColor = globals.NodeWidgetBackgroundColor
 
             # del node
             # self.nodeWidgets.append(new_node)
@@ -455,3 +455,94 @@ class GraphManager:
                 print(neighbor.Id, end=" ")
             print()
         print()
+
+    def getIndexFromListOfNodes(self, node):
+        index = -1
+        for n in self.nodeWidgets:
+            index += 1
+            if node.Id == n.Id:
+                return index
+
+    def BFS(self, dummy):
+
+        source = globals.mainViewWidget.ids.bfs_txt_input.text
+
+        try:
+            source = int(source)
+            source = self.getNodeWidgetById(source)
+            if source == None:
+                raise GraphException("The starting node does not exist")
+        except:
+            raise GraphException("Invalid number for the starting node")
+
+
+        visited = [False] * (len(self.nodeWidgets))   # Mark all the vertices as not visited
+        queue = []  # Create a queue for BFS
+        queue.append(source)  # Mark the source node as visited and enqueue it
+
+        visited[self.getIndexFromListOfNodes(source)] = True
+
+        while queue:
+
+            node = queue.pop(0)  # Dequeue a vertex from queue and color it
+            print(node.Id, end=" ")
+            node.backgroundColor = globals.colors['green']
+            self.update_canvas()
+
+            for n in node.neighbors: # Get all adjacent vertices of the dequeued vertex node. If a adjacent has not
+                if visited[self.getIndexFromListOfNodes(n)] == False:                # been visited, then mark it visited and enqueue it
+                    queue.append(n)
+                    visited[self.getIndexFromListOfNodes(n)] = True
+
+    def DFSUtil(self, v, visited):
+
+        visited[self.getIndexFromListOfNodes(v)] = True  # Mark the current node as visited and color it
+        print(v.Id, end=' ')
+        v.backgroundColor = [1, 0, 0, 1]
+
+        for i in v.neibors:  # Recur for all the vertices adjacent to this vertex
+            if visited[self.getIndexFromListOfNodes(i)] == False:
+                self.DFSUtil(i, visited)
+
+                # The function to do DFS traversal. It uses
+
+    # recursive DFSUtil()
+
+    def DFS(self, startNode):
+
+        try:
+            startNode = int(startNode)
+            startNode = self.getNodeWidgetById(startNode)
+            if startNode == None:
+                raise GraphException("The starting node does not exist")
+        except:
+            raise GraphException("Invalid number for the starting node")
+
+        visited = [False] * (len(self.nodeWidgets))  # Mark all the vertices as not visited
+
+        self.DFSUtil(startNode, visited)  # Call the recursive helper function to print DFS traversal
+
+    def dijkstra(self, src):
+
+        dist = [sys.maxint] * self.V
+        dist[src] = 0
+        sptSet = [False] * self.V
+
+        for cout in range(self.V):
+
+            # Pick the minimum distance vertex from the set of vertices not yet processed.
+            # u is always equal to src in first iteration
+            u = self.minDistance(dist, sptSet)
+
+            # Put the minimum distance vertex in the shotest path tree
+            sptSet[u] = True
+
+            # Update dist value of the adjacent vertices of the picked vertex only if the current
+            # distance is greater than new distance and the vertex in not in the shotest path tree
+            for v in range(self.V):
+                if self.graph[u][v] > 0 and \
+                        sptSet[v] == False and \
+                        dist[v] > dist[u] + self.graph[u][v]:
+                    dist[v] = dist[u] + self.graph[u][v]
+
+        self.printSolution(dist)

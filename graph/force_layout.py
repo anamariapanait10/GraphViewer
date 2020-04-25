@@ -119,7 +119,7 @@ def recalculatePositions(gn=0):
     #globals.graphManager.randomizePositions()
     global grabbed_node
     grabbed_node = gn
-    Clock.schedule_interval(update, 0.001)
+    Clock.schedule_interval(update, 0.0005)
 
 
 

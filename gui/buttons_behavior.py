@@ -6,6 +6,7 @@ from graph import node_widget
 from graph import edge_widget
 from gui import popup_widget
 from graph import force_layout
+from kivy.clock import Clock
 
 class SettingsButton(ButtonBehavior):
 
@@ -293,6 +294,11 @@ class BfsButton(ButtonBehavior):
             globals.algDropDownList.ids.bfs_btn.background_normal: ''
             globals.algDropDownList.ids.bfs_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+        globals.mainViewWidget.ids.bfs_txt_input.visible = True
+        globals.mainViewWidget.ids.bfs_txt_lbl.visible = True
+        globals.mainViewWidget.ids.down_btns.visible = True
+        Clock.schedule_once( globals.graphManager.BFS, 5)
+
 
 class DfsButton(ButtonBehavior):
 
@@ -308,6 +314,10 @@ class DfsButton(ButtonBehavior):
         else:  # if it is pressed
             globals.algDropDownList.ids.dfs_btn.background_normal: ''
             globals.algDropDownList.ids.dfs_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+        globals.mainViewWidget.ids.bfs_txt_input.visible = True
+        globals.mainViewWidget.ids.bfs_txt_lbl.visible = True
+        #globals.graphManager.DFS(globals.mainViewWidget.ids.bfs_txt_input.text)
 
 
 class WhiteButton():

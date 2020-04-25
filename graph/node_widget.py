@@ -1,6 +1,6 @@
 from kivy.uix.widget import Widget
 from globals import globals
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ListProperty
 
 def getnextid():
     nextid = 1
@@ -37,6 +37,7 @@ def changeNodeRadius(new_radius):
 class NodeWidget(Widget):
 
     nodeId = StringProperty()
+    backgroundColor = ListProperty(globals.colors['white'])
 
     def __init__(self, Id, pos):
         super().__init__()  # calls the constructor of the Widget class
@@ -45,7 +46,7 @@ class NodeWidget(Widget):
         self.neighbors = [] # the list of neighbors
         self.size = [ 2 * globals.radiusOfNodeWidget, 2 * globals.radiusOfNodeWidget ]
         self.force = [0, 0]
-        self.backgroundColor = globals.NodeWidgetBackgroundColor
+        #self.backgroundColor = globals.NodeWidgetBackgroundColor
         self.color = globals.NodeWidgetColor # the color refers to the margins and the id of the node
         self.nodeId = str(Id)
 
@@ -64,7 +65,8 @@ class NodeWidget(Widget):
         return getnextid()
 
     def getNodeWidgetBackgroundColor(self):
-        return globals.NodeWidgetBackgroundColor
+        #return globals.NodeWidgetBackgroundColor
+        return self.backgroundColor
 
     def getNodeWidgetColor(self):
         return globals.NodeWidgetColor

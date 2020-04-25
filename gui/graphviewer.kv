@@ -12,7 +12,7 @@
                pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
 
           Color:
-               rgba: root.getNodeWidgetBackgroundColor()
+               rgba: root.backgroundColor
           Ellipse:
                size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
                pos: self.pos
@@ -489,8 +489,30 @@
                                         size_hint_y: None
                                         bcolor: 0.64, 0.7, 1, 1
                                         color: 0, 0, 0, 1
+                                   BoxLayout:
+                                        orientation: 'horizontal'
+
+                                        Label:
+                                             id: bfs_txt_lbl
+                                             size_hint: None, None
+                                             visible: False
+                                             opacity: 1 if self.visible else 0
+                                             size: 200, 30
+                                             text: 'Enter the starting node:'
+                                             color: 0, 0, 0, 1
+                                        TextInput:
+                                             id: bfs_txt_input
+                                             visible: False
+                                             #hint_text: 'Enter the starting node'
+                                             opacity: 1 if self.visible else 0
+                                             size_hint: None, None
+                                             size: 50, 30
+
 
                                    GridLayout:
+                                        id: down_btns
+                                        visible:False
+                                        opacity: 1 if self.visible else 0
                                         row_default_height: 30
                                         row_force_default: True
                                         rows: 1
