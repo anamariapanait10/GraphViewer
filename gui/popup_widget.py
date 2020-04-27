@@ -1,4 +1,5 @@
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
 from globals import globals
 from graph import node_widget
 from graph import edge_widget
@@ -36,3 +37,10 @@ class PopupWidget(GridLayout):
 
     def getRadiusSliderValue(self):
         return globals.radiusOfNodeWidget
+
+class ErrorPopupWidget(BoxLayout):
+    def setText(self, text):
+        globals.errorPopupWidget.ids.error_popup_lbl.text = text
+
+    def closePopUp(self):
+        globals.popupWindow.dismiss()

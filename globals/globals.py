@@ -11,6 +11,7 @@ changeColorDropDownList = None
 
 popupWindow = ObjectProperty()
 popupWidget = None
+errorPopupWidget = None
 
 NodeWidgetBackgroundColor = ListProperty()
 NodeWidgetColor = ListProperty()

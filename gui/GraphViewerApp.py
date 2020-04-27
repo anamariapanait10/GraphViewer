@@ -42,6 +42,8 @@ class MainViewWidget(Widget):
                 if self.lastSelectedNode != None and self.grabbedNode != None:
                     node = self.grabbedNode
                     globals.graphManager.addEdgeWidget(self.lastSelectedNode.Id, node.Id)
+                    self.lastSelectedNode.setMarginWidth(5)
+                    node.setMarginWidth(10)
                     self.lastSelectedNode = None
                     globals.graphManager.update_text_on_edgeAdd()
 
@@ -49,6 +51,7 @@ class MainViewWidget(Widget):
 
                 else:
                     self.lastSelectedNode = self.grabbedNode
+                    self.lastSelectedNode.setMarginWidth(10)
                 touch.grab(self)
                 return True
         else:

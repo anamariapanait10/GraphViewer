@@ -1,6 +1,6 @@
 from kivy.uix.widget import Widget
 from globals import globals
-from kivy.properties import StringProperty, ListProperty
+from kivy.properties import StringProperty, ListProperty, NumericProperty
 
 def getnextid():
     nextid = 1
@@ -38,6 +38,7 @@ class NodeWidget(Widget):
 
     nodeId = StringProperty()
     backgroundColor = ListProperty(globals.colors['white'])
+    marginWidth = NumericProperty(5)
 
     def __init__(self, Id, pos):
         super().__init__()  # calls the constructor of the Widget class
@@ -49,6 +50,14 @@ class NodeWidget(Widget):
         #self.backgroundColor = globals.NodeWidgetBackgroundColor
         self.color = globals.NodeWidgetColor # the color refers to the margins and the id of the node
         self.nodeId = str(Id)
+
+    def setMarginWidth(self, value):
+        self.marginWidth = int(value)
+        globals.graphManager.update_canvas()
+
+    def getMarginWidth(self):
+        globals.graphManager.update_canvas()
+        return self.marginWidth
 
     def setNodeId(self, nodeId):
         self.Id = nodeId

@@ -4,6 +4,10 @@ from graph import edge_widget
 import random
 from math import sqrt
 from globals import globals
+from kivy.clock import Clock
+from functools import partial
+from kivy.uix.popup import Popup
+from gui import popup_widget
 
 class GraphManager:
 
@@ -463,26 +467,10 @@ class GraphManager:
             if node.Id == n.Id:
                 return index
 
-    def BFS(self, dummy):
 
-        source = globals.mainViewWidget.ids.bfs_txt_input.text
+    def BFSUtil(self, queue, visited, dummy):
 
-        try:
-            source = int(source)
-            source = self.getNodeWidgetById(source)
-            if source == None:
-                raise GraphException("The starting node does not exist")
-        except:
-            raise GraphException("Invalid number for the starting node")
-
-
-        visited = [False] * (len(self.nodeWidgets))   # Mark all the vertices as not visited
-        queue = []  # Create a queue for BFS
-        queue.append(source)  # Mark the source node as visited and enqueue it
-
-        visited[self.getIndexFromListOfNodes(source)] = True
-
-        while queue:
+        if len(queue) != 0:
 
             node = queue.pop(0)  # Dequeue a vertex from queue and color it
             print(node.Id, end=" ")
@@ -493,6 +481,40 @@ class GraphManager:
                 if visited[self.getIndexFromListOfNodes(n)] == False:                # been visited, then mark it visited and enqueue it
                     queue.append(n)
                     visited[self.getIndexFromListOfNodes(n)] = True
+        else:
+            Clock.unschedule(self.BFSUtil)
+
+    def BFS(self):
+
+        source = globals.mainViewWidget.ids.bfs_txt_input.text
+        isOk = True
+
+        try:
+            if source == "":
+                globals.errorPopupWidget = popup_widget.ErrorPopupWidget()
+                globals.errorPopupWidget.setText("You must enter the starting node first!")
+                globals.popupWindow = Popup(title="Error", content=globals.errorPopupWidget, size_hint=(None, None),
+                                            size=(400, 400), auto_dismiss=False)
+                globals.popupWindow.open()
+                globals.errorPopupWidget.ids.error_popup_btn.bind(on_press=popup_widget.ErrorPopupWidget.closePopUp)
+                isOk = False
+
+            else:
+                source = int(source)
+                source = self.getNodeWidgetById(source)
+                if source == None:
+                    raise GraphException("The starting node does not exist")
+        except:
+            raise GraphException("Invalid number for the starting node")
+
+        if isOk == True:
+            visited = [False] * (len(self.nodeWidgets))   # Mark all the vertices as not visited
+            queue = []  # Create a queue for BFS
+            queue.append(source)  # Mark the source node as visited and enqueue it
+
+            visited[self.getIndexFromListOfNodes(source)] = True
+            Clock.schedule_interval(partial(self.BFSUtil, queue, visited), 1)
+
 
     def DFSUtil(self, v, visited):
 

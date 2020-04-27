@@ -1,12 +1,22 @@
 from kivy.uix.behaviors import ButtonBehavior
 from globals import globals
 from kivy.uix.dropdown import DropDown
+from kivy.uix.widget import Widget
 from kivy.uix.popup import Popup
+from kivy.vector import Vector
 from graph import node_widget
 from graph import edge_widget
 from gui import popup_widget
 from graph import force_layout
 from kivy.clock import Clock
+
+
+class CircularButton(ButtonBehavior, Widget):
+    def collide_point(self, x, y):
+        return Vector(x, y).distance(self.center) <= self.width / 2
+
+def on_press(dummy):
+    globals.graphManager.BFS()
 
 class SettingsButton(ButtonBehavior):
 
@@ -297,7 +307,8 @@ class BfsButton(ButtonBehavior):
         globals.mainViewWidget.ids.bfs_txt_input.visible = True
         globals.mainViewWidget.ids.bfs_txt_lbl.visible = True
         globals.mainViewWidget.ids.down_btns.visible = True
-        Clock.schedule_once( globals.graphManager.BFS, 5)
+        globals.mainViewWidget.ids.play_btn.visible = True
+        globals.mainViewWidget.ids.play_btn.bind(on_press=on_press)
 
 
 class DfsButton(ButtonBehavior):

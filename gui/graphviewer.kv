@@ -8,8 +8,8 @@
           Color:
                rgba: root.getNodeWidgetColor()
           Ellipse:
-               size: root.getNodeRadius() + 5, root.getNodeRadius() + 5 # it used to be 55, 55
-               pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
+               size: root.getNodeRadius() + root.marginWidth, root.getNodeRadius() +  root.marginWidth # it used to be 55, 55
+               pos: [self.pos[0] - root.marginWidth/2, self.pos[1] - root.marginWidth/2]
 
           Color:
                rgba: root.backgroundColor
@@ -43,9 +43,6 @@
           color: 1, 1, 1, 1
           size: [0, 0] if root.cost == 0 else [20, 20]
 
-#          BorderLabel:
-#               text: "10"
-#               pos: root.getPositionForLabel()
 
 
 <LabelB>:
@@ -58,12 +55,45 @@
                size: self.size
                radius: 5, 5, 5, 5
 
+<CircularButton>:
+     bcolor: 0.2, 0.7, 0.9, 0.75
+     canvas.before:
+          Color:
+               rgba: self.bcolor
+          Ellipse:
+               pos: self.pos[0] + 15, self.pos[1] - 10
+               size: self.size
+     Label:
+          text: "Play"
+          pos: root.pos[0] + 15, root.pos[1] - 10
+          color: 1, 1, 1, 1
+          size: 50, 50
+
 #<BorderLabel@Label+BorderBehavior>:
 #     size_hint: None, None
 #     pos: (100,100)
 #     width: 200
 #     height: 100
 #     borders: 3, 'solid', (1,1,1,1)
+
+<ErrorPopupWidget>:
+
+     orientation: 'vertical'
+
+     Label:
+          id: error_popup_lbl
+          #text_size: self.size
+
+     AnchorLayout:
+          anchor_x:'right'
+          anchor_y:'bottom'
+
+          Button:
+               id: error_popup_btn
+               text: 'Close'
+               size_hint: None, None
+               size: 100, 30
+
 
 <PopupWidget>:
 
@@ -487,11 +517,12 @@
                                         text:'Tap to add nodes, \nDouble top to remove nodes'
                                         text_size: self.size
                                         size_hint_y: None
-                                        bcolor: 0.64, 0.7, 1, 1
-                                        color: 0, 0, 0, 1
+                                        bcolor: 0.2, 0.7, 0.9, 0.75
+                                        color: 1, 1, 1, 1
+
                                    BoxLayout:
                                         orientation: 'horizontal'
-
+                                        spacing: 10
                                         Label:
                                              id: bfs_txt_lbl
                                              size_hint: None, None
@@ -507,6 +538,12 @@
                                              opacity: 1 if self.visible else 0
                                              size_hint: None, None
                                              size: 50, 30
+                                        CircularButton:
+                                             id: play_btn
+                                             visible: False
+                                             opacity: 1 if self.visible else 0
+                                             size_hint: None, None
+                                             size: 50, 50
 
 
                                    GridLayout:
