@@ -7,120 +7,120 @@ from globals import globals
 
 class GraphManager:
 
-    def __init__(self, isDirected):
-        self.isDirected = isDirected
-        self.nodeWidgets = []   # the list of nodes
-        self.edgeWidgets = []   # the list of edges
+    def __init__(self, is_directed):
+        self.is_directed = is_directed
+        self.node_widgets = []   # the list of nodes
+        self.edge_widgets = []   # the list of edges
 
     def getNodeWidgetList(self):
-        return self.nodeWidgets
+        return self.node_widgets
 
     def getEdgeWidgetList(self):
-        return self.edgeWidgets
+        return self.edge_widgets
 
-    def getNodeWidgetById(self, nodeId): # returns None if it does not exists
+    def getNodeWidgetById(self, node_id): # returns None if it does not exists
         try:
-            nodeId = int(nodeId)
+            node_id = int(node_id)
         except:
             raise GraphException('Node id must be a positive integer.')
 
         node = None
-        for nodeWidget in self.nodeWidgets:
-            if nodeWidget.Id == nodeId:
-                node = nodeWidget
+        for node_widget in self.node_widgets:
+            if node_widget.Id == node_id:
+                node = node_widget
                 break
         return node
 
-    def deleteNodeWidgetById(self, nodeId): 
-        for nodeWidget in self.nodeWidgets[:]:
-            if nodeWidget.Id == nodeId:
-                self.nodeWidgets.remove(nodeWidget)
+    def deleteNodeWidgetById(self, node_id):
+        for node_widget in self.node_widgets[:]:
+            if node_widget.Id == node_id:
+                self.node_widgets.remove(node_widget)
                 break
 
-    def deleteEdgeWidgetById(self, node1Id, node2Id):
+    def deleteEdgeWidgetById(self, node1_id, node2_id):
         # I put the following conditions because when a graph is undirected it might have two edges overlap if
         # in the input it was given both the edge from the node1 to node2 and from node2 to node1. So in that case
         # both edges must be deleted. It's not the same when the graph is directed.
 
-        if globals.graphManager.getIsDirected() == True:
-            for edgeWidget in self.edgeWidgets[:]:
-                if edgeWidget.node1.Id == node1Id and edgeWidget.node2.Id == node2Id:
-                    self.edgeWidgets.remove(edgeWidget)
+        if globals.graph_manager.getIsDirected() == True:
+            for edge_widget in self.edge_widgets[:]:
+                if edge_widget.node1.Id == node1_id and edge_widget.node2.Id == node2_id:
+                    self.edge_widgets.remove(edge_widget)
                     break
         else:
-            for edgeWidget in self.edgeWidgets[:]:
-                if edgeWidget.node1.Id == node1Id and edgeWidget.node2.Id == node2Id \
-                or edgeWidget.node2.Id == node1Id and edgeWidget.node1.Id == node2Id:
-                    self.edgeWidgets.remove(edgeWidget)
+            for edge_widget in self.edge_widgets[:]:
+                if edge_widget.node1.Id == node1_id and edge_widget.node2.Id == node2_id \
+                or edge_widget.node2.Id == node1_id and edge_widget.node1.Id == node2_id:
+                    self.edge_widgets.remove(edge_widget)
 
-    def deleteNodeWidgetByCoords(self, x1, y1): # the x and y are the coordinates of the touch and if they collide with a node, it will be deleted
-        for nodeWidget in self.nodeWidgets[:]:
-            x2 = nodeWidget.pos[0] + globals.radiusOfNodeWidget + globals.mainViewWidget.ids.graph_canvas.pos[0]
-            y2 = nodeWidget.pos[1] + globals.radiusOfNodeWidget + globals.mainViewWidget.ids.graph_canvas.pos[1]
+    def deleteNodeWidgetByCoords(self, x1, y1):  # the x and y are the coordinates of the touch and if they collide with
+        for node_widget in self.node_widgets[:]:  # a node, it will be deleted
+            x2 = node_widget.pos[0] + globals.node_radius + globals.main_view_widget.ids.graph_canvas.pos[0]
+            y2 = node_widget.pos[1] + globals.node_radius + globals.main_view_widget.ids.graph_canvas.pos[1]
             dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-            if dist <= globals.radiusOfNodeWidget:
-                globals.mainViewWidget.ids.graph_canvas.remove_widget(nodeWidget)
-                self.nodeWidgets.remove(nodeWidget)
-                return nodeWidget.Id
+            if dist <= globals.node_radius:
+                globals.main_view_widget.ids.graph_canvas.remove_widget(node_widget)
+                self.node_widgets.remove(node_widget)
+                return node_widget.Id
 
-    def deleteEdgeWidgetByCoords(self, x, y): # the x and y are the coordinates of the touch and if they collide with an edge, it will be deleted
-        for edgeWidget in self.edgeWidgets[:]:
-            if edgeWidget.collide_point(x, y):
-                globals.mainViewWidget.ids.graph_canvas.remove_widget(edgeWidget)
-                self.edgeWidgets.remove(edgeWidget)
+    def deleteEdgeWidgetByCoords(self, x, y):    # the x and y are the coordinates of the touch and if they collide with
+        for edge_widget in self.edge_widgets[:]:  # an edge, it will be deleted
+            if edge_widget.collide_point(x, y):
+                globals.main_view_widget.ids.graph_canvas.remove_widget(edge_widget)
+                self.edge_widgets.remove(edge_widget)
 
-    def NodeWidgetExists(self, nodeId): # verify if a NodeWidget exists
+    def NodeWidgetExists(self, node_id): # verify if a NodeWidget exists
         exists = False
-        for nodeWidget in self.nodeWidgets:
-            if nodeWidget.Id == nodeId:
+        for node_widget in self.node_widgets:
+            if node_widget.Id == node_id:
                 exists = True
 
         return exists
 
-    def setisDirected(self, TrueOrFalse):
-        self.isDirected = TrueOrFalse
+    def setisDirected(self, true_or_false):
+        self.is_directed = true_or_false
 
     def getIsDirected(self):
-        return self.isDirected
+        return self.is_directed
 
     def interpretLine(self, line):  # returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
-                                    # [ nodeId ] for isolated nodes
-                                    # [ node1Id, node2Id ] for unweighted edge
-                                    # [ nodeId, node2Id, cost ] for weighted edge
+                                    # [ node_id ] for isolated nodes
+                                    # [ node1_id, node2_id ] for unweighted edge
+                                    # [ node1_id, node2_id, cost ] for weighted edge
 
-        foundSource = False
-        foundDest = False
-        foundCost = False
+        found_source = False
+        found_dest = False
+        found_cost = False
         index = 0
 
         while index < len(line):
 
             if line[index].isdigit():
 
-                if foundSource == False:
+                if not found_source:
                     source = int(line[index])
                     index += 1
                     while index < len(line) and line[index].isdigit():
                         source = source * 10 + int(line[index])
                         index += 1
-                    foundSource = True
+                    found_source = True
 
-                elif foundDest == False:
+                elif not found_dest:
                     dest = int(line[index])
                     index += 1
                     while index < len(line) and line[index].isdigit():
                         dest = dest * 10 + int(line[index])
                         index += 1
-                    foundDest = True
+                    found_dest = True
 
-                elif foundCost == False:
+                elif found_cost == False:
                     cost = int(line[index])
                     index += 1
                     while index < len(line) and line[index].isdigit():
                         cost = cost * 10 + int(line[index])
                         index += 1
-                    foundCost = True
+                    found_cost = True
 
                 else:
                     return -1
@@ -131,58 +131,40 @@ class GraphManager:
             else:
                 index += 1
 
-        if foundSource == False: # if the condition is True, then it is an empty line
+        if found_source == False: # if the condition is True, then it is an empty line
             return []
-        elif foundSource == True and foundDest == False: # if the condition is True, then it is an isolated node
+        elif found_source == True and found_dest == False: # if the condition is True, then it is an isolated node
             return [source]
-        elif foundCost == False:  # if the condition is True, then it is an unweighted edge
+        elif found_cost == False:  # if the condition is True, then it is an unweighted edge
             return [source, dest]
         else:    # if the condition is True, then it is an weighted edge
             return [source, dest, cost]
 
 
     def update_canvas(self, arg=0):
-        """This function clears all widgets from the canvas and creates new widgets with almost the same properties
-         except the color and dimensions might change. I was forced to create new widgets because Kivy refreshes
-         the visual properties only after next call"""
 
-        globals.mainViewWidget.ids.graph_canvas.clear_widgets()
+        globals.main_view_widget.ids.graph_canvas.clear_widgets()
 
-        for edge in self.edgeWidgets:
-            #self.deleteEdgeWidgetById(edge.node1.Id, edge.node2.Id) # this method only removes the edge from de edgeWidgets list
-            #new_edge = edge_widget.EdgeWidget(edge.node1, edge.node2)
-            #new_edge.updateEdgeWidgetColor()
-            #new_edge.id = edge.id
-            #self.edgeWidgets.append(new_edge)
-           # globals.mainViewWidget.ids.graph_canvas.add_widget(new_edge)
-            if self.isDirected == True:
+        for edge in self.edge_widgets:
+            if self.is_directed == True:
                 edge.trianglePoints = edge.getTrianglePoints()
-            globals.mainViewWidget.ids.graph_canvas.add_widget(edge)
+            globals.main_view_widget.ids.graph_canvas.add_widget(edge)
 
-
-        for node in self.nodeWidgets[:]:
-            # self.deleteNodeWidgetById(node.Id) # this method only removes the node from de nodeWidgets list
-            # new_node = node_widget.NodeWidget(node.Id, [node.pos[0], node.pos[1]])
-            node.setLabelId(node.Id)
-            node.color = globals.NodeWidgetColor
-            #node.backgroundColor = globals.NodeWidgetBackgroundColor
-
-            # del node
-            # self.nodeWidgets.append(new_node)
-            globals.mainViewWidget.ids.graph_canvas.add_widget(node)
+        for node in self.node_widgets:
+            globals.main_view_widget.ids.graph_canvas.add_widget(node)
 
     def update_text_on_edgeAdd(self):
 
         new_text = ""
 
-        for edge in self.edgeWidgets:
+        for edge in self.edge_widgets:
             new_text += str(edge.node1.Id) + " " + str(edge.node2.Id) + "\n"
 
-        for node in self.nodeWidgets:
+        for node in self.node_widgets:
             if len(node.neighbors) == 0:
                 new_text += str(node.Id) + "\n"
 
-        globals.mainViewWidget.ids.input_nodes.text = new_text
+        globals.main_view_widget.ids.input_text.text = new_text
 
     def update_text_on_delete(self, text, nodeId): # this function updates the text when the user eliminates a node by double click
         if text != "":
@@ -211,7 +193,7 @@ class GraphManager:
                                 if len(node.neighbors) == 1:  # if it has only one neighbor, with the id nodeId, it won't have anymore after deleting
                                     new_text += str(value[0]) + "\n"
 
-                globals.mainViewWidget.ids.input_nodes.text = new_text
+                globals.main_view_widget.ids.input_text.text = new_text
 
 
     def nodeWidgetsDontOverlap(self):   # This function generates random coordinates for the NodeWidget
@@ -219,19 +201,19 @@ class GraphManager:
 
          # boundary coordonates for spawning the nodes
         coords = [10, 10,
-                  int(globals.mainViewWidget.ids.graph_canvas.size[0] - 50),
-                  int(globals.mainViewWidget.ids.graph_canvas.size[1] - 50)]
+                  int(globals.main_view_widget.ids.graph_canvas.size[0] - 50),
+                  int(globals.main_view_widget.ids.graph_canvas.size[1] - 50)]
 
         while(True):    # TODO= Put a boundary...
             x1 = random.randrange(coords[0], coords[2])
             y1 = random.randrange(coords[1], coords[3])
 
             GoodCoords = True
-            for nodeWidget in self.nodeWidgets:
+            for nodeWidget in self.node_widgets:
                 x2 = nodeWidget.pos[0]
                 y2 = nodeWidget.pos[1]
                 dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-                if dist < 2 * globals.radiusOfNodeWidget + globals.minimumDistanceBetweenNodeWidgets:
+                if dist < 2 * globals.node_radius + globals.minimum_distance_between_nodes:
                     GoodCoords = False
                     break
 
@@ -244,10 +226,11 @@ class GraphManager:
             if pos == 0:
                 pos = self.nodeWidgetsDontOverlap() # This function generates random positions which do not overlap the other nodes
             new_nodeWidget = node_widget.NodeWidget(nodeId, pos)
-            self.nodeWidgets.append(new_nodeWidget)
+            self.node_widgets.append(new_nodeWidget)
+            globals.main_view_widget.ids.graph_canvas.add_widget(new_nodeWidget)
 
     def edgeAlreadyExists(self, node1Id, node2Id):
-        for edge in self.edgeWidgets:
+        for edge in self.edge_widgets:
             if int(edge.node1.Id) == node1Id and int(edge.node2.Id) == node2Id:
                 return True
         return False
@@ -257,14 +240,15 @@ class GraphManager:
         if node1Id != node2Id and self.edgeAlreadyExists(node1Id, node2Id) == False:
 
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
-            self.edgeWidgets.append(new_edgeWidget)
+            self.edge_widgets.append(new_edgeWidget)
+            globals.main_view_widget.ids.graph_canvas.add_widget(new_edgeWidget)
 
     def interpretAdjacencyList(self, line):# returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
                                     # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
 
-        foundNode = False
-        foundNeighbors = False
+        found_node = False
+        found_neighbors = False
         neighbors = []
         index = 0
 
@@ -272,15 +256,15 @@ class GraphManager:
 
             if line[index].isdigit():
 
-                if foundNode == False:
+                if found_node == False:
                     node = int(line[index])
                     index += 1
                     while index < len(line) and line[index].isdigit():
                         node = node * 10 + int(line[index])
                         index += 1
-                    foundNode = True
+                    found_node = True
 
-                elif foundNeighbors == False:
+                elif found_neighbors == False:
 
                     while index < len(line):
                         if line[index].isdigit() == True:
@@ -293,14 +277,14 @@ class GraphManager:
                             index += 1
                         elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
                             return -1
-                    foundNeighbors == True
+                    found_neighbors == True
 
             elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
                 return -1
             else:
                 index += 1
 
-        if foundNode == False: # if the condition is True, then it is an empty line, I don't think it really needs this condition
+        if found_node == False: # if the condition is True, then it is an empty line, I don't think it really needs this condition
             return []
         else:
             return [node, neighbors]
@@ -308,32 +292,32 @@ class GraphManager:
     def interpretAdjacencyMatrix(self, nodeId, line): # returns -1 for invalid syntax #TODO: verifica daca are nr de coloanele si linii egale
                                               # and a list otherwise, in the following format:
                                               # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
-        foundNode = False
+        found_node = False
         index = 0
         neighbors = []
         while index < len(line):
             if line[index].isdigit():
 
-                if foundNode == False:
+                if found_node == False:
                     node = int(line[index])
                     index += 1
                     while index < len(line) and line[index].isdigit():
                         node = node * 10 + int(line[index])
                         index += 1
-                    foundNode = True
+                    found_node = True
 
 
         return [nodeId, neighbors]
 
-    def returnOldPosition(self, nodeId, lastNodeWidgetsList):
+    def returnOldPosition(self, node_id, last_node_widgets_list):
         pos = 0
-        for node in lastNodeWidgetsList:
-            if node.Id == nodeId:
+        for node in last_node_widgets_list:
+            if node.Id == node_id:
                 pos = node.pos
                 break
         return pos
 
-    def interpretCostMatrix(self, nodeId, line): # returns -1 for invalid syntax
+    def interpretCostMatrix(self, node_id, line): # returns -1 for invalid syntax
                                                  # and a list otherwise, in the following format:
                                                  # [ nodeId, [[ neighbor1Id, cost ], [ neighbor2Id, cost ] ...]]
         index = 0
@@ -347,27 +331,27 @@ class GraphManager:
 
             index += 1
 
-        return [nodeId, neighbors]
+        return [node_id, neighbors]
 
     def parse_graph_data(self, dummy=0, data=""):
         """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
 
         if data == "":
-            data = globals.mainViewWidget.ids.input_nodes.text
+            data = globals.main_view_widget.ids.input_text.text
 
         if data != "":
             lines = data.split('\n')
-            lastNodeWidgetsList = self.nodeWidgets
-            self.nodeWidgets = []
-            self.edgeWidgets = []
-            nodeId = 1
+            last_node_widgets_list = self.node_widgets
+            self.node_widgets = []
+            self.edge_widgets = []
+            node_id = 1
 
-            if lines != None:
+            if lines:
                 for line in lines:
                     if line != "":
-                        if globals.listOfEdgesBtn == True:
+                        if globals.edge_list_input_btn == True:
                             value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
-                                                             # an empty string or invalid sintax
+                                                             # an empty string or invalid syntax
                                                              # see function description for more information
 
                             if value == -1:
@@ -376,7 +360,7 @@ class GraphManager:
                                 pass
                             elif len(value) == 1:
                                 pos = 0
-                                for node in lastNodeWidgetsList:
+                                for node in last_node_widgets_list:
                                     if node.Id == value[0]:
                                         pos = node.pos
                                         break
@@ -386,53 +370,53 @@ class GraphManager:
                                 if len(value) == 2:
                                     if value[0] != value[1]:
 
-                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))  # this does nothing if it already exists
-                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], lastNodeWidgetsList))
+                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))  # this does nothing if it already exists
+                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], last_node_widgets_list))
                                         self.addEdgeWidget(value[0], value[1])
 
                                 if len(value) == 3:
                                     if value[0] != value[1]:
 
-                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))
-                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], lastNodeWidgetsList))
+                                        self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))
+                                        self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], last_node_widgets_list))
                                         self.addEdgeWidget(value[0], value[1], value[2])
 
-                                if self.isDirected == True:
+                                if self.is_directed == True:
                                     if value[0] != value[1]:
-                                        for node in self.nodeWidgets:
+                                        for node in self.node_widgets:
                                             if node.Id == value[0]:
                                                 node.neighbors.append(self.getNodeWidgetById(value[1]))
                                                 break
                                 else:
                                     if value[0] != value[1]:
-                                        for node in self.nodeWidgets:
+                                        for node in self.node_widgets:
                                             if node.Id == value[0]:
                                                 node.neighbors.append(self.getNodeWidgetById(value[1]))
                                             if node.Id == value[1]:
                                                 node.neighbors.append(self.getNodeWidgetById(value[0]))
 
-                        elif globals.adjacencyListBtn == True or globals.adjacencyMatrixBtn == True:
+                        elif globals.adjacency_list_input_btn == True or globals.adjacency_matrix_input_btn == True:
 
-                            if globals.adjacencyListBtn == True:
+                            if globals.adjacency_list_input_btn == True:
                                 value = self.interpretAdjacencyList(line)
                                 if value == -1:
                                     raise GraphException("Invalid format for the adjacency list!")
-                            if globals.adjacencyMatrixBtn == True:
-                                value = self.interpretAdjacencyMatrix(nodeId, line)
-                                nodeId += 1
+                            if globals.adjacency_matrix_input_btn == True:
+                                value = self.interpretAdjacencyMatrix(node_id, line)
+                                node_id += 1
                                 if value == -1:
                                     raise GraphException("Invalid format for the adjacency matrix!")
 
 
-                            self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], lastNodeWidgetsList))
+                            self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))
                             nodeWidget = self.getNodeWidgetById(value[0])
                             for node in value[1]:
                                 if node != nodeWidget.Id:
-                                    self.addNodeWidget(node, pos=self.returnOldPosition(node, lastNodeWidgetsList))
+                                    self.addNodeWidget(node, pos=self.returnOldPosition(node, last_node_widgets_list))
                                     node = self.getNodeWidgetById(node)
                                     self.addEdgeWidget(nodeWidget.Id, node.Id)
 
-                                    if self.isDirected == True:
+                                    if self.is_directed == True:
                                         nodeWidget.neighbors.append(node)
                                     else:
                                         nodeWidget.neighbors.append(node)
@@ -441,15 +425,14 @@ class GraphManager:
                         else: # when globals.costMatrixBtn == True
                             self.interpretCostMatrix()
 
-        self.update_canvas()
+        # self.update_canvas()
         self.printGraph()
 
     def addNodeFromDrawing(self, node):
-        node.setLabelId(node.Id)
-        self.nodeWidgets.append(node)
+        self.node_widgets.append(node)
 
     def printGraph(self):
-        for node in self.nodeWidgets:
+        for node in self.node_widgets:
             print(node.Id, end=": ")
             for neighbor in node.neighbors:
                 print(neighbor.Id, end=" ")
@@ -458,62 +441,7 @@ class GraphManager:
 
     def getIndexFromListOfNodes(self, node):
         index = -1
-        for n in self.nodeWidgets:
+        for n in self.node_widgets:
             index += 1
             if node.Id == n.Id:
                 return index
-
-
-
-    def DFSUtil(self, v, visited):
-
-        visited[self.getIndexFromListOfNodes(v)] = True  # Mark the current node as visited and color it
-        print(v.Id, end=' ')
-        v.backgroundColor = [1, 0, 0, 1]
-
-        for i in v.neibors:  # Recur for all the vertices adjacent to this vertex
-            if visited[self.getIndexFromListOfNodes(i)] == False:
-                self.DFSUtil(i, visited)
-
-                # The function to do DFS traversal. It uses
-
-    # recursive DFSUtil()
-
-    def DFS(self, startNode):
-
-        try:
-            startNode = int(startNode)
-            startNode = self.getNodeWidgetById(startNode)
-            if startNode == None:
-                raise GraphException("The starting node does not exist")
-        except:
-            raise GraphException("Invalid number for the starting node")
-
-        visited = [False] * (len(self.nodeWidgets))  # Mark all the vertices as not visited
-
-        self.DFSUtil(startNode, visited)  # Call the recursive helper function to print DFS traversal
-
-    def dijkstra(self, src):
-
-        dist = [sys.maxint] * self.V
-        dist[src] = 0
-        sptSet = [False] * self.V
-
-        for cout in range(self.V):
-
-            # Pick the minimum distance vertex from the set of vertices not yet processed.
-            # u is always equal to src in first iteration
-            u = self.minDistance(dist, sptSet)
-
-            # Put the minimum distance vertex in the shotest path tree
-            sptSet[u] = True
-
-            # Update dist value of the adjacent vertices of the picked vertex only if the current
-            # distance is greater than new distance and the vertex in not in the shotest path tree
-            for v in range(self.V):
-                if self.graph[u][v] > 0 and \
-                        sptSet[v] == False and \
-                        dist[v] > dist[u] + self.graph[u][v]:
-                    dist[v] = dist[u] + self.graph[u][v]
-
-        self.printSolution(dist)

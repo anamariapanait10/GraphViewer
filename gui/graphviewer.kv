@@ -2,64 +2,65 @@
 #:import Factory kivy.factory.Factory
 
 <NodeWidget>:
-     size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
+     size: root.radius * 2, root.radius * 2
 
      canvas.before:
           Color:
-               rgba: root.getNodeWidgetColor()
+               rgba: root.border_color
           Ellipse:
-               size: root.getNodeRadius() + root.marginWidth, root.getNodeRadius() +  root.marginWidth # it used to be 55, 55
-               pos: [self.pos[0] - root.marginWidth/2, self.pos[1] - root.marginWidth/2]
+               size: root.radius * 2 + root.border_width, root.radius * 2 +  root.border_width
+               pos: [self.pos[0] - root.border_width / 2, self.pos[1] - root.border_width / 2]
 
           Color:
-               rgba: root.backgroundColor
+               rgba: root.background_color
           Ellipse:
-               size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
+               size: root.radius * 2, root.radius * 2
                pos: self.pos
 
      Label:
-          id: nodeId_lbl
+          id: node_id_lbl
           size: 10, 10
-          color: root.getNodeWidgetColor()
-          pos: [self.parent.pos[0] + root.getNodeRadius() / 2 - 5, self.parent.pos[1] + root.getNodeRadius() / 2 - 5]
-          text: root.getId()
+          color: root.border_color
+          pos: [root.pos[0] + root.radius - 5, root.pos[1] + root.radius - 5] # I subtracted 5 because in order to center
+                                                                              # the label I need to subtract its size / 2
+          text: root.node_id
 
 
 <EdgeWidget>:
      canvas.before:
           Color:
-               rgba: root.getEdgeWidgetColor()
+               rgba: root.color
 
           Line:
                points: self.points
                width: 1.5
           Triangle:
-               points: self.trianglePoints
+               points: self.triangle_points
 
      LabelB:
           text: str("") if root.cost == 0 else str(root.cost)
-          pos: [0, 0] if root.labelPosition == [] else root.labelPosition # [(root.points[0] + root.points[2]) / 2,  (root.points[1] + root.points[3]) / 2]
-          bcolor:0, 0, 0, 1
+          pos: [0, 0] if root.label_position == [] else root.label_position
+          background_color:0, 0, 0, 1
           color: 1, 1, 1, 1
           size: [0, 0] if root.cost == 0 else [20, 20]
 
 
 
 <LabelB>:
-     bcolor: 1, 1, 1, 1
+     background_color: 1, 1, 1, 1
      canvas.before:
           Color:
-               rgba: self.bcolor
+               rgba: self.background_color
           RoundedRectangle:
                pos: self.pos
                size: self.size
                radius: 5, 5, 5, 5
 
 <CircularButton>:
-     bcolor: 0.2, 0.7, 0.9, 0.75
+     background_color: 0.2, 0.7, 0.9, 0.75
      canvas.before:
           Color:
-               rgba: self.bcolor
+               rgba: self.background_color
           Ellipse:
                pos: self.pos
                size: self.size
@@ -71,12 +72,10 @@
 
 
 <ErrorPopupWidget>:
-
      orientation: 'vertical'
 
      Label:
           id: error_popup_lbl
-          #text_size: self.size
 
      AnchorLayout:
           anchor_x:'right'
@@ -146,7 +145,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: nodeWidgetBackground_lbl
-          bcolor: root.getNodeWidgetBackgroundColor()
+          background_color: root.getNodeWidgetBackgroundColor()
           size: 40, 40
           size_hint_x: None
      Button:
@@ -163,7 +162,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: nodeWidgetColor_lbl
-          bcolor: root.getNodeWidgetColor()
+          background_color: root.getNodeWidgetColor()
           size: 40, 40
           size_hint_x: None
      Button:
@@ -182,7 +181,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: edgeWidgetColor_lbl
-          bcolor: root.getEdgeWidgetColor()
+          background_color: root.getEdgeWidgetColor()
           size: 40, 40
           size_hint_x: None
      Button:
@@ -462,7 +461,7 @@
                               bar_width: 15
 
                               TextInput:
-                                   id: input_nodes
+                                   id: input_text
                                     #text:'ScrollviewExample'*100
                                    width: scroller.width
                                    size_hint: None, None

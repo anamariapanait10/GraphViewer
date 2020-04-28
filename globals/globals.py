@@ -1,32 +1,27 @@
 from kivy.properties import ObjectProperty
-from kivy.properties import ListProperty
 
 
-graphManager = None
-mainViewWidget = None
+graph_manager = None
+main_view_widget = None
 
-inputDropDownList = None
-algDropDownList = None
-changeColorDropDownList = None
+input_drop_down_list = None
+algorithms_drop_down_list = None
+change_color_drop_down_list = None
 
-popupWindow = ObjectProperty()
-popupWidget = None
-errorPopupWidget = None
+popup_window = ObjectProperty()
+popup_widget = None
+error_popup_widget = None
 
-NodeWidgetBackgroundColor = ListProperty()
-NodeWidgetColor = ListProperty()
-EdgeWidgetColor = ListProperty()
-
-radiusOfNodeWidget = 50
-lengthOfEdgeWidget = 50
-minimumDistanceBetweenNodeWidgets = 5
+node_radius = 25
+edge_length = 50
+minimum_distance_between_nodes = 5
 
 forces = True
 
-listOfEdgesBtn = True
-adjacencyListBtn = False
-adjacencyMatrixBtn = False
-costMatrixBtn = False
+edge_list_input_btn = True
+adjacency_list_input_btn = False
+adjacency_matrix_input_btn = False
+cost_matrix_input_btn = False
 
 colors = { 'white': [0.9, 0.9, 0.9, 1], 'black': [0, 0, 0, 1], 'red': [1, 0, 0, 1], 'yellow': [0.937, 0.87, 0.32, 1],
            'orange': [1, 0.62, 0.088, 1], 'blue': [0.199, 0.7, 1, 1], 'purple': [0.75, 0.5, 1, 1],

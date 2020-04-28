@@ -7,15 +7,15 @@ from graph import edge_widget
 class PopupWidget(GridLayout):
 
     def closePopUp(self):
-        globals.popupWindow.dismiss()
-        globals.graphManager.update_canvas()
+        globals.popup_window.dismiss()
+       # globals.graph_manager.update_canvas()
 
     def new_radius(self, *args):
         self.ids.nodeRadius_lbl.text = str(int(args[1]))
         node_widget.changeNodeRadius(int(args[1]))
         self.ids.radiusSlider.value = int(args[1])
-        globals.graphManager.update_canvas()
-        for edge in globals.graphManager.edgeWidgets:
+       # globals.graph_manager.update_canvas()
+        for edge in globals.graph_manager.edgeWidgets:
             edge.updateCoords()
 
     def new_length(self, *args):
@@ -33,14 +33,14 @@ class PopupWidget(GridLayout):
         return globals.EdgeWidgetColor
 
     def getEdgeSliderValue(self):
-        return globals.lengthOfEdgeWidget
+        return globals.edge_length
 
     def getRadiusSliderValue(self):
-        return globals.radiusOfNodeWidget
+        return globals.node_radius
 
 class ErrorPopupWidget(BoxLayout):
     def setText(self, text):
-        globals.errorPopupWidget.ids.error_popup_lbl.text = text
+        globals.error_popup_widget.ids.error_popup_lbl.text = text
 
     def closePopUp(self):
-        globals.popupWindow.dismiss()
+        globals.popup_window.dismiss()

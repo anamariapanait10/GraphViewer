@@ -42,61 +42,61 @@ def dist(u, v):
 
 def __calculateForces():
 
-    nodeWidgets = globals.graphManager.getNodeWidgetList()
-    for v in nodeWidgets:
+    node_widgets = globals.graph_manager.getNodeWidgetList()
+    for v in node_widgets:
         v.force = [0, 0]
 
-    for v in nodeWidgets:
+    for v in node_widgets:
 
-        for u in nodeWidgets:
+        for u in node_widgets:
             if v != u:
                 d = dist(u, v)
-                sinus = (v.pos[1] - u.pos[1]) / d
-                cosinus = (v.pos[0] - u.pos[0]) / d
+                sine = (v.pos[1] - u.pos[1]) / d
+                cosine = (v.pos[0] - u.pos[0]) / d
 
-                if globals.graphManager.edgeAlreadyExists(int(u.Id), int(v.Id)):
+                if globals.graph_manager.edgeAlreadyExists(int(u.Id), int(v.Id)):
                     F = c1 * log(d / c2) # F is positive towards v
 
                 else:
                     F = -c3 / (d ** 2)
 
-                if globals.graphManager.isDirected or u.Id == grabbed_node or v.Id == grabbed_node: # ?
+                if globals.graph_manager.is_directed or u.Id == grabbed_node or v.Id == grabbed_node: # ?
                     F *= 2
 
                 if u.Id != grabbed_node:
-                    u.force[0] += F * cosinus
-                    u.force[1] += F * sinus
+                    u.force[0] += F * cosine
+                    u.force[1] += F * sine
 
                 if v.Id != grabbed_node:
-                    v.force[0] -= F * cosinus
-                    v.force[1] -= F * sinus
+                    v.force[0] -= F * cosine
+                    v.force[1] -= F * sine
 
 
 def __moveNodes():
 
-    nodeWidgets = globals.graphManager.getNodeWidgetList()
+    node_widgets = globals.graph_manager.getNodeWidgetList()
 
-    for v in nodeWidgets:
+    for v in node_widgets:
         nx = v.pos[0] + c4 * v.force[0]
         ny = v.pos[1] + c4 * v.force[1]
 
         if nx < 0:
             nx = 20
 
-        if nx > globals.mainViewWidget.ids.graph_canvas.size[0]:
-            nx = globals.mainViewWidget.ids.graph_canvas.size[0] - 60
+        if nx > globals.main_view_widget.ids.graph_canvas.size[0]:
+            nx = globals.main_view_widget.ids.graph_canvas.size[0] - 60
 
         if ny < 0:
             ny = 20
 
-        if ny > globals.mainViewWidget.ids.graph_canvas.size[1]:
-            ny = globals.mainViewWidget.ids.graph_canvas.size[1] - 60
+        if ny > globals.main_view_widget.ids.graph_canvas.size[1]:
+            ny = globals.main_view_widget.ids.graph_canvas.size[1] - 60
 
         v.pos[0] = nx
         v.pos[1] = ny
 
-    edgeWidgets = globals.graphManager.getEdgeWidgetList()
-    for e in edgeWidgets:
+    edge_widgets = globals.graph_manager.getEdgeWidgetList()
+    for e in edge_widgets:
         e.updateCoords()
 
 
@@ -105,7 +105,7 @@ number = 0
 def update(arg=0):
     __calculateForces()
     __moveNodes()
-    # globals.graphManager.update_canvas()
+
     global number
     number += 1
     if number >= M:
@@ -116,7 +116,6 @@ def update(arg=0):
 
 
 def recalculatePositions(gn=0):
-    #globals.graphManager.randomizePositions()
     global grabbed_node
     grabbed_node = gn
     Clock.schedule_interval(update, 0.0005)
