@@ -1,4 +1,4 @@
-from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.behaviors import ButtonBehavior, ToggleButtonBehavior
 from globals import globals
 from kivy.uix.dropdown import DropDown
 from kivy.uix.widget import Widget
@@ -8,15 +8,15 @@ from graph import node_widget
 from graph import edge_widget
 from gui import popup_widget
 from graph import force_layout
-from kivy.clock import Clock
+from gui import algorithms
 
 
-class CircularButton(ButtonBehavior, Widget):
+class CircularButton(ToggleButtonBehavior, Widget):
     def collide_point(self, x, y):
         return Vector(x, y).distance(self.center) <= self.width / 2
 
-def on_press(dummy):
-    globals.graphManager.BFS()
+    def on_press(self):
+        algorithms.BFS().start()
 
 class SettingsButton(ButtonBehavior):
 
@@ -308,7 +308,7 @@ class BfsButton(ButtonBehavior):
         globals.mainViewWidget.ids.bfs_txt_lbl.visible = True
         globals.mainViewWidget.ids.down_btns.visible = True
         globals.mainViewWidget.ids.play_btn.visible = True
-        globals.mainViewWidget.ids.play_btn.bind(on_press=on_press)
+        globals.mainViewWidget.ids.play_btn.bind(on_press=CircularButton.on_press)
 
 
 class DfsButton(ButtonBehavior):

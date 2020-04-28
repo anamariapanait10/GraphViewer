@@ -33,6 +33,7 @@ class MainViewWidget(Widget):
 
     grabbedNode = None
     lastSelectedNode = None
+    # grabbedTouch = None
 
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
@@ -49,11 +50,20 @@ class MainViewWidget(Widget):
 
                     print("Add edge")
 
-                else:
+                elif self.lastSelectedNode == None:
                     self.lastSelectedNode = self.grabbedNode
                     self.lastSelectedNode.setMarginWidth(10)
+                else:
+                    pass
+
                 touch.grab(self)
-                return True
+                # self.grabbedTouch = touch
+
+            elif self.lastSelectedNode != None:
+                self.lastSelectedNode.setMarginWidth(5)
+                self.lastSelectedNode = None
+
+            return True
         else:
             return super().on_touch_down(touch)
 
@@ -74,6 +84,11 @@ class MainViewWidget(Widget):
             print("Touch Up")
             if touch.grab_current is self:
                 touch.ungrab(self)
+                # if self.lastSelectedNode != None:
+                    # dist = sqrt((self.lastSelectedNode.pos[0]-self.grabbedNode.pos[0])**2+(self.lastSelectedNode.pos[1]-self.grabbedNode.pos[1])**2)
+                    # if dist < 10:
+                # self.grabbedNode.setMarginWidth(5)
+                # self.grabbedNode = None
                 if globals.forces== True:
                     recalculatePositions()
             else:
@@ -146,6 +161,10 @@ class MainViewWidget(Widget):
     def text_event(self, event, text):
         if text != "":
             global lastInputText
+
+            max_length = self.getTextWidth()
+            globals.mainViewWidget.ids.input_nodes.width = max_length
+
             if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
                 self.ids.graph_canvas.clear_widgets()
                 globals.graphManager.parse_graph_data(text)
@@ -153,6 +172,16 @@ class MainViewWidget(Widget):
                     recalculatePositions()
 
                 lastInputText = text
+
+    def getTextWidth(self):
+
+        max_length = globals.mainViewWidget.ids.scroller.width
+
+        for line in globals.mainViewWidget.ids.input_nodes._lines_labels:
+            max_length = max(max_length, line.width + 20)
+
+        return max_length
+
 
 
 class LabelB(Label):

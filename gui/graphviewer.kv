@@ -61,20 +61,14 @@
           Color:
                rgba: self.bcolor
           Ellipse:
-               pos: self.pos[0] + 15, self.pos[1] - 10
+               pos: self.pos
                size: self.size
      Label:
           text: "Play"
-          pos: root.pos[0] + 15, root.pos[1] - 10
+          pos: root.pos
           color: 1, 1, 1, 1
           size: 50, 50
 
-#<BorderLabel@Label+BorderBehavior>:
-#     size_hint: None, None
-#     pos: (100,100)
-#     width: 200
-#     height: 100
-#     borders: 3, 'solid', (1,1,1,1)
 
 <ErrorPopupWidget>:
 
@@ -434,172 +428,166 @@
           BoxLayout:
                height: 1000
 
-               Splitter:
-                    sizable_from: 'right'
-                    min_size: 200
-                    max_size: 600
+               BoxLayout:
+                    orientation: 'vertical'
+                     #size_hint_y: None
 
                     BoxLayout:
-                         orientation: 'vertical'
-                         #size_hint_y: None
+                         orientation: 'horizontal'
+                         size_hint_y: None
+                         height: 40
+                         padding:[10, 0, 10, 0]
+                         spacing: 20
+
+                         Label:
+                              size: 50, 40
+                              text: 'Graph data'
+                              color: 0, 0, 0, 1
+
+                         Button:
+                              id: input_btn
+                              size: 100, 40
+                              background_color: 1, 1, 1, 1
+                              text: 'Input'
+
+                    BoxLayout:
+                         orientation: 'horizontal'
+                          #size_hint_y: None
+                         height: 40
+                         ScrollView:
+                              id:scroller
+                              do_scroll_x: True
+                              do_scroll_y: True
+                              scroll_type: ['bars']
+                              bar_width: 15
+
+                              TextInput:
+                                   id: input_nodes
+                                    #text:'ScrollviewExample'*100
+                                   width: scroller.width
+                                   size_hint: None, None
+                                   height: max(self.minimum_height, scroller.height)
+                                   hint_text:'Enter text'
+                                    #font_size: 30
+                                    #size: 50, 300
 
                          BoxLayout:
-                              orientation: 'horizontal'
-                              size_hint_y: None
-                              height: 40
-                              padding:[10, 0, 10, 0]
-                              spacing: 20
+                              orientation: 'vertical'
+                              spacing: 50
+                              padding: [10, 0, 10, 20]
+                               #size_hint_y: None
+                               #height: 90
 
-                              Label:
-                                   size: 50, 40
-                                   text: 'Graph data'
-                                   color: 0, 0, 0, 1
-
-                              Button:
-                                   id: input_btn
-                                   size: 100, 40
-                                   background_color: 1, 1, 1, 1
-                                   text: 'Input'
-
-                         BoxLayout:
-                              orientation: 'horizontal'
-                              #size_hint_y: None
-                              height: 40
-                              ScrollView:
-                                   id:scroller
-                                   do_scroll_x: True
-                                   do_scroll_y: True
-                                   scroll_type: ['bars']
-                                   bar_width: 15
-                                   bar_inactive_color: self.bar_color
-
-                                   TextInput:
-                                        id: input_nodes
-                                        #text:'ScrollviewExample'*100
-                                        width: 1000 #scroller.width
-                                        size_hint: None, None
-                                        height: max(self.minimum_height, scroller.height)
-                                        hint_text:'Enter text'
-                                        #font_size: 30
-                                        #size: 50, 300
-
-                              BoxLayout:
-                                   orientation: 'vertical'
-                                   spacing: 50
-                                   padding: [10, 0, 10, 20]
-                                   #size_hint_y: None
-                                   #height: 90
-
-                                   AnchorLayout:
-                                        anchor_x: 'left'
-                                        anchor_y: 'top'
-
-                                        BoxLayout:
-                                             orientation: 'horizontal'
-                                             size_hint: None, None
-                                             spacing: 10
-                                             Label:
-                                                  #padding: [20, 20]
-                                                  size_hint: None, None
-                                                  size: 80, 10
-                                                  color: 0, 0, 0, 1
-                                                  text: 'Forces:'
-
-                                             Switch:
-                                                  id: switch
-                                                  active: True
-                                                  size_hint: None, None
-                                                  size: 60, 10
-
-                                   LabelB:
-                                        id: draw_lbl
-                                        padding: [20, 20]
-                                        text:'Tap to add nodes, \nDouble top to remove nodes'
-                                        text_size: self.size
-                                        size_hint_y: None
-                                        bcolor: 0.2, 0.7, 0.9, 0.75
-                                        color: 1, 1, 1, 1
+                              AnchorLayout:
+                                   anchor_x: 'left'
+                                   anchor_y: 'top'
 
                                    BoxLayout:
                                         orientation: 'horizontal'
+                                        size_hint: None, None
                                         spacing: 10
                                         Label:
-                                             id: bfs_txt_lbl
+                                              #padding: [20, 20]
                                              size_hint: None, None
-                                             visible: False
-                                             opacity: 1 if self.visible else 0
-                                             size: 200, 30
-                                             text: 'Enter the starting node:'
+                                             size: 80, 10
                                              color: 0, 0, 0, 1
-                                        TextInput:
-                                             id: bfs_txt_input
-                                             visible: False
-                                             #hint_text: 'Enter the starting node'
-                                             opacity: 1 if self.visible else 0
-                                             size_hint: None, None
-                                             size: 50, 30
-                                        CircularButton:
-                                             id: play_btn
-                                             visible: False
-                                             opacity: 1 if self.visible else 0
-                                             size_hint: None, None
-                                             size: 50, 50
+                                             text: 'Forces:'
 
+                                        Switch:
+                                             id: switch
+                                             active: True
+                                             size_hint: None, None
+                                             size: 60, 10
 
-                                   GridLayout:
-                                        id: down_btns
-                                        visible:False
+                              LabelB:
+                                   id: draw_lbl
+                                   padding: [20, 20]
+                                   text:'Tap to add nodes, \nDouble top to remove nodes'
+                                   text_size: self.size
+                                   size_hint_y: None
+                                   bcolor: 0.2, 0.7, 0.9, 0.75
+                                   color: 1, 1, 1, 1
+
+                              BoxLayout:
+                                   orientation: 'horizontal'
+                                   spacing: 30
+                                   Label:
+                                        id: bfs_txt_lbl
+                                        size_hint: None, None
+                                        visible: False
                                         opacity: 1 if self.visible else 0
-                                        row_default_height: 30
-                                        row_force_default: True
-                                        rows: 1
-                                        cols: 3
+                                        size: 150, 30
+                                        text: 'Enter the starting node:'
+                                        color: 0, 0, 0, 1
+                                   TextInput:
+                                        id: bfs_txt_input
+                                        visible: False
+                                         #hint_text: 'Enter the starting node'
+                                        opacity: 1 if self.visible else 0
+                                        size_hint: None, None
+                                        size: 50, 30
+                                   CircularButton:
+                                        id: play_btn
+                                        visible: False
+                                        opacity: 1 if self.visible else 0
+                                        size_hint: None, None
+                                        size: 50, 50
+
+
+                              GridLayout:
+                                   id: down_btns
+                                   visible:False
+                                   opacity: 1 if self.visible else 0
+                                   row_default_height: 30
+                                   row_force_default: True
+                                   rows: 1
+                                   cols: 3
+                                   height: 30
+                                   width: 400
+                                   size_hint_x: None
+                                   size_hint_y: None
+
+                                   BoxLayout:
+                                        orientation: 'horizontal'
                                         height: 30
-                                        width: 400
+                                        spacing: 20
                                         size_hint_x: None
-                                        size_hint_y: None
+                                        width:50
 
-                                        BoxLayout:
-                                             orientation: 'horizontal'
-                                             height: 30
-                                             spacing: 20
+                                        Button :
+                                             size: 50, 30
                                              size_hint_x: None
-                                             width:50
+                                             pos:10, 0
+                                             background_color: 1, 1, 1, 1
+                                             text: '<='
 
-                                             Button :
-                                                  size: 50, 30
-                                                  size_hint_x: None
-                                                  pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '<='
+                                   BoxLayout:
+                                        orientation: 'horizontal'
+                                        height: 30
+                                        spacing: 30
+                                        size_hint_x: None
+                                        width: 120
+                                        Button :
+                                             size: 50, 30
+                                             pos:10, 0
+                                             background_color: 1, 1, 1, 1
+                                             text: '<-'
 
-                                        BoxLayout:
-                                             orientation: 'horizontal'
-                                             height: 30
-                                             spacing: 30
+                                        Button :
+                                             size: 50, 30
+                                             pos:10, 0
+                                             background_color: 1, 1, 1, 1
+                                             text: '->'
+                                   BoxLayout:
+                                        orientation: 'horizontal'
+                                        height: 30
+                                        spacing: 20
+                                        Button :
                                              size_hint_x: None
-                                             width: 120
-                                             Button :
-                                                  size: 50, 30
-                                                  pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '<-'
-
-                                             Button :
-                                                  size: 50, 30
-                                                  pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '->'
-                                        BoxLayout:
-                                             orientation: 'horizontal'
-                                             height: 30
-                                             spacing: 20
-                                             Button :
-                                                  size_hint_x: None
-                                                  size: 50, 30
-                                                  pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '=>'
+                                             size: 50, 30
+                                             pos:10, 0
+                                             background_color: 1, 1, 1, 1
+                                             text: '=>'
 
 
                RelativeLayout:
