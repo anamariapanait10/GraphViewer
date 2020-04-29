@@ -368,10 +368,8 @@
           rows: 4
 
           BoxLayout:
-               orientation: 'vertical'
                size_hint_y: None
                height: 70
-                # If you put something here it will appear above the slider
 
                GridLayout:
                     row_default_height: 40
@@ -433,41 +431,51 @@
                                         #width: 100
 
           BoxLayout:
-               height: 1000
+               #height: 1000
+               orientation: 'horizontal'
 
                BoxLayout:
                     orientation: 'vertical'
-                     #size_hint_y: None
+                    size_hint_x: None
+                    width: 350
 
-                    BoxLayout:
+                    BoxLayout: # the input type dropdown
+
                          orientation: 'horizontal'
-                         size_hint_y: None
+                         size_hint: None, None
+                         width: 300
                          height: 40
                          padding:[10, 0, 10, 0]
                          spacing: 20
 
                          Label:
-                              size: 50, 40
+                              size_hint_x: None
+                              size: 120, 40
                               text: 'Graph data'
                               color: 0, 0, 0, 1
 
                          Button:
                               id: input_btn
-                              size: 100, 40
+                              size_hint_x: None
+                              size: 190, 40
                               background_color: 1, 1, 1, 1
                               text: 'Input'
 
                     BoxLayout:
                          orientation: 'horizontal'
                           #size_hint_y: None
-                         height: 40
-                         ScrollView:
+                         #height: 40
+                         size_hint_x: None
+                         width: 300
+
+                         ScrollView:    # Input text for nodes
                               id:scroller
                               do_scroll_x: True
                               do_scroll_y: True
                               scroll_type: ['bars']
                               bar_width: 15
-                              size: 50, 300
+                              size_hint_x: None
+                              size: 150, 800
 
                               TextInput:
                                    id: input_text
@@ -478,46 +486,51 @@
                                     #font_size: 30
 
 
-                         BoxLayout:
+                         BoxLayout:     # Forces, instructions and algorithm controls
                               orientation: 'vertical'
-                              spacing: 50
+                              #spacing: 50
                               padding: [10, 0, 10, 20]
-                               #size_hint_y: None
-                               #height: 90
+                              size_hint_x: None
+                              width: 200
 
-                              AnchorLayout:
-                                   anchor_x: 'left'
-                                   anchor_y: 'top'
+#                              canvas.before:
+#                                  Color:
+#                                        rgba: 1, 0, 0, 1
+#                                  Line:
+#                                       points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+#                                      width: 2
 
-                                   BoxLayout:
-                                        orientation: 'horizontal'
-                                        size_hint: None, None
-                                        spacing: 10
-                                        Label:
-                                              #padding: [20, 20]
-                                             size_hint: None, None
-                                             size: 80, 10
-                                             color: 0, 0, 0, 1
-                                             text: 'Forces:'
+                              BoxLayout:
+                                   orientation: 'horizontal'
+                                   size_hint_x: None
+                                   spacing: 30
+                                   Label:
+                                          #padding: [20, 20]
+                                        size_hint_x: None
+                                        size: 80, 10
+                                        color: 0, 0, 0, 1
+                                        text: 'Forces:'
 
-                                        Switch:
-                                             id: switch
-                                             active: True
-                                             size_hint: None, None
-                                             size: 60, 10
+                                   Switch:
+                                        id: switch
+                                        active: True
+                                        #size_hint: None, None
+                                        size: 60, 10
 
                               LabelB:
                                    id: draw_lbl
                                    padding: [20, 20]
-                                   text:'Tap to add nodes, \nDouble top to remove nodes'
+                                   text:'Tap to add nodes, \nDouble tap to remove nodes\nTap on two different nodes\nto create an edge between them'
                                    text_size: self.size
                                    size_hint_y: None
-                                   bcolor: 0.2, 0.7, 0.9, 0.75
+                                   height: 150
+                                   background_color: 0.2, 0.7, 0.9, 0.75
                                    color: 1, 1, 1, 1
 
                               BoxLayout:
                                    orientation: 'horizontal'
                                    spacing: 30
+
                                    Label:
                                         id: bfs_txt_lbl
                                         size_hint: None, None
@@ -532,13 +545,13 @@
                                          #hint_text: 'Enter the starting node'
                                         opacity: 1 if self.visible else 0
                                         size_hint: None, None
-                                        size: 50, 30
-                                   CircularButton:
-                                        id: play_btn
-                                        visible: False
-                                        opacity: 1 if self.visible else 0
-                                        size_hint: None, None
-                                        size: 50, 50
+                                        size: 40, 30
+                              CircularButton:
+                                   id: play_btn
+                                   visible: False
+                                   opacity: 1 if self.visible else 0
+                                   size_hint: None, None
+                                   size: 50, 50
 
 
                               GridLayout:
@@ -549,10 +562,10 @@
                                    row_force_default: True
                                    rows: 1
                                    cols: 3
-                                   height: 30
-                                   width: 400
                                    size_hint_x: None
                                    size_hint_y: None
+                                   height: 30
+                                   width: 220
 
                                    BoxLayout:
                                         orientation: 'horizontal'
@@ -599,22 +612,23 @@
 
                RelativeLayout:
                     id: graph_canvas
+
                     canvas.before:
                          Color:
                               rgba: 0.8, 0.9, 0.9, 1
                          RoundedRectangle:
-                              pos: self.parent.pos[0] - 6, self.parent.pos[1] - 46
-                              size: self.size[0] - 6, self.size[1] - 6
+                              pos: self.parent.pos[0] - 4, self.parent.pos[1] - 28
+                              size: self.size[0] - 6, self.size[1] - 4
                               radius: 15, 15, 15, 15
 
                          Color:
                               rgba: 0, 0, 0, 0.7
                          Line:
                               width: 1
-                              rounded_rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 46, self.width - 6, self.height - 6, 15
+                              rounded_rectangle: self.parent.pos[0] - 4, self.parent.pos[1] - 28, self.width - 6, self.height - 4, 15
 
           GridLayout:
                size_hint_y: None
-               height: 40
+               height: 20
                rows: 1
                cols: 1
