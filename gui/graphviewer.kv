@@ -6,13 +6,13 @@
 
      canvas.before:
           Color:
-               rgba: root.border_color
+               rgba: self.border_color
           Ellipse:
                size: root.radius * 2 + root.border_width, root.radius * 2 +  root.border_width
                pos: [self.pos[0] - root.border_width / 2, self.pos[1] - root.border_width / 2]
 
           Color:
-               rgba: root.background_color
+               rgba: self.background_color
           Ellipse:
                size: root.radius * 2, root.radius * 2
                pos: self.pos
@@ -145,7 +145,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: nodeWidgetBackground_lbl
-          background_color: root.getNodeWidgetBackgroundColor()
+          background_color: root.node_background_color_lbl
           size: 40, 40
           size_hint_x: None
      Button:
@@ -162,7 +162,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: nodeWidgetColor_lbl
-          background_color: root.getNodeWidgetColor()
+          background_color: root.node_border_color_lbl
           size: 40, 40
           size_hint_x: None
      Button:
@@ -181,7 +181,7 @@
           color: 1, 1, 1, 1
      LabelB:
           id: edgeWidgetColor_lbl
-          background_color: root.getEdgeWidgetColor()
+          background_color: root.edge_color_lbl
           size: 40, 40
           size_hint_x: None
      Button:
@@ -346,10 +346,18 @@
      canvas.before:
           Color:
                rgba: 1, 1, 1, 1
+
           Rectangle:
-          # self here refers to the widget i.e FloatLayout
                pos: self.pos[0], self.pos[1]
                size: self.size[0], self.size[1]
+
+
+     canvas.after:
+          Color:
+               rgba: 0, 0, 0, 0.9
+          Line:
+               points: 0, self.size[1], 0, 0, self.size[0], 0, self.size[0], self.size[1]
+               width: 1
 
      GridLayout:
           size: root.width - 20, root.height - 20
@@ -459,16 +467,16 @@
                               do_scroll_y: True
                               scroll_type: ['bars']
                               bar_width: 15
+                              size: 50, 300
 
                               TextInput:
                                    id: input_text
-                                    #text:'ScrollviewExample'*100
                                    width: scroller.width
                                    size_hint: None, None
                                    height: max(self.minimum_height, scroller.height)
                                    hint_text:'Enter text'
                                     #font_size: 30
-                                    #size: 50, 300
+
 
                          BoxLayout:
                               orientation: 'vertical'

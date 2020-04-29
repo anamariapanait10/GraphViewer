@@ -37,3 +37,5 @@ class NodeWidget(Widget):
         self.size = [ 2 * self.radius, 2 * self.radius ]
         self.force = [0, 0]
         self.node_id = str(Id)
+        self.background_color = globals.node_background_color
+        self.border_color = globals.node_border_color

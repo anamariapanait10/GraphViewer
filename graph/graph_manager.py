@@ -140,18 +140,18 @@ class GraphManager:
         else:    # if the condition is True, then it is an weighted edge
             return [source, dest, cost]
 
-
     def update_canvas(self, arg=0):
 
         globals.main_view_widget.ids.graph_canvas.clear_widgets()
 
         for edge in self.edge_widgets:
             if self.is_directed == True:
-                edge.trianglePoints = edge.getTrianglePoints()
+                edge.triangle_points = edge.getTrianglePoints()
             globals.main_view_widget.ids.graph_canvas.add_widget(edge)
 
         for node in self.node_widgets:
             globals.main_view_widget.ids.graph_canvas.add_widget(node)
+
 
     def update_text_on_edgeAdd(self):
 
@@ -228,6 +228,7 @@ class GraphManager:
             new_nodeWidget = node_widget.NodeWidget(nodeId, pos)
             self.node_widgets.append(new_nodeWidget)
             globals.main_view_widget.ids.graph_canvas.add_widget(new_nodeWidget)
+            return new_nodeWidget
 
     def edgeAlreadyExists(self, node1Id, node2Id):
         for edge in self.edge_widgets:
@@ -241,7 +242,7 @@ class GraphManager:
 
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
             self.edge_widgets.append(new_edgeWidget)
-            globals.main_view_widget.ids.graph_canvas.add_widget(new_edgeWidget)
+            globals.main_view_widget.ids.graph_canvas.add_widget(new_edgeWidget, 200)
 
     def interpretAdjacencyList(self, line):# returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
@@ -333,15 +334,29 @@ class GraphManager:
 
         return [node_id, neighbors]
 
+    def deleteOldNodes(self, last_node_widgets_list):
+        globals.graph_manager.node_widgets.sort(key=lambda node: node.Id)
+        for node in last_node_widgets_list:
+            result = globals.binarySearch(globals.graph_manager.node_widgets, 0, len(globals.graph_manager.node_widgets) - 1, node.Id)
+            if result == -1:
+                globals.main_view_widget.ids.graph_canvas.remove_widget(node)
+
+    def deleteOldEdges(self, last_edge_widgets_list):
+        for edge in last_edge_widgets_list:
+            if self.edgeAlreadyExists(edge.node1.Id, edge.node2.Id) == False:
+                globals.main_view_widget.ids.graph_canvas.remove_widget(edge)
+
     def parse_graph_data(self, dummy=0, data=""):
         """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
 
         if data == "":
             data = globals.main_view_widget.ids.input_text.text
+        globals.main_view_widget.ids.graph_canvas.clear_widgets()
 
         if data != "":
             lines = data.split('\n')
             last_node_widgets_list = self.node_widgets
+            last_edge_widgets_list = self.edge_widgets
             self.node_widgets = []
             self.edge_widgets = []
             node_id = 1
@@ -359,13 +374,7 @@ class GraphManager:
                             elif len(value) == 0:
                                 pass
                             elif len(value) == 1:
-                                pos = 0
-                                for node in last_node_widgets_list:
-                                    if node.Id == value[0]:
-                                        pos = node.pos
-                                        break
-                                self.addNodeWidget(value[0], pos)
-
+                                self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))
                             else:
                                 if len(value) == 2:
                                     if value[0] != value[1]:
@@ -394,6 +403,8 @@ class GraphManager:
                                                 node.neighbors.append(self.getNodeWidgetById(value[1]))
                                             if node.Id == value[1]:
                                                 node.neighbors.append(self.getNodeWidgetById(value[0]))
+                                self.deleteOldNodes(last_node_widgets_list)
+                                self.deleteOldEdges(last_edge_widgets_list)
 
                         elif globals.adjacency_list_input_btn == True or globals.adjacency_matrix_input_btn == True:
 
@@ -425,11 +436,12 @@ class GraphManager:
                         else: # when globals.costMatrixBtn == True
                             self.interpretCostMatrix()
 
-        # self.update_canvas()
+        #self.update_canvas()
+
         self.printGraph()
 
-    def addNodeFromDrawing(self, node):
-        self.node_widgets.append(node)
+    #def addNodeFromDrawing(self, node):
+    #    self.node_widgets.append(node)
 
     def printGraph(self):
         for node in self.node_widgets:

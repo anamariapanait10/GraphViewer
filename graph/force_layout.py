@@ -30,7 +30,7 @@ from globals import globals
 
 
 c1 = 2
-c2 = 150
+c2 = 200
 c3 = 250
 c4 = 1
 M = 500
@@ -80,17 +80,17 @@ def __moveNodes():
         nx = v.pos[0] + c4 * v.force[0]
         ny = v.pos[1] + c4 * v.force[1]
 
-        if nx < 0:
-            nx = 20
+        if nx < 5:
+            nx = 5
 
-        if nx > globals.main_view_widget.ids.graph_canvas.size[0]:
-            nx = globals.main_view_widget.ids.graph_canvas.size[0] - 60
+        if nx > globals.main_view_widget.ids.graph_canvas.size[0] - globals.node_radius * 2 - 5:
+            nx = globals.main_view_widget.ids.graph_canvas.size[0] - globals.node_radius * 2 - 5
 
-        if ny < 0:
-            ny = 20
+        if ny < 5:
+            ny = 5
 
-        if ny > globals.main_view_widget.ids.graph_canvas.size[1]:
-            ny = globals.main_view_widget.ids.graph_canvas.size[1] - 60
+        if ny > globals.main_view_widget.ids.graph_canvas.size[1] - globals.node_radius * 2 - 5:
+            ny = globals.main_view_widget.ids.graph_canvas.size[1] - globals.node_radius * 2 - 5
 
         v.pos[0] = nx
         v.pos[1] = ny

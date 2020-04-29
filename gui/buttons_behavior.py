@@ -21,7 +21,7 @@ class CircularButton(ToggleButtonBehavior, Widget):
 class SettingsButton(ButtonBehavior):
 
     def on_release(self):
-        globals.popup_widget = popup_widget.PopupWidget()
+        globals.popup_widget = popup_widget.PopupWidget(globals.node_background_color, globals.node_border_color, globals.edge_color)
         globals.popup_window = Popup(title="Settings", content=globals.popup_widget, size_hint=(None, None), size=(450, 425), auto_dismiss=False)
         globals.popup_window.open()
 
@@ -245,8 +245,7 @@ class UndirectedButton(ButtonBehavior):
             globals.main_view_widget.ids.directed_btn.background_color = (0.8, 0.8, 0.8, 1)
             globals.graph_manager.setisDirected(True)
 
-        globals.graph_manager.parse_graph_data(globals.main_view_widget.ids.input_nodes.text)
-       # # globals.graph_manager.update_canvas()
+        globals.graph_manager.parse_graph_data(globals.main_view_widget.ids.input_text.text)
 
 
 class DirectedButton(ButtonBehavior):
@@ -269,8 +268,7 @@ class DirectedButton(ButtonBehavior):
             globals.main_view_widget.ids.undirected_btn.background_color = (0.8, 0.8, 0.8, 1)
             globals.graph_manager.setisDirected(False)
 
-        globals.graph_manager.parse_graph_data(globals.main_view_widget.ids.input_nodes.text)
-       # # globals.graph_manager.update_canvas()
+        globals.graph_manager.parse_graph_data(globals.main_view_widget.ids.input_text.text)
 
 
 class DijkstraButton(ButtonBehavior):
@@ -330,161 +328,172 @@ class DfsButton(ButtonBehavior):
         globals.main_view_widget.ids.bfs_txt_lbl.visible = True
         #globals.graphManager.DFS(globals.mainViewWidget.ids.bfs_txt_input.text)
 
+def changeBackgroundColorForAllNodes(color):
+    for node in globals.graph_manager.node_widgets:
+        node.background_color = color
+
+def changeBorderColorForAllNodes(color):
+    for node in globals.graph_manager.node_widgets:
+        node.border_color = color
+
+def changeEdgeColorForAllEdges(color):
+    for edge in globals.graph_manager.edge_widgets:
+        edge.color = color
 
 class WhiteButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('white')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-        #dr = ChangeColorDropDownList()
-        #dr.ids.color_dropdown.dismiss()
+        #node_widget.NodeWidget.background_color = globals.colors['white']
+        changeBackgroundColorForAllNodes(globals.colors['white'])
+        globals.popup_widget.node_background_color_lbl = globals.colors['white']
+        globals.node_background_color = globals.colors['white']
+        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('white')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-        #globals.popupWidget.ids.changeColor_btn1.close()
+        changeBorderColorForAllNodes(globals.colors['white'])
+        globals.popup_widget.node_border_color_lbl = globals.colors['white']
+        globals.node_border_color = globals.colors['white']
+        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('white')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-      #  # globals.graph_manager.update_canvas()
-       # globals.popupWidget.ids.changeColor_btn3.close()
-
+        changeEdgeColorForAllEdges(globals.colors['white'])
+        globals.popup_widget.edge_color_lbl = globals.colors['white']
+        globals.edge_color = globals.colors['white']
+        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
 
 class BlackButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('black')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-      #  globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['black']
+        globals.popup_widget.node_background_color_lbl = globals.colors['black']
+        globals.node_background_color = globals.colors['black']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('black')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-       # globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['black']
+        globals.popup_widget.node_border_color_lbl = globals.colors['black']
+        globals.node_border_color = globals.colors['black']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('black')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-       # # globals.graph_manager.update_canvas()
-      #  globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['black']
+        globals.popup_widget.edge_color_lbl = globals.colors['black']
+        globals.edge_color = globals.colors['black']
 
 class RedButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('red')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-       # globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['red']
+        globals.popup_widget.node_background_color_lbl = globals.colors['red']
+        globals.node_background_color = globals.colors['red']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('red')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['red']
+        globals.popup_widget.node_border_color_lbl = globals.colors['red']
+        globals.node_border_color = globals.colors['red']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('red')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-        # globals.graph_manager.update_canvas()
-      #  globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['red']
+        globals.popup_widget.edge_color_lbl = globals.colors['red']
+        globals.edge_color = globals.colors['red']
 
 class YellowButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('yellow')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-      #  globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['yellow']
+        globals.popup_widget.node_background_color_lbl = globals.colors['yellow']
+        globals.node_background_color = globals.colors['yellow']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('yellow')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['yellow']
+        globals.popup_widget.node_border_color_lbl = globals.colors['yellow']
+        globals.node_border_color = globals.colors['yellow']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('yellow')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['yellow']
+        globals.popup_widget.edge_color_lbl = globals.colors['yellow']
+        globals.edge_color = globals.colors['yellow']
 
 class OrangeButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('orange')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-       # globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['orange']
+        globals.popup_widget.node_background_color_lbl = globals.colors['orange']
+        globals.node_background_color = globals.colors['orange']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('orange')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['orange']
+        globals.popup_widget.node_border_color_lbl = globals.colors['orange']
+        globals.node_border_color = globals.colors['orange']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('orange')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-        #globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['orange']
+        globals.popup_widget.edge_color_lbl = globals.colors['orange']
+        globals.edge_color = globals.colors['orange']
 
 class BlueButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('blue')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-       # globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['blue']
+        globals.popup_widget.node_background_color_lbl = globals.colors['blue']
+        globals.node_background_color = globals.colors['blue']
+
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('blue')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['blue']
+        globals.popup_widget.node_border_color_lbl = globals.colors['blue']
+        globals.node_border_color = globals.colors['blue']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('blue')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-       # globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['blue']
+        globals.popup_widget.edge_color_lbl = globals.colors['blue']
+        globals.edge_color = globals.colors['blue']
 
 class PurpleButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('purple')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-        #globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['purple']
+        globals.popup_widget.node_background_color_lbl = globals.colors['purple']
+        globals.node_background_color = globals.colors['purple']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('purple')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['purple']
+        globals.popup_widget.node_border_color_lbl = globals.colors['purple']
+        globals.node_border_color = globals.colors['purple']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('purple')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-       # globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['purple']
+        globals.popup_widget.edge_color_lbl = globals.colors['purple']
+        globals.edge_color = globals.colors['purple']
 
 class GreenButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('green')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-       # globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['green']
+        globals.popup_widget.node_background_color_lbl = globals.colors['green']
+        globals.node_background_color = globals.colors['green']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('green')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-        #globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['green']
+        globals.popup_widget.node_border_color_lbl = globals.colors['green']
+        globals.node_border_color = globals.colors['green']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('green')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-       # globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['green']
+        globals.popup_widget.edge_color_lbl = globals.colors['green']
+        globals.edge_color = globals.colors['green']
 
 class PinkButton():
 
     def dropdown1(self):
-        node_widget.changeNodeWidgetBackgroundColor('pink')
-        globals.popup_widget.ids.nodeWidgetBackground_lbl.bcolor = globals.popup_widget.getNodeWidgetBackgroundColor()
-        #globals.popupWidget.ids.changeColor_btn1.close()
+        node_widget.NodeWidget.background_color = globals.colors['pink']
+        globals.popup_widget.node_background_color_lbl = globals.colors['pink']
+        globals.node_background_color = globals.colors['pink']
 
     def dropdown2(self):
-        node_widget.changeNodeWidgetColor('pink')
-        globals.popup_widget.ids.nodeWidgetColor_lbl.bcolor = globals.popup_widget.getNodeWidgetColor()
-       # globals.popupWidget.ids.changeColor_btn2.close()
+        node_widget.NodeWidget.border_color = globals.colors['pink']
+        globals.popup_widget.node_border_color_lbl = globals.colors['pink']
+        globals.node_border_color = globals.colors['pink']
 
     def dropdown3(self):
-        edge_widget.changeEdgeWidgetColor('pink')
-        globals.popup_widget.ids.edgeWidgetColor_lbl.bcolor = globals.popup_widget.getEdgeWidgetColor()
-      #  globals.popupWidget.ids.changeColor_btn3.close()
+        edge_widget.EdgeWidget.color = globals.colors['pink']
+        globals.popup_widget.edge_color_lbl = globals.colors['pink']
+        globals.edge_color = globals.colors['pink']

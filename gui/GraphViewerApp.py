@@ -9,7 +9,7 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
 from datetime import datetime
-
+from kivy.graphics import Line
 
 #kivy.require('2.0.0')
 
@@ -32,20 +32,26 @@ class MainViewWidget(Widget):
 
     grabbedNode = None
     lastSelectedNode = None
-    # grabbedTouch = None
+    isSelectedANode = False
+    ismoved = False
 
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            #print("Touch down")
+            print("Touch down")
+
+            self.isSelectedANode = False
+            self.ismoved = False
             self.grabbedNode = isOnNode(touch)
             if self.grabbedNode != None:
-                if self.lastSelectedNode != None and self.grabbedNode != None:
-                    node = self.grabbedNode
-                    globals.graph_manager.addEdgeWidget(self.lastSelectedNode.Id, node.Id)
+                self.isSelectedANode = True
+                if self.lastSelectedNode != None and self.grabbedNode != None and self.lastSelectedNode != self.grabbedNode:
+                    globals.graph_manager.addEdgeWidget(self.lastSelectedNode.Id, self.grabbedNode.Id)
                     self.lastSelectedNode.border_width = 5
-                    node.border_width = 10
+                    #self.grabbedNode.border_width = 10
                     self.lastSelectedNode = None
                     globals.graph_manager.update_text_on_edgeAdd()
+
+                    self.isSelectedANode = False
 
                     print("Add edge")
 
@@ -59,19 +65,32 @@ class MainViewWidget(Widget):
                 # self.grabbedTouch = touch
 
             elif self.lastSelectedNode != None:
+                self.isSelectedANode = False
                 self.lastSelectedNode.border_width = 5
                 self.lastSelectedNode = None
 
+            print(self.isSelectedANode)
+            print(self.ismoved)
+            print(self.grabbedNode)
+            print(self.lastSelectedNode)
             return True
+
         else:
             return super().on_touch_down(touch)
 
+
+
     def on_touch_move(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos) and touch.grab_current is self:
-            # self.ids.graph_canvas.remove_widget(self.grabedNode)
+
+            if touch.pos[0] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[0] != self.grabbedNode.pos[0] \
+            or touch.pos[1] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[1] != self.grabbedNode.pos[1]:
+                self.ismoved = True
+
             self.grabbedNode.pos = [touch.pos[0] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[0],
                                     touch.pos[1] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[1]]
-            # self.ids.graph_canvas.add_widget(self.grabedNode)
+
+
             if globals.forces == True:
                 recalculatePositions(gn=self.grabbedNode.Id)
             else:
@@ -86,8 +105,10 @@ class MainViewWidget(Widget):
                 # if self.lastSelectedNode != None:
                     # dist = sqrt((self.lastSelectedNode.pos[0]-self.grabbedNode.pos[0])**2+(self.lastSelectedNode.pos[1]-self.grabbedNode.pos[1])**2)
                     # if dist < 10:
-                # self.grabbedNode.setMarginWidth(5)
-                # self.grabbedNode = None
+                if self.ismoved == True:
+                    self.grabbedNode.border_width = 5
+                    self.grabbedNode = None
+                    #self.isSelectedANode = False
                 if globals.forces== True:
                     recalculatePositions()
             else:
@@ -97,8 +118,10 @@ class MainViewWidget(Widget):
                     self.on_double_press(touch)
                 else:
                     node = isOnNode(touch)
-                    if not node:
+                    if not node and self.isSelectedANode == False:
                         self.on_single_press(touch)
+                    else:
+                        self.isSelectedANode = True
             return True
 
         else:
@@ -108,15 +131,14 @@ class MainViewWidget(Widget):
     def on_double_press(self, touch):
         nodeToBeDeletedFromText = globals.graph_manager.deleteNodeWidgetByCoords(touch.pos[0], touch.pos[1])
         globals.graph_manager.deleteEdgeWidgetByCoords(touch.pos[0], touch.pos[1])
-       # globals.graph_manager.update_canvas()
         globals.graph_manager.update_text_on_delete(globals.main_view_widget.ids.input_text.text, nodeToBeDeletedFromText)
         print("Double press")
 
     def on_single_press(self, touch):
 
         print("Single press")
-        nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - 25
-        ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - 25
+        nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - globals.node_radius
+        ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - globals.node_radius
 
         # print("nx =" + str(nx) + " ny = " + str(ny))
 
@@ -132,8 +154,10 @@ class MainViewWidget(Widget):
         if ny > self.ids.graph_canvas.size[1] - 55:
             ny = self.ids.graph_canvas.size[1] - 55
 
-        n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
-        self.ids.graph_canvas.add_widget(n)
+
+        #n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
+        #self.ids.graph_canvas.add_widget(n)
+        n = globals.graph_manager.addNodeWidget(node_widget.getnextid(), [nx, ny])
 
         text = self.ids.input_text.text
         length = len(text)
@@ -148,7 +172,7 @@ class MainViewWidget(Widget):
             else:
                 self.ids.input_text.text += "\n" + str(n.Id)
 
-        globals.graph_manager.addNodeFromDrawing(n)
+
         if globals.forces == True:
             recalculatePositions()
 
@@ -161,16 +185,18 @@ class MainViewWidget(Widget):
         if text != "":
             global lastInputText
 
+           # globals.main_view_widget.ids.input_text._lines_labels[0].background_color = [1, 0, 0, 1]
+
             max_length = self.getTextWidth()
             globals.main_view_widget.ids.input_text.width = max_length
 
-            if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
-                self.ids.graph_canvas.clear_widgets()
-                globals.graph_manager.parse_graph_data(text)
-                if globals.forces == True:
-                    recalculatePositions()
+           # if self.keyIsEnter(text) == True or len(lastInputText) > len(text):
+               # self.ids.graph_canvas.clear_widgets()
+            globals.graph_manager.parse_graph_data(data=text)
+            if globals.forces == True:
+                recalculatePositions()
 
-                lastInputText = text
+            lastInputText = text
 
     def getTextWidth(self):
 
@@ -231,6 +257,7 @@ class GraphViewerApp(App):
         globals.main_view_widget.ids.switch.bind(active=callback)
 
         Factory.register('KivyB', module='LabelB')
+
 
         return globals.main_view_widget
 
