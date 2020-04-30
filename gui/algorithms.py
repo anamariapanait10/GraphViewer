@@ -64,7 +64,7 @@ class BFS():
             elif isOk == True:
                 Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
 
-    """
+
 
     def DFSUtil(self, v, visited):
 
@@ -121,4 +121,3 @@ class BFS():
         
         
         
-    """

@@ -328,38 +328,24 @@ class DfsButton(ButtonBehavior):
         globals.main_view_widget.ids.bfs_txt_lbl.visible = True
         #globals.graphManager.DFS(globals.mainViewWidget.ids.bfs_txt_input.text)
 
-def changeBackgroundColorForAllNodes(color):
-    for node in globals.graph_manager.node_widgets:
-        node.background_color = color
 
-def changeBorderColorForAllNodes(color):
-    for node in globals.graph_manager.node_widgets:
-        node.border_color = color
-
-def changeEdgeColorForAllEdges(color):
-    for edge in globals.graph_manager.edge_widgets:
-        edge.color = color
 
 class WhiteButton():
 
     def dropdown1(self):
-        #node_widget.NodeWidget.background_color = globals.colors['white']
-        changeBackgroundColorForAllNodes(globals.colors['white'])
+        node_widget.NodeWidget.background_color = globals.colors['white']
         globals.popup_widget.node_background_color_lbl = globals.colors['white']
         globals.node_background_color = globals.colors['white']
-        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
 
     def dropdown2(self):
-        changeBorderColorForAllNodes(globals.colors['white'])
+        node_widget.NodeWidget.border_color = globals.colors['white']
         globals.popup_widget.node_border_color_lbl = globals.colors['white']
         globals.node_border_color = globals.colors['white']
-        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
 
     def dropdown3(self):
-        changeEdgeColorForAllEdges(globals.colors['white'])
-        globals.popup_widget.edge_color_lbl = globals.colors['white']
-        globals.edge_color = globals.colors['white']
-        globals.main_view_widget.ids.graph_canvas.canvas.ask_update()
+        edge_widget.EdgeWidget.color = globals.colors['black']
+        globals.popup_widget.edge_color_lbl = globals.colors['black']
+        globals.edge_color = globals.colors['black']
 
 class BlackButton():
 

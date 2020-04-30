@@ -313,6 +313,7 @@ class GraphManager:
             new_edgeWidget = edge_widget.EdgeWidget(self.getNodeWidgetById(node1Id), self.getNodeWidgetById(node2Id), cost)
             self.edge_widgets.append(new_edgeWidget)
             globals.main_view_widget.ids.graph_canvas.add_widget(new_edgeWidget, 200)
+            self.add_node_neighbor(node1Id, node2Id)
 
     def interpretAdjacencyList(self, line):# returns -1 for invalid syntax
                                     # and a list otherwise, in the following format:
@@ -416,6 +417,23 @@ class GraphManager:
             if self.edgeAlreadyExists(edge.node1.Id, edge.node2.Id) == False:
                 globals.main_view_widget.ids.graph_canvas.remove_widget(edge)
 
+
+    def add_node_neighbor(self, node_id, neighbor_id):
+
+        if self.is_directed == True:
+            if node_id != neighbor_id:
+                for node in self.node_widgets:
+                    if node.Id == node_id:
+                        node.neighbors.append(self.getNodeWidgetById(neighbor_id))
+                        break
+        else:
+            if node_id != neighbor_id:
+                for node in self.node_widgets:
+                    if node.Id == node_id:
+                        node.neighbors.append(self.getNodeWidgetById(neighbor_id))
+                    if node.Id == neighbor_id:
+                        node.neighbors.append(self.getNodeWidgetById(node_id))
+
     def parse_graph_data(self, dummy=0, data=""):
         """Data is a string in the format "node_1_Id" + " " + "node_2_Id" which holds all the necessary data for creating the graph."""
 
@@ -460,19 +478,7 @@ class GraphManager:
                                         self.addNodeWidget(value[1], pos=self.returnOldPosition(value[1], last_node_widgets_list))
                                         self.addEdgeWidget(value[0], value[1], value[2])
 
-                                if self.is_directed == True:
-                                    if value[0] != value[1]:
-                                        for node in self.node_widgets:
-                                            if node.Id == value[0]:
-                                                node.neighbors.append(self.getNodeWidgetById(value[1]))
-                                                break
-                                else:
-                                    if value[0] != value[1]:
-                                        for node in self.node_widgets:
-                                            if node.Id == value[0]:
-                                                node.neighbors.append(self.getNodeWidgetById(value[1]))
-                                            if node.Id == value[1]:
-                                                node.neighbors.append(self.getNodeWidgetById(value[0]))
+                                #self.add_node_neighbor(value[0], value[1])
                                 self.deleteOldNodes(last_node_widgets_list)
                                 self.deleteOldEdges(last_edge_widgets_list)
 
