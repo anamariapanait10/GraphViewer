@@ -65,9 +65,79 @@ class GraphManager:
 
     def deleteEdgeWidgetByCoords(self, x, y):    # the x and y are the coordinates of the touch and if they collide with
         for edge_widget in self.edge_widgets[:]:  # an edge, it will be deleted
-            if edge_widget.collide_point(x, y):
+
+            mid_x1 = edge_widget.points[0]
+            mid_y1 = edge_widget.points[1]
+            mid_x2 = edge_widget.points[2]
+            mid_y2 = edge_widget.points[3]
+
+            if mid_x1 != mid_x2 and mid_y1 != mid_y2:
+                m1 = (mid_y2 - mid_y1) / (mid_x2 - mid_x1)
+                m2 = -1 / m1
+
+                w = 1.5
+                dx = sqrt( w ** 2 / (1 + m2 ** 2)) / 2
+                dy = m2 * dx
+
+                x1 = mid_x1 + dx
+                y1 = mid_y1 + dy
+                x2 = mid_x1 - dx
+                y2 = mid_y1 - dy
+                x3 = mid_x2 + dx
+                y3 = mid_y2 + dy
+                x4 = mid_x2 - dx
+                y4 = mid_y2 - dy
+
+            elif mid_x1 == mid_x2:
+                w = 1.5
+                x1 = mid_x1
+                y1 = mid_y1 - w / 2
+                x2 = mid_x1
+                y2 = mid_y1 + w / 2
+                x3 = mid_x2
+                y3 = mid_y2 - w / 2
+                x4 = mid_x2
+                y4 = mid_y2 + w / 2
+            else:
+                w = 1.5
+                x1 = mid_x1 - w / 2
+                y1 = mid_y1
+                x2 = mid_x1 + w / 2
+                y2 = mid_y1
+                x3 = mid_x2 - w / 2
+                y3 = mid_y2
+                x4 = mid_x2 + w / 2
+                y4 = mid_y2
+
+            a1 = sqrt((x1 - x2)**2 + (y1 - y2)**2)
+            a2 = sqrt((x2 - x3)**2 + (y2 - y3)**2)
+            a3 = sqrt((x3 - x4)**2 + (y3 - y4)**2)
+            a4 = sqrt((x4 - x1)**2 + (y4 - y1)**2)
+
+            b1 = sqrt((x1 - x)**2 + (y1 - y)**2)
+            b2 = sqrt((x2 - x)**2 + (y2 - y)**2)
+            b3 = sqrt((x3 - x)**2 + (y3 - y)**2)
+            b4 = sqrt((x4 - x)**2 + (y4 - y)**2)
+
+            A = a1 * a2
+
+            p1 = (a1 + b1 + b2) / 2
+            p2 = (a2 + b2 + b3) / 2
+            p3 = (a3 + b3 + b4) / 2
+            p4 = (a4 + b4 + b1) / 2
+
+            A1 = sqrt(p1 * (p1 - a1) * (p1 - b1) * (p1 - b2))
+            A2 = sqrt(p2 * (p2 - a2) * (p2 - b2) * (p2 - b3))
+            A3 = sqrt(p3 * (p3 - a3) * (p3 - b3) * (p3 - b4))
+            A4 = sqrt(p4 * (p4 - a4) * (p4 - b4) * (p4 - b1))
+
+            print(str(A1 + A1 + A3 + A4) + " " + str(A))
+            print(abs(A - (A1 + A2 + A3 + A4)))
+            if (abs(A - (A1 + A2 + A3 + A4))) < 30:
+                print("este")
                 globals.main_view_widget.ids.graph_canvas.remove_widget(edge_widget)
                 self.edge_widgets.remove(edge_widget)
+                break
 
     def NodeWidgetExists(self, node_id): # verify if a NodeWidget exists
         exists = False

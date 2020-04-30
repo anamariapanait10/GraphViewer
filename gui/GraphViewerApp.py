@@ -13,6 +13,8 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 from kivy.factory import Factory
 from datetime import datetime
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from gui import screen_manager
 
 #kivy.require('2.0.0')
 
@@ -42,7 +44,6 @@ class MainViewWidget(Widget):
         if self.ids.graph_canvas.collide_point(*touch.pos):
             print("Touch down")
 
-            #self.isSelectedANode = False
             self.ismoved = False
             self.grabbedNode = isOnNode(touch)
             if self.grabbedNode != None:
@@ -51,7 +52,6 @@ class MainViewWidget(Widget):
                 if self.lastSelectedNode != None and self.grabbedNode != None and self.lastSelectedNode != self.grabbedNode:
                     globals.graph_manager.addEdgeWidget(self.lastSelectedNode.Id, self.grabbedNode.Id)
                     self.lastSelectedNode.border_width = 5
-                    #self.grabbedNode.border_width = 10
                     self.lastSelectedNode = None
                     globals.graph_manager.update_text_on_edgeAdd()
 
@@ -67,17 +67,10 @@ class MainViewWidget(Widget):
                     self.lastSelectedNode.border_width = 10
 
 
-                # self.grabbedTouch = touch
-
             elif self.lastSelectedNode != None:
-                #self.isSelectedANode = False
                 self.lastSelectedNode.border_width = 5
                 self.lastSelectedNode = None
 
-            # print(self.isSelectedANode)
-            # print(self.ismoved)
-            # print(self.grabbedNode)
-            # print(self.lastSelectedNode)
             return True
 
         else:
@@ -88,8 +81,6 @@ class MainViewWidget(Widget):
     def on_touch_move(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos) and touch.grab_current is self:
 
-            # if touch.pos[0] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[0] != self.grabbedNode.pos[0] \
-            # or touch.pos[1] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[1] != self.grabbedNode.pos[1]:
             self.ismoved = True
 
             self.grabbedNode.pos = [touch.pos[0] - globals.node_radius - globals.main_view_widget.ids.graph_canvas.pos[0],
@@ -112,17 +103,10 @@ class MainViewWidget(Widget):
                 self.lastSelectedNode = None
                 self.isSelectedANode = False
                 self.ismoved = False
-
-            if touch.grab_current is self.grabbedNode and self.grabbedNode is not None:
                 touch.ungrab(self)
-                # if self.lastSelectedNode != None:
-                    # dist = sqrt((self.lastSelectedNode.pos[0]-self.grabbedNode.pos[0])**2+(self.lastSelectedNode.pos[1]-self.grabbedNode.pos[1])**2)
-                    # if dist < 10:
-
-                    #self.isSelectedANode = False
                 if globals.forces== True:
                     recalculatePositions()
-            else:
+            elif not(touch.grab_current is self.grabbedNode and self.grabbedNode is not None):
                 if touch.is_double_tap:
                     if touch.grab_current != None:
                         touch.ungrab(touch.grab_current)
@@ -133,10 +117,8 @@ class MainViewWidget(Widget):
                         self.on_single_press(touch)
                     elif node is None:
                         self.isSelectedANode = False
-                    # else:
-                    #     self.isSelectedANode = True
 
-            print("Selected: " + str(self.isSelectedANode))
+            # print("Selected: " + str(self.isSelectedANode))
             return True
 
         else:
@@ -173,8 +155,6 @@ class MainViewWidget(Widget):
             ny = self.ids.graph_canvas.size[1] - 55
 
 
-        #n = node_widget.NodeWidget(node_widget.getnextid(), [nx, ny])
-        #self.ids.graph_canvas.add_widget(n)
         n = globals.graph_manager.addNodeWidget(node_widget.getnextid(), [nx, ny])
 
         text = self.ids.input_text.text
@@ -276,6 +256,13 @@ class GraphViewerApp(App):
 
         Factory.register('KivyB', module='LabelB')
 
+        globals.main_screen = screen_manager.MainScreen()
+        globals.main_screen.add_widget(globals.main_view_widget)
+        globals.theory_screen = screen_manager.TheoryScreen()
+        globals.screen_manager = screen_manager.ScreenManager(transition=FadeTransition(duration=.05))
+        globals.screen_manager.add_widget(globals.main_screen)
+        globals.screen_manager.add_widget(globals.theory_screen)
 
-        return globals.main_view_widget
+        return globals.screen_manager
+        # return globals.main_view_widget
 

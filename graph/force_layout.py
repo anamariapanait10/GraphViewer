@@ -49,7 +49,7 @@ def __calculateForces():
     for v in node_widgets:
 
         for u in node_widgets:
-            if v != u:
+            if v != None and u != None and v.Id != u.Id:
                 d = dist(u, v)
                 sine = (v.pos[1] - u.pos[1]) / d
                 cosine = (v.pos[0] - u.pos[0]) / d
@@ -60,8 +60,8 @@ def __calculateForces():
                 else:
                     F = -c3 / (d ** 2)
 
-                if globals.graph_manager.is_directed or u.Id == grabbed_node or v.Id == grabbed_node: # ?
-                    F *= 2
+                # if globals.graph_manager.is_directed or u.Id == grabbed_node or v.Id == grabbed_node: # ?
+                #     F *= 2
 
                 if u.Id != grabbed_node:
                     u.force[0] += F * cosine

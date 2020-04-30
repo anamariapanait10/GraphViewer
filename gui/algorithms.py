@@ -33,34 +33,36 @@ class BFS():
         source = globals.main_view_widget.ids.bfs_txt_input.text
         isOk = True
 
-        try:
-            if source == "":
-                globals.error_popup_widget = popup_widget.ErrorPopupWidget()
-                globals.error_popup_widget.setText("You must enter the starting node first!")
-                globals.popup_window = Popup(title="Error", content=globals.error_popup_widget, size_hint=(None, None),
-                                             size=(400, 200), auto_dismiss=False)
-                globals.popup_window.open()
-                globals.error_popup_widget.ids.error_popup_btn.bind(on_press=popup_widget.ErrorPopupWidget.closePopUp)
-                isOk = False
+        if globals.main_view_widget.ids.play_btn.visible == True:
 
-            else:
-                source = int(source)
-                source = globals.graph_manager.getNodeWidgetById(source)
-                if source == None:
-                    raise GraphException("The starting node does not exist")
-        except:
-            raise GraphException("Invalid number for the starting node")
+            try:
+                if source == "":
+                    globals.error_popup_widget = popup_widget.ErrorPopupWidget()
+                    globals.error_popup_widget.setText("You must enter the starting node first!")
+                    globals.popup_window = Popup(title="Error", content=globals.error_popup_widget, size_hint=(None, None),
+                                                 size=(400, 200), auto_dismiss=False)
+                    globals.popup_window.open()
+                    globals.error_popup_widget.ids.error_popup_btn.bind(on_press=popup_widget.ErrorPopupWidget.closePopUp)
+                    isOk = False
 
-        if isOk == True and self.isFirstTime:
-            self.visited = [False] * (len(globals.graph_manager.node_widgets))  # Mark all the vertices as not visited
-            self.queue = []  # Create a queue for BFS
-            self.queue.append(source)  # Mark the source node as visited and enqueue it
+                else:
+                    source = int(source)
+                    source = globals.graph_manager.getNodeWidgetById(source)
+                    if source == None:
+                        raise GraphException("The starting node does not exist")
+            except:
+                raise GraphException("Invalid number for the starting node")
 
-            self.visited[globals.graph_manager.getIndexFromListOfNodes(source)] = True
-            Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
-            self.isFirstTime = False
-        elif isOk == True:
-            Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
+            if isOk == True and self.isFirstTime:
+                self.visited = [False] * (len(globals.graph_manager.node_widgets))  # Mark all the vertices as not visited
+                self.queue = []  # Create a queue for BFS
+                self.queue.append(source)  # Mark the source node as visited and enqueue it
+
+                self.visited[globals.graph_manager.getIndexFromListOfNodes(source)] = True
+                Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
+                self.isFirstTime = False
+            elif isOk == True:
+                Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
 
     """
 

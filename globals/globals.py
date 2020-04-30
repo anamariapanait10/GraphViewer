@@ -3,6 +3,9 @@ from kivy.properties import ObjectProperty, ListProperty
 
 graph_manager = None
 main_view_widget = None
+screen_manager = None
+main_screen = None
+theory_screen = None
 
 input_drop_down_list = None
 algorithms_drop_down_list = None
