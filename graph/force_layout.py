@@ -30,7 +30,7 @@ from globals import globals
 
 
 c1 = 2
-c2 = 200
+c2 = 150
 c3 = 250
 c4 = 1
 M = 500

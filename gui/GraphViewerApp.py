@@ -1,9 +1,12 @@
 #import kivy
 from kivy.config import Config
 
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '620')
+
 Config.set('graphics', 'window_state', 'maximized')
 Config.set('graphics', 'minimum_width', '800')
-Config.set('graphics', 'minimum_height', '600')
+Config.set('graphics', 'minimum_height', '620')
 
 from kivy.app import App
 from graph.graph_manager import GraphManager

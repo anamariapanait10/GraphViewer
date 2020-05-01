@@ -512,7 +512,7 @@ class GraphManager:
                         else: # when globals.costMatrixBtn == True
                             self.interpretCostMatrix()
 
-        #self.update_canvas()
+        self.update_canvas()
 
         self.printGraph()
 

@@ -24,13 +24,19 @@
                          Line:
                               points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
                               width: 2
-                    AnchorLayout:
 
+                    AnchorLayout:
                          anchor_x: 'left'
                          anchor_y: 'top'
-                         #size_hint:None, None
+                         size_hint_x: None
                          width: 50
-                         height: 50
+                         #height: 50
+                         canvas.before:
+                              Color:
+                                   rgba: 0, 1, 0, 1
+                              Line:
+                                   points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+                                   width: 2
                          Button:
                               on_release: app.root.current = 'main'
                               text: '<-'
@@ -38,36 +44,67 @@
                               font_size: 20
                               size_hint: None, None
                               size: 50, 50
-                    Label:
-                         text:'Algorithms:'
-                         font_size: 40
-                         size_hint: None, None
-                         size: 200, 50
-               AnchorLayout:
-                    #orientation: 'vertical'
-                    #spacing: 5
+
+                    AnchorLayout:
+                         anchor_x: 'left'
+                         anchor_y: 'top'
+                         canvas.before:
+                              Color:
+                                   rgba: 1, 0, 1, 1
+                              Line:
+                                   points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+                                   width: 2
+
+                         Label:
+                              text:'Algorithms:'
+                              font_size: 40
+                              size_hint: None, None
+                              size: 200, 50
+
+               BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 5
                     canvas.before:
                          Color:
                               rgba: 1, 0, 0, 1
                          Line:
                               points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
                               width: 2
-                    anchor_x: 'left'
-                    anchor_y: 'top'
+                    #anchor_x: 'left'
+                    #anchor_y: 'top'
                     padding: [10, 10, 10, 10]
+                    size_hint_y: None
+                    height: 150
 
-                    ToggleButton:
-                         text: 'BFS'
-                         size_hint: None, None
-                         size: 200, 40
-                    ToggleButton:
-                         text: 'DFS'
-                         size_hint: None, None
-                         size: 200, 40
-                    ToggleButton:
-                         text: 'Dijkstra'
-                         size_hint: None, None
-                         size: 200, 40
+                    AnchorLayout:
+                         anchor_x: 'left'
+                         anchor_y: 'top'
+                         #size_hint_y: None
+                         #height: 40
+                         ToggleButton:
+                              text: 'BFS'
+                              size_hint: None, None
+                              size: 200, 40
+                    AnchorLayout:
+                         anchor_x: 'left'
+                         anchor_y: 'top'
+                         #size_hint_y: None
+                         #height: 40
+                         ToggleButton:
+                              text: 'DFS'
+                              size_hint: None, None
+                              size: 200, 40
+
+                    AnchorLayout:
+                         anchor_x: 'left'
+                         anchor_y: 'top'
+                         #size_hint_y: None
+                         #height: 40
+                         ToggleButton:
+                              text: 'Dijkstra'
+                              size_hint: None, None
+                              size: 200, 40
+
                AnchorLayout:
                     anchor_x: 'center'
                     CircularButton:
@@ -503,8 +540,8 @@
 
                               GridLayout:
                                    rows: 1
-                                   cols: 2
-                                   width: 200
+                                   cols: 3
+                                   width: 300
                                    size_hint_x: None
                                    Button:
                                         id: settings_btn
@@ -518,9 +555,18 @@
                                         size: 100, 50
                                         pos: self.pos
                                         background_color: 1, 1, 1, 1
+                                        text: 'Open'
+                                        size_hint_x: None
+                                        #width: 100
+
+                                   Button:
+                                        size: 100, 50
+                                        pos: self.pos
+                                        background_color: 1, 1, 1, 1
                                         text: 'Save'
                                         size_hint_x: None
                                         #width: 100
+
 
           BoxLayout:
                #height: 1000
@@ -566,6 +612,7 @@
                          size_hint_x: None
                          width: 400
 
+
                          ScrollView:    # Input text for nodes
                               id:scroller
                               do_scroll_x: True
@@ -581,142 +628,161 @@
                                    size_hint: None, None
                                    height: max(self.minimum_height, scroller.height)
                                    hint_text:'Enter text'
-                                    #font_size: 30
+                                   #font_size: 30
+
+                         AnchorLayout:
+                              anchor_y:'top'
 
 
-                         BoxLayout:     # Forces, instructions and algorithm controls
-
-
-                              orientation: 'vertical'
-                              spacing: 20
-                              padding: [10, 0, 10, 0]
-                              size_hint_x: None
-                              width: 250
-
-
-                              BoxLayout:
-                                   orientation: 'horizontal'
-                                   size_hint_x: None
-                                   spacing: 30
-                                   Label:
-                                          #padding: [20, 20]
-                                        size_hint_x: None
-                                        size: 125, 10
-                                        color: 0, 0, 0, 1
-                                        text: 'Forces:'
-
-                                   Switch:
-                                        id: switch
-                                        active: True
-                                         #size_hint: None, None
-                                        size: 60, 10
-
-                              LabelB:
-                                   id: draw_lbl
-                                   padding: [20, 23]
-                                   text:'Tap to add nodes. \n\nDouble tap to remove nodes or edges.\n\nTap on two different nodes to create an edge between them.'
-                                   text_size: self.size
-                                   size_hint: None, None
-                                   width: 235
-                                   height: 190
-                                   background_color: 0.2, 0.7, 0.9, 0.75
-                                   color: 1, 1, 1, 1
-
-                              BoxLayout:
+                              BoxLayout:     # Forces, instructions and algorithm controls
                                    orientation: 'vertical'
-                                   #spacing: 10
+                                   spacing: 30
+                                   padding: [10, 0, 10, 0]
+                                   size_hint_x: None
+                                   size_hint_y: None
+                                   width: 250
+                                   height: 470
 
-                                   AnchorLayout:
-                                        anchor_x: 'center'
-
-                                        Button:
-                                             text: 'Theory'
-                                             size_hint: None, None
-                                             size: 150, 40
-                                             on_release: app.root.current= 'theory_screen'
-
-                                   BoxLayout:
+                                   BoxLayout: # Forces
                                         orientation: 'horizontal'
-                                        spacing: 5
-
-
-                                        Label:
-                                             id: bfs_txt_lbl
-                                             size_hint: None, None
-                                             visible: False
-                                             opacity: 1 if self.visible else 0
-                                             size: 160, 30
-                                             text: 'Enter starting node:'
-                                             color: 0, 0, 0, 1
-                                        TextInput:
-                                             id: bfs_txt_input
-                                             visible: False
-                                             opacity: 1 if self.visible else 0
-                                             size_hint: None, None
-                                             size: 40, 30
-
-                                   AnchorLayout:
-                                        anchor_x: 'center'
-
-                                        CircularButton:
-                                             id: play_btn
-                                             visible: False
-                                             text: "Play"
-                                             color: 1, 1, 1, 1
-                                             opacity: 1 if self.visible else 0
-                                             size_hint: None, None
-                                             size: 50, 50
-
-
-                                   BoxLayout:
-                                        id: down_btns
-                                        orientation: 'horizontal'
-                                        visible:False
-                                        opacity: 1 if self.visible else 0
-                                         #size_hint_x: None
+                                        size_hint_x: None
                                         size_hint_y: None
-                                        height: 30
-                                         #width: 220
+                                        height: 40
                                         spacing: 30
+      #                                  canvas.before:
+       #                                      Color:
+        #                                          rgba: 1, 0, 0, 1
+         #                                    Line:
+          #                                        points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+           #                                       width: 2
+                                        Label:
+                                               #padding: [20, 20]
+                                             size_hint_x: None
+                                             #size_hint_y: None
+                                             size: 125, 10
+                                             color: 0, 0, 0, 1
+                                             text: 'Forces:'
+
+                                        Switch:
+                                             id: switch
+                                             active: True
+                                              #size_hint: None, None
+                                             size: 60, 10
+
+                                   LabelB: #Instructions
+                                        id: draw_lbl
+                                        padding: [20, 23]
+                                        text:'Tap to add nodes. \n\nDouble tap to remove nodes or edges.\n\nTap on two different nodes to create an edge between them.'
+                                        text_size: self.size
+                                        size_hint: None, None
+                                        width: 235
+                                        height: 190
+                                        background_color: 0.2, 0.7, 0.9, 0.75
+                                        color: 1, 1, 1, 1
+
+                                   BoxLayout:  #Theory + Algorithms
+                                        orientation: 'vertical'
+                                        spacing: 10
+                                        size_hint_y: None
+                                        height: 180
+
+                                        AnchorLayout:
+                                             anchor_x: 'center'
+
+
+                                             size_hint_y: None
+                                             height: 40
+
+                                             Button:
+                                                  text: 'Theory'
+                                                  size_hint: None, None
+                                                  size: 150, 40
+                                                  on_release: app.root.current= 'theory_screen'
 
                                         BoxLayout:
                                              orientation: 'horizontal'
+                                             spacing: 5
+                                             size_hint_y: None
                                              height: 30
-                                             spacing: 2
-                                              #width:50
-                                             size_hint_x: None
 
-                                             Button :
-                                                  size: 50, 30
-                                                  size_hint_x: None
-                                                   #pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '<='
 
-                                             Button :
-                                                  size: 50, 30
-                                                   #pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '<-'
+                                             Label:
+                                                  id: bfs_txt_lbl
+                                                  size_hint: None, None
+                                                  visible: False
+                                                  opacity: 1 if self.visible else 0
+                                                  size: 160, 30
+                                                  text: 'Enter starting node:'
+                                                  color: 0, 0, 0, 1
+                                             TextInput:
+                                                  id: bfs_txt_input
+                                                  visible: False
+                                                  opacity: 1 if self.visible else 0
+                                                  size_hint: None, None
+                                                  size: 40, 30
+
+                                        AnchorLayout:
+                                             anchor_x: 'center'
+                                             size_hint_y: None
+                                             height: 50
+                                             CircularButton:
+                                                  id: play_btn
+                                                  visible: False
+                                                  text: "Play"
+                                                  color: 1, 1, 1, 1
+                                                  opacity: 1 if self.visible else 0
+                                                  size_hint: None, None
+                                                  size: 50, 50
+
 
                                         BoxLayout:
+                                             id: down_btns
                                              orientation: 'horizontal'
+                                             visible:False
+                                             opacity: 1 if self.visible else 0
+                                             #size_hint_x: None
+                                             size_hint_y: None
                                              height: 30
-                                             spacing: 2
-                                             size_hint_x: None
+                                             #width: 220
+                                             spacing: 30
 
-                                             Button :
-                                                  size: 50, 30
-                                                 # pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '->'
-
-                                             Button :
+                                             BoxLayout:
+                                                  orientation: 'horizontal'
+                                                  height: 30
+                                                  spacing: 2
+                                                   #width:50
                                                   size_hint_x: None
-                                                  size: 50, 30
-                                                  #pos:10, 0
-                                                  background_color: 1, 1, 1, 1
-                                                  text: '=>'
+
+                                                  Button :
+                                                       size: 50, 30
+                                                       size_hint_x: None
+                                                       #pos:10, 0
+                                                       background_color: 1, 1, 1, 1
+                                                       text: '<='
+
+                                                  Button :
+                                                       size: 50, 30
+                                                       #pos:10, 0
+                                                       background_color: 1, 1, 1, 1
+                                                       text: '<-'
+
+                                             BoxLayout:
+                                                  orientation: 'horizontal'
+                                                  height: 30
+                                                  spacing: 2
+                                                  size_hint_x: None
+
+                                                  Button :
+                                                       size: 50, 30
+                                                       # pos:10, 0
+                                                       background_color: 1, 1, 1, 1
+                                                       text: '->'
+                                                  Button :
+                                                       size_hint_x: None
+                                                       size: 50, 30
+                                                       #pos:10, 0
+                                                       background_color: 1, 1, 1, 1
+                                                       text: '=>'
 
                RelativeLayout:
                     id: graph_canvas
