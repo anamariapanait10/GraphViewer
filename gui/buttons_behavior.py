@@ -22,7 +22,7 @@ class SettingsButton(ButtonBehavior):
 
     def on_release(self):
         globals.popup_widget = popup_widget.PopupWidget(globals.node_background_color, globals.node_border_color, globals.edge_color)
-        globals.popup_window = Popup(title="Settings", content=globals.popup_widget, size_hint=(None, None), size=(450, 425), auto_dismiss=False)
+        globals.popup_window = Popup(title="Settings", content=globals.popup_widget, size_hint=(None, None), size=(480, 490), auto_dismiss=False)
         globals.popup_window.open()
 
         dropdown1 = ChangeColorDropDownList()

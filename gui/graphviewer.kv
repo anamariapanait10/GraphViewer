@@ -220,7 +220,7 @@
 <PopupWidget>:
 
      cols: 3
-     rows: 7
+     rows: 8
      row_default_height: 40
      row_force_default: True
      padding: [0, 20, 0, 0]
@@ -286,7 +286,7 @@
 
 
      Label:
-          text: 'Node color'
+          text: 'Node border'
           size_hint: 0.6, 0.2
           color: 1, 1, 1, 1
      LabelB:
@@ -321,6 +321,27 @@
           size_hint_x: None
           size: 150, 40
 
+
+     Label:
+          text: 'Language:'
+          size_hint_y: None
+          size: 60, 30
+          color: 1, 1, 1, 1
+
+     Label:
+          text: 'English'
+          size_hint_y: None
+          size: 60, 30
+          color: 1, 1, 1, 1
+
+     Button:
+         # id: changeColor_btn3
+          text: 'Change language'
+         # background_normal: ''
+         # size_hint: 0.4, 0.1
+          size_hint_x: None
+          size: 150, 40
+
      BoxLayout:
      BoxLayout:
      BoxLayout:
@@ -331,7 +352,7 @@
             #   size_hint_x: None
              #  size: 100, 50
               # pos_hint: {'center': 1}
-              # on_release: root.closePopUp()
+               #on_release: root.closePopUp()
      BoxLayout:
           padding:[50, 0, 0, 0]
           Button:
