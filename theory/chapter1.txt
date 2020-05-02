@@ -1,0 +1,92 @@
+1. Noţiuni introductive
+1.1 Terminologie
+Graf = orice mulţime finită V, prevăzută cu o relaţie binară internă E. Notăm graful cu G=(V,E).
+Graf neorientat = un graf G=(V,E), în care relaţia binară este simetrică: dacă (v,w)∈E, atunci (w,v)∈E.
+Graf orientat = un graf G=(V,E), în care relaţia binară nu este simetrică.
+Nod = element al mulţimii V, unde G=(V,E) este un graf neorientat.
+Vârf = element al mulţimii V, unde G=(V,E) este un graf orientat sau neorientat.
+Muchie = element al mulţimii E ce descrie o relaţie existentă între două vârfuri din V, unde G=(V,E)
+este un graf neorientat;
+Arc = element al mulţimii E ce descrie o relaţie existentă între două vârfuri din V, unde G=(V,E) este
+un graf orientat;
+Arcele sunt parcurse în direcţia dată de relaţia vârf = succesor_direct. Muchiile unui graf
+neorientat sunt considerate ca neavând direcţie, deci pot fi parcurse în ambele sensuri.
+Adiacenţă = Vârful w este adiacent cu v dacă perechea (v,w)∈E. Într-un graf neorientat, existenţa
+muchiei (v,w) presupune că w este adiacent cu v şi v adiacent cu w.
+Graf neorientat – poza
+Graf orientat - poza
+În exemplele din figura de mai sus, vârful 1 este adiacent cu 4, dar 1 şi 3 nu reprezintă o pereche
+de vârfuri adiacente.
+Incidenţă = o muchie este incidentă cu un nod dacă îl are pe acesta ca extremitate. Muchia (v,w) este
+incidentă în nodul v, respectiv w.
+Incidenţă spre interior = Un arc este incident spre interior cu un vârf, dacă îl are pe acesta ca vârf
+terminal (arcul converge spre vârf). Arcul (v,w) este incident spre interior cu
+vârful w.
+Incidenţă spre exterior = Un arc este incident spre exterior cu un vârf dacă îl are pe acesta ca vârf
+iniţial (arcul pleacă din vârf). Arcul (v,w) este incident spre exterior cu vârful
+v.
+Grad = Gradul unui nod v, dintr-un graf neorientat, este un număr natural ce reprezintă numărul de
+noduri adiacente cu acesta.
+Grad interior = În cazul unui graf orientat, fiecare nod v are asociat un număr numit grad interior şi care
+este egal cu numărul de arce care îl au pe v ca vârf terminal (numărul de arce incidente
+spre interior).
+Grad exterior = În cazul unui graf orientat, fiecare nod v are asociat un număr numit grad exterior şi care este egal cu numărul de arce care îl au pe v ca vârf iniţial (numărul de arce
+incidente spre exterior).
+Vârf izolat = Un vârf cu gradul 0.
+Vârf terminal  Un vârf cu gradul 1.
+poza
+Vârful 5 este terminal (gradul 1).
+Vârful 6 este izolat (gradul 0).
+Vârfurile 1, 2, 4 au gradele egale cu 2.
+Lanţ = este o secvenţă de noduri ale unui graf neorientat G=(V,E), cu proprietatea că oricare două noduri consecutive sunt adiacente: w1, w2, w3,. . ,wp cu proprietatea că (wi, wi+1)E pentru 1≤i<p.
+Lungimea unui lanţ = numărul de muchii din care este format.
+Lanţ simplu = lanţul care conţine numai muchii distincte.
+Lanţ compus = lanţul care nu este format numai din muchii distincte.
+Lanţ elementar = lanţul care conţine numai noduri distincte.
+Ciclu = Un lanţ în care primul nod coincide cu ultimul. Ciclul este elementar dacă este format doar din
+noduri distincte, excepţie făcând primul şi ultimul. Lungimea minimă a unui ciclu este 3.
+poza
+Succesiunea de vârfuri 2, 3, 5, 6 reprezintă un
+lanţ simplu şi elementar de lungime 3.
+Lanţul 5 3 4 5 6 este simplu dar nu este
+elementar.
+Lanţul 5 3 4 5 3 2 este compus şi nu este
+elementar.
+Lanţul 3 4 5 3 reprezintă un ciclu elementar.
+Drum = este o secvenţă de vârfuri ale unui graf orientat G=(V,E), cu proprietatea că oricare două vârfuri consecutive sunt adiacente: (w1, w2, w3,. . ,wp), cu proprietatea că (wi, wi+1)E, pentru 1≤i<p.
+Lungimea unui drum = numărul de arce din care este format.
+Drum simplu = drumul care conţine numai arce distincte.
+Drum compus = drumul care nu este format numai din arce distincte.
+Drum elementar = drumul care conţine numai vârfuri distincte.
+Circuit = Un drum în care primul vârf coincide cu ultimul. Circuitul este elementar dacă este format
+doar din vârfuri distincte, excepţie făcând primul şi ultimul.
+Buclă = Circuit format dintr-un singur arc.
+poza
+Ciclu elementar 3,6,4,5,1,3
+Circuit elementar 1,3, 5,4,2,1
+Graf parţial = Un graf G’=(V,E’) reprezintă graf parţial al grafului G=(V,E) dacă E’E. Cu alte cuvinte
+G’ este graf parţial al lui G, dacă este identic, sau se obţine prin suprimarea unor muchii
+(respectiv arce) din G.
+Subgraf = Un subgraf al lui G=(V,E) este un graf G’=(V’,E’) în care V’V, iar V’ conţine toate
+muchiile/arcele din E ce au ambele extremităţi în V’. Cu alte cuvinte G’ este subgraf al lui G,
+dacă este identic, sau se obţine prin suprimarea unor noduri împreună cu muchiile/arcele
+incidente cu acestea.
+Graf regulat = graf neorientat în care toate nodurile au acelaşi grad.
+Graf complet = graf neorientat G=(V,E) în care există muchie între oricare două noduri. Numărul de
+muchii ale unui graf complet este |V |*|V-1|/2.
+Graf conex = graf neorientat G=(V,E) în care, pentru orice pereche de noduri (v,w), există un lanţ care
+le uneşte.
+Graf tare conex = graf orientat G=(V,E) în care, pentru orice pereche de vârfuri (v,w), există drum de la
+v la w şi un drum de la w la v.
+Componentă conexă = subgraf al grafului de referinţă, maximal în raport cu proprietatea de conexitate
+(între oricare două vârfuri există lanţ);
+Lanţ hamiltonian = un lanţ elementar care conţine toate nodurile unui graf.
+Ciclu hamiltonian = un ciclu elementar care conţine toate nodurile grafului.
+Graf hamiltonian = un graf G care conţine un ciclu hamiltonian.
+Condiţie de suficienţă: Dacă G este un graf cu n3 vârfuri, astfel încât gradul oricărui vârf verifică
+inegalitatea: gr(x)=n/2, rezultă că G este graf hamiltonian.
+Lanţ eulerian = un lanţ simplu care conţine toate muchiile unui graf.
+Ciclu eulerian = un ciclu simplu care conţine toate muchiile grafului.
+Graf eulerian = un graf care conţine un ciclu eulerian.
+Condiţie necesară şi suficientă: Un graf este eulerian dacă şi numai dacă oricare vârf al său are gradul
+par.

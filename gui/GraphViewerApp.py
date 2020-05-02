@@ -266,6 +266,10 @@ class GraphViewerApp(App):
         globals.screen_manager.add_widget(globals.main_screen)
         globals.screen_manager.add_widget(globals.theory_screen)
 
+        with open("../GraphViewer/theory/chapter1.txt") as f:
+            content = f.read()
+            globals.theory_screen.ids.theory_lbl.text = content
+
         return globals.screen_manager
         # return globals.main_view_widget
 

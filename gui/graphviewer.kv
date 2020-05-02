@@ -9,12 +9,21 @@
 <TheoryScreen>:
      name: 'theory_screen'
 
+     canvas.before:
+          Color:
+               rgba: 1, 1, 1, 1
+          Rectangle:
+               pos: self.pos
+               size: self.size
+
      BoxLayout:
           orientation: 'horizontal'
 
           BoxLayout:
                orientation: 'vertical'
                spacing: 30
+               size_hint_x: None
+               width: 300
 
                BoxLayout:
                     orientation: 'horizontal'
@@ -56,7 +65,8 @@
                                    width: 2
 
                          Label:
-                              text:'Algorithms:'
+                              text:'Theory:'
+                              color: 0, 0, 0, 1
                               font_size: 40
                               size_hint: None, None
                               size: 200, 50
@@ -85,6 +95,14 @@
                               text: 'BFS'
                               size_hint: None, None
                               size: 200, 40
+
+                         Label:
+                              id: chapter1_lbl
+                              size_hint_x: None
+                              size: 500, 30
+                              text: '10/10'
+                              color: 0, 1, 0, 1
+
                     AnchorLayout:
                          anchor_x: 'left'
                          anchor_y: 'top'
@@ -94,6 +112,13 @@
                               text: 'DFS'
                               size_hint: None, None
                               size: 200, 40
+                         Label:
+                              id: chapter2_lbl
+                              size_hint_x: None
+                              size: 500, 30
+                              text: '-'
+                              color: 0, 1, 0, 1
+
 
                     AnchorLayout:
                          anchor_x: 'left'
@@ -104,9 +129,23 @@
                               text: 'Dijkstra'
                               size_hint: None, None
                               size: 200, 40
+                         Label:
+                              id: chapter3_lbl
+                              size_hint_x: None
+                              size: 500, 30
+                              text: '-'
+                              color: 0, 1, 0, 1
+
 
                AnchorLayout:
-                    anchor_x: 'center'
+                    #anchor_x: 'center'
+                    anchor_y:'center'
+                    canvas.before:
+                         Color:
+                              rgba: 1, 0, 0, 1
+                         Line:
+                              points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+                              width: 2
                     CircularButton:
                          text: "Test"
                          size_hint: None, None
@@ -120,9 +159,11 @@
                bar_width: 15
 
                Label:
-                    text: 'Scrolable example' * 100
+                    id: theory_lbl
+                    #text: 'Scrolable example' * 100
                     size: self.parent.size
                     font_size: 30
+                    color: 0, 0, 0, 1
                     size_hint_y: None
                     text_size:self.width, None
                     height: self.texture_size[1]

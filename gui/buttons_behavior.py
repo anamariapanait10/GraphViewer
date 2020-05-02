@@ -18,6 +18,8 @@ class CircularButton(ToggleButtonBehavior, Widget):
     def on_press(self):
         algorithms.BFS().start()
 
+
+
 class SettingsButton(ButtonBehavior):
 
     def on_release(self):
