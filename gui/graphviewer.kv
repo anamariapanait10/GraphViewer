@@ -279,8 +279,8 @@
           size_hint_x: None
      Slider:
           id: radiusSlider
-          min: 20
-          max: 70
+          min: 15
+          max: 40
           step: 1
           orientation: 'horizontal'
           value: root.getRadiusSliderValue()
@@ -300,8 +300,8 @@
           size_hint_x: None
      Slider:
           id: edgeSlider
-          min: 5
-          max: 150
+          min: 80
+          max: 450
           step: 1
           orientation: 'horizontal'
           value: root.getEdgeSliderValue()
@@ -721,15 +721,16 @@
                                                #padding: [20, 20]
                                              size_hint_x: None
                                              #size_hint_y: None
-                                             size: 125, 10
+                                             size: 100, 10
                                              color: 0, 0, 0, 1
                                              text: 'Forces:'
 
                                         Switch:
                                              id: switch
                                              active: True
-                                              #size_hint: None, None
-                                             size: 60, 10
+                                             size_hint_x: None
+                                             size: 80, 30
+
 
                                    LabelB: #Instructions
                                         id: draw_lbl

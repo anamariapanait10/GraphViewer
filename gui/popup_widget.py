@@ -4,7 +4,7 @@ from globals import globals
 from graph import node_widget
 from graph import edge_widget
 from kivy.properties import ListProperty
-
+import graph.force_layout
 
 class PopupWidget(GridLayout):
 
@@ -23,19 +23,23 @@ class PopupWidget(GridLayout):
 
     def new_radius(self, *args):
         self.ids.nodeRadius_lbl.text = str(int(args[1]))
-        node_widget.radius = (int(args[1]))
+        globals.node_radius = (int(args[1]))
         self.ids.radiusSlider.value = int(args[1])
 
         for edge in globals.graph_manager.edge_widgets:
             edge.updateCoords()
 
+        for node in globals.graph_manager.node_widgets:
+            node.set_radius(int(args[1]))
+
     def new_length(self, *args):
         self.ids.edgeLength_lbl.text = str(int(args[1]))
-        edge_widget.changeEdgeLength(int(args[1]))
         self.ids.edgeSlider.value = int(args[1])
+        graph.force_layout.c2 = int(args[1])
+        graph.force_layout.recalculatePositions()
 
     def getEdgeSliderValue(self):
-        return globals.edge_length
+        return graph.force_layout.c2
 
     def getRadiusSliderValue(self):
         return globals.node_radius

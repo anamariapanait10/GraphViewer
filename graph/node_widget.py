@@ -39,3 +39,6 @@ class NodeWidget(Widget):
         self.node_id = str(Id)
         self.background_color = globals.node_background_color
         self.border_color = globals.node_border_color
+
+    def set_radius(self, r):
+        self.radius = r

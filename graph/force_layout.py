@@ -108,6 +108,8 @@ def update(arg=0):
 
     global number
     number += 1
+    if globals.forces == False:
+        Clock.unschedule(update)
     if number >= M:
         Clock.unschedule(update)
         number = 0

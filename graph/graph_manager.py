@@ -220,6 +220,7 @@ class GraphManager:
             globals.main_view_widget.ids.graph_canvas.add_widget(edge)
 
         for node in self.node_widgets:
+            node.set_radius(globals.node_radius)
             globals.main_view_widget.ids.graph_canvas.add_widget(node)
 
 
