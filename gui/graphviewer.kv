@@ -27,6 +27,7 @@
 
                BoxLayout:
                     orientation: 'horizontal'
+
 #                    canvas.before:
 #                         Color:
 #                              rgba: 1, 0, 0, 1
@@ -71,61 +72,58 @@
                     size_hint_y: None
                     height: 150
 
-                    AnchorLayout:
-                         anchor_x: 'left'
-                         anchor_y: 'top'
-                         #size_hint_y: None
-                         #height: 40
-                         ToggleButton:
-                              text: 'BFS'
+                    BoxLayout:
+                         orientation: 'horizontal'
+                         AnchorLayout:
+                              anchor_x: 'left'
+                              anchor_y: 'top'
+                              #size_hint_y: None
+                              #height: 40
+                              ToggleButton:
+                                   text: 'BFS'
+                                   size_hint: None, None
+                                   size: 200, 40
+
+
+                         CheckBox:
                               size_hint: None, None
-                              size: 200, 40
+                              size: 50, 50
+                              background_color: 0, 0, 0, 1
+                              disabled: True
 
-					#CheckBox:
-					#     size_hint: None, None
-					#     size: 50, 50
-					#     background_color: 0, 0, 0, 1
-					#     #disabled: True
-
-                         #Label:
-                         #     id: chapter1_lbl
-                         #     size_hint_x: None
-                         #     size: 500, 30
-                         #     text: '10/10'
-                         #     color: 0, 1, 0, 1
-
-                    AnchorLayout:
-                         anchor_x: 'left'
-                         anchor_y: 'top'
-                         #size_hint_y: None
-                         #height: 40
-                         ToggleButton:
-                              text: 'DFS'
+                    BoxLayout:
+                         orientation: 'horizontal'
+                         AnchorLayout:
+                              anchor_x: 'left'
+                              anchor_y: 'top'
+                              #size_hint_y: None
+                              #height: 40
+                              ToggleButton:
+                                   text: 'DFS'
+                                   size_hint: None, None
+                                   size: 200, 40
+                         CheckBox:
                               size_hint: None, None
-                              size: 200, 40
-                         Label:
-                              id: chapter2_lbl
-                              size_hint_x: None
-                              size: 500, 30
-                              text: '-'
-                              color: 0, 1, 0, 1
+                              size: 50, 50
+                              background_color: 0, 0, 0, 1
+                              disabled: True
 
-
-                    AnchorLayout:
-                         anchor_x: 'left'
-                         anchor_y: 'top'
-                         #size_hint_y: None
-                         #height: 40
-                         ToggleButton:
-                              text: 'Dijkstra'
+                    BoxLayout:
+                         orientation: 'horizontal'
+                         AnchorLayout:
+                              anchor_x: 'left'
+                              anchor_y: 'top'
+                              #size_hint_y: None
+                              #height: 40
+                              ToggleButton:
+                                   text: 'Dijkstra'
+                                   size_hint: None, None
+                                   size: 200, 40
+                         CheckBox:
                               size_hint: None, None
-                              size: 200, 40
-                         Label:
-                              id: chapter3_lbl
-                              size_hint_x: None
-                              size: 500, 30
-                              text: '-'
-                              color: 0, 1, 0, 1
+                              size: 50, 50
+                              background_color: 0, 0, 0, 1
+                              disabled: True
 
 
                AnchorLayout:
@@ -151,11 +149,11 @@
                          points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
                          width: 2
 
-               BoxLayout:
-                    orientation: 'vertical'
+               GridLayout:
+                    cols: 1
                     id: box_layout
                     size_hint_y: None
-                    height: 4000
+                    height: self.minimum_height
 
 
 

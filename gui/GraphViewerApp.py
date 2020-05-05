@@ -221,7 +221,7 @@ def make_uchr(code: str):
 class GraphViewerApp(App):
     def build(self):
 
-        Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # disable multi-touch emulation
+        Config.set('input', 'mouse', 'mouse, multitouch_on_demand') # disable multi-touch emulation
 
         self.icon = '../GraphViewer/images/Icon.png'    # set the app icon
 
@@ -288,15 +288,17 @@ class GraphViewerApp(App):
             while line != "":
 
                 if line.startswith("../GraphViewer/images/") == True:
-                    box = BoxLayout(orientation='horizontal', spacing= 50)
+                    box = BoxLayout(orientation='horizontal', spacing=50)
                     img = Image(source=line.strip('\n'))
-                   # img.height = img.texture_size[1]
+                    img.height = img.texture_size[1]
+                    box.size_hint_y = None
+                    box.height = 200
                     box.add_widget(img)
 
                     line = f.readline(200)
                     while line != "" and line.startswith("../GraphViewer/images/") == True:
                         img = Image(source=line.strip('\n'))
-                        #img.height = img.texture_size[1]
+                        img.height = img.texture_size[1]
                         box.add_widget(img)
                         line = f.readline(200)
 
@@ -304,6 +306,7 @@ class GraphViewerApp(App):
 
                 else:
                     text = line
+                    number_of_lines = 1
 
                     line = f.readline(200)
                     try:
@@ -318,6 +321,7 @@ class GraphViewerApp(App):
                     line = "".join(line)
                     while line != "" and line.startswith("../GraphViewer/images/") == False:
                         text += line
+                        number_of_lines += 1
                         line = f.readline(200)
                         try:
                             chr = make_uchr("U+2208")
@@ -330,7 +334,9 @@ class GraphViewerApp(App):
                             pass
                         line = "".join(line)
 
-                    lbl = Label(text=u''+text, color= [0, 0, 0, 1], font_size= 30, font_name='Sans-serif')
+                    lbl = Label(text=text, color= [0, 0, 0, 1], font_size=20, font_name='./font/FreeSans.ttf')
+                    lbl.size_hint_y = None
+                    lbl.height = 30 * number_of_lines
                     globals.theory_screen.ids.box_layout.add_widget(lbl)
 
         s = 0
