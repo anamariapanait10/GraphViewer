@@ -1,3 +1,5 @@
+
+
 1. Noţiuni introductive
 
 1.1 Terminologie
@@ -19,7 +21,7 @@ muchiei (v,w) presupune că w este adiacent cu v şi v adiacent cu w.
 ../GraphViewer/images/undirected_graph.png
 ../GraphViewer/images/directed_graph.png
 
-              Graf neorientat                       Graf orientat
+                                Graf neorientat                                                                                Graf orientat
 
 În exemplele din figura de mai sus, vârful 1 este adiacent cu 4, dar 1 şi 3 nu reprezintă o pereche
 de vârfuri adiacente.
