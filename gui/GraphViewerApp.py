@@ -18,6 +18,8 @@ from kivy.factory import Factory
 from datetime import datetime
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from gui import screen_manager
+from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
 
 #kivy.require('2.0.0')
 
@@ -213,6 +215,8 @@ class MainViewWidget(Widget):
 class LabelB(Label):
     background_color = ListProperty(globals.colors['white'])
 
+def make_uchr(code: str):
+    return chr(int(code.lstrip("U+").zfill(8), 16))
 
 class GraphViewerApp(App):
     def build(self):
@@ -266,9 +270,77 @@ class GraphViewerApp(App):
         globals.screen_manager.add_widget(globals.main_screen)
         globals.screen_manager.add_widget(globals.theory_screen)
 
+        #box_layout = BoxLayout(orientation='vertical')
+
+
         with open("../GraphViewer/theory/chapter1.txt", encoding='utf-8') as f:
-            content = f.read()
-            globals.theory_screen.ids.theory_lbl.text = content
+
+            line = f.readline(200)
+            try:
+                chr = make_uchr("U+2208")
+                index = line.index(chr)
+                line = list(line)
+                while index:
+                    line[index] = chr
+            except ValueError:
+                pass
+            line = "".join(line)
+            while line != "":
+
+                if line.startswith("../GraphViewer/images/") == True:
+                    box = BoxLayout(orientation='horizontal', spacing= 50)
+                    img = Image(source=line.strip('\n'))
+                   # img.height = img.texture_size[1]
+                    box.add_widget(img)
+
+                    line = f.readline(200)
+                    while line != "" and line.startswith("../GraphViewer/images/") == True:
+                        img = Image(source=line.strip('\n'))
+                        #img.height = img.texture_size[1]
+                        box.add_widget(img)
+                        line = f.readline(200)
+
+                    globals.theory_screen.ids.box_layout.add_widget(box)
+
+                else:
+                    text = line
+
+                    line = f.readline(200)
+                    try:
+                        chr = make_uchr("U+2208")
+                        index = line.index(chr)
+                        line = list(line)
+                        while index:
+                            line[index] = chr
+                            index = line.index(chr, index + 1)
+                    except ValueError:
+                        pass
+                    line = "".join(line)
+                    while line != "" and line.startswith("../GraphViewer/images/") == False:
+                        text += line
+                        line = f.readline(200)
+                        try:
+                            chr = make_uchr("U+2208")
+                            index = line.index(chr)
+                            line = list(line)
+                            while index:
+                                line[index] = chr
+                                index = line.index(chr, index + 1)
+                        except ValueError:
+                            pass
+                        line = "".join(line)
+
+                    lbl = Label(text=u''+text, color= [0, 0, 0, 1], font_size= 30, font_name='Sans-serif')
+                    globals.theory_screen.ids.box_layout.add_widget(lbl)
+
+        s = 0
+        for c in globals.theory_screen.ids.box_layout.children:
+            s += c.height
+            print(c.height)
+
+        #globals.theory_screen.ids.box_layout.width = s
+        print(s)
+
 
         return globals.screen_manager
         # return globals.main_view_widget

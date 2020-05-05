@@ -27,12 +27,12 @@
 
                BoxLayout:
                     orientation: 'horizontal'
-                    canvas.before:
-                         Color:
-                              rgba: 1, 0, 0, 1
-                         Line:
-                              points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
-                              width: 2
+#                    canvas.before:
+#                         Color:
+#                              rgba: 1, 0, 0, 1
+#                         Line:
+#                              points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+#                              width: 2
 
                     AnchorLayout:
                          anchor_x: 'left'
@@ -40,12 +40,7 @@
                          size_hint_x: None
                          width: 50
                          #height: 50
-                         canvas.before:
-                              Color:
-                                   rgba: 0, 1, 0, 1
-                              Line:
-                                   points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
-                                   width: 2
+
                          Button:
                               on_release: app.root.current = 'main'
                               text: '<-'
@@ -57,12 +52,7 @@
                     AnchorLayout:
                          anchor_x: 'left'
                          anchor_y: 'top'
-                         canvas.before:
-                              Color:
-                                   rgba: 1, 0, 1, 1
-                              Line:
-                                   points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
-                                   width: 2
+
 
                          Label:
                               text:'Theory:'
@@ -74,12 +64,7 @@
                BoxLayout:
                     orientation: 'vertical'
                     spacing: 5
-                    canvas.before:
-                         Color:
-                              rgba: 1, 0, 0, 1
-                         Line:
-                              points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
-                              width: 2
+
                     #anchor_x: 'left'
                     #anchor_y: 'top'
                     padding: [10, 10, 10, 10]
@@ -96,12 +81,18 @@
                               size_hint: None, None
                               size: 200, 40
 
-                         Label:
-                              id: chapter1_lbl
-                              size_hint_x: None
-                              size: 500, 30
-                              text: '10/10'
-                              color: 0, 1, 0, 1
+					#CheckBox:
+					#     size_hint: None, None
+					#     size: 50, 50
+					#     background_color: 0, 0, 0, 1
+					#     #disabled: True
+
+                         #Label:
+                         #     id: chapter1_lbl
+                         #     size_hint_x: None
+                         #     size: 500, 30
+                         #     text: '10/10'
+                         #     color: 0, 1, 0, 1
 
                     AnchorLayout:
                          anchor_x: 'left'
@@ -140,12 +131,7 @@
                AnchorLayout:
                     #anchor_x: 'center'
                     anchor_y:'center'
-                    canvas.before:
-                         Color:
-                              rgba: 1, 0, 0, 1
-                         Line:
-                              points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
-                              width: 2
+
                     CircularButton:
                          text: "Test"
                          size_hint: None, None
@@ -157,16 +143,20 @@
                do_scroll_y: True
                scroll_type: ['bars']
                bar_width: 15
+               id: theory_scrollview
+               canvas.before:
+                    Color:
+                         rgba: 0, 1, 1, 1
+                    Line:
+                         points: [*self.pos, self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1], self.pos[0], self.pos[1] + self.size[1], *self.pos]
+                         width: 2
 
-               Label:
-                    id: theory_lbl
-                    #text: 'Scrolable example' * 100
-                    size: self.parent.size
-                    font_size: 30
-                    color: 0, 0, 0, 1
+               BoxLayout:
+                    orientation: 'vertical'
+                    id: box_layout
                     size_hint_y: None
-                    text_size:self.width, None
-                    height: self.texture_size[1]
+                    height: 4000
+
 
 
 <NodeWidget>:

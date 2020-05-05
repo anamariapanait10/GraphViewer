@@ -60,8 +60,8 @@ def __calculateForces():
                 else:
                     F = -c3 / (d ** 2)
 
-                # if globals.graph_manager.is_directed or u.Id == grabbed_node or v.Id == grabbed_node: # ?
-                #     F *= 2
+                if u.Id == grabbed_node or v.Id == grabbed_node: #globals.graph_manager.is_directed or
+                    F *= 4
 
                 if u.Id != grabbed_node:
                     u.force[0] += F * cosine

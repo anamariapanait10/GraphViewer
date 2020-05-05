@@ -1,5 +1,7 @@
 1. Noţiuni introductive
+
 1.1 Terminologie
+
 Graf = orice mulţime finită V, prevăzută cu o relaţie binară internă E. Notăm graful cu G=(V,E).
 Graf neorientat = un graf G=(V,E), în care relaţia binară este simetrică: dacă (v,w)∈E, atunci (w,v)∈E.
 Graf orientat = un graf G=(V,E), în care relaţia binară nu este simetrică.
@@ -13,8 +15,12 @@ Arcele sunt parcurse în direcţia dată de relaţia vârf = succesor_direct. Mu
 neorientat sunt considerate ca neavând direcţie, deci pot fi parcurse în ambele sensuri.
 Adiacenţă = Vârful w este adiacent cu v dacă perechea (v,w)∈E. Într-un graf neorientat, existenţa
 muchiei (v,w) presupune că w este adiacent cu v şi v adiacent cu w.
-Graf neorientat – poza
-Graf orientat - poza
+
+../GraphViewer/images/undirected_graph.png
+../GraphViewer/images/directed_graph.png
+
+              Graf neorientat                       Graf orientat
+
 În exemplele din figura de mai sus, vârful 1 este adiacent cu 4, dar 1 şi 3 nu reprezintă o pereche
 de vârfuri adiacente.
 Incidenţă = o muchie este incidentă cu un nod dacă îl are pe acesta ca extremitate. Muchia (v,w) este
@@ -30,15 +36,17 @@ noduri adiacente cu acesta.
 Grad interior = În cazul unui graf orientat, fiecare nod v are asociat un număr numit grad interior şi care
 este egal cu numărul de arce care îl au pe v ca vârf terminal (numărul de arce incidente
 spre interior).
-Grad exterior = În cazul unui graf orientat, fiecare nod v are asociat un număr numit grad exterior şi care este egal cu numărul de arce care îl au pe v ca vârf iniţial (numărul de arce
+Grad exterior = În cazul unui graf orientat, fiecare nod v are asociat un număr numit grad exterior şi care este egal
+cu numărul de arce care îl au pe v ca vârf iniţial (numărul de arce
 incidente spre exterior).
 Vârf izolat = Un vârf cu gradul 0.
-Vârf terminal  Un vârf cu gradul 1.
+Vârf terminal = Un vârf cu gradul 1.
 poza
 Vârful 5 este terminal (gradul 1).
 Vârful 6 este izolat (gradul 0).
 Vârfurile 1, 2, 4 au gradele egale cu 2.
-Lanţ = este o secvenţă de noduri ale unui graf neorientat G=(V,E), cu proprietatea că oricare două noduri consecutive sunt adiacente: w1, w2, w3,. . ,wp cu proprietatea că (wi, wi+1)E pentru 1≤i<p.
+Lanţ = este o secvenţă de noduri ale unui graf neorientat G=(V,E), cu proprietatea că oricare două noduri consecutive
+ sunt adiacente: w1, w2, w3,. . ,wp cu proprietatea că (wi, wi+1)E pentru 1≤i<p.
 Lungimea unui lanţ = numărul de muchii din care este format.
 Lanţ simplu = lanţul care conţine numai muchii distincte.
 Lanţ compus = lanţul care nu este format numai din muchii distincte.
@@ -53,7 +61,8 @@ elementar.
 Lanţul 5 3 4 5 3 2 este compus şi nu este
 elementar.
 Lanţul 3 4 5 3 reprezintă un ciclu elementar.
-Drum = este o secvenţă de vârfuri ale unui graf orientat G=(V,E), cu proprietatea că oricare două vârfuri consecutive sunt adiacente: (w1, w2, w3,. . ,wp), cu proprietatea că (wi, wi+1)E, pentru 1≤i<p.
+Drum = este o secvenţă de vârfuri ale unui graf orientat G=(V,E), cu proprietatea că oricare două vârfuri consecutive
+sunt adiacente: (w1, w2, w3,. . ,wp), cu proprietatea că (wi, wi+1)E, pentru 1≤i<p.
 Lungimea unui drum = numărul de arce din care este format.
 Drum simplu = drumul care conţine numai arce distincte.
 Drum compus = drumul care nu este format numai din arce distincte.
