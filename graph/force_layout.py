@@ -62,7 +62,7 @@ def __calculateForces():
                         F = -c3 / (d ** 2)  # Force calculation is based on Coulomb's law for electronically charged particles
 
                     if u.Id == grabbed_node or v.Id == grabbed_node: #globals.graph_manager.is_directed or
-                        F *= 4
+                        F *= 2
 
                     if u.Id != grabbed_node:
                         u.force[0] += F * cosine

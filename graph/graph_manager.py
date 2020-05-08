@@ -352,6 +352,8 @@ class GraphManager:
                             index += 1
                         elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
                             return -1
+                        else:
+                            index += 1
                     found_neighbors == True
 
             elif line[index] != ' ' and line[index] != '\n' and line[index] != ':' and line[index] != ',':
@@ -359,30 +361,30 @@ class GraphManager:
             else:
                 index += 1
 
-        if found_node == False: # if the condition is True, then it is an empty line, I don't think it really needs this condition
+        if found_node == False: # if the condition is True, then it is an empty line
             return []
         else:
             return [node, neighbors]
 
-    def interpretAdjacencyMatrix(self, nodeId, line): # returns -1 for invalid syntax #TODO: verifica daca are nr de coloanele si linii egale
-                                              # and a list otherwise, in the following format:
-                                              # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
-        found_node = False
-        index = 0
-        neighbors = []
-        while index < len(line):
-            if line[index].isdigit():
+    def interpretAdjacencyMatrix(self, number_of_cols, matrix, last_node_widgets_list): # returns a list in the following format:
+                                                                # [ nodeId, [neighbor1Id, neighbor2Id, ...]]
+        node_id = 0
+        for line in matrix:
+            node_id += 1
+            self.addNodeWidget(node_id, pos=self.returnOldPosition(node_id, last_node_widgets_list))
+            for neighbor in line:
+                nodeWidget = self.getNodeWidgetById(node_id)
+                if neighbor != nodeWidget.Id:
+                    self.addNodeWidget(neighbor, pos=self.returnOldPosition(neighbor,last_node_widgets_list))
+                    neighbor = self.getNodeWidgetById(neighbor)
+                    self.addEdgeWidget(nodeWidget.Id, neighbor.Id)
 
-                if found_node == False:
-                    node = int(line[index])
-                    index += 1
-                    while index < len(line) and line[index].isdigit():
-                        node = node * 10 + int(line[index])
-                        index += 1
-                    found_node = True
+                    if self.is_directed == True:
+                        nodeWidget.neighbors.append(neighbor)
+                    else:
+                        nodeWidget.neighbors.append(neighbor)
+                        neighbor.neighbors.append(nodeWidget)
 
-
-        return [nodeId, neighbors]
 
     def returnOldPosition(self, node_id, last_node_widgets_list):
         pos = 0
@@ -407,6 +409,47 @@ class GraphManager:
             index += 1
 
         return [node_id, neighbors]
+
+    def interpretLineAdjancyMatrix(self, text): # this function will return a list in the following format [node_Id, [neighbors1, ...]]
+                                                # and -1 if the syntax is invalid
+        index = 0
+        node_id = 0
+        list = []
+
+        while index < len(text):
+            if text[index] == '1' or text[index] == '0':
+                index += 1
+                node_id += 1
+                if index < len(text) and text[index] != " ":
+                    return -1
+                elif text[index - 1] == '1':
+                    list.append(node_id)
+            elif text[index] != " ":
+                return -1
+            else:
+                index += 1
+
+        return [node_id, list]
+
+
+
+    def interpretLineCostMatrix(self, text): # this function will return a list with the numbers of that line
+        index = 0
+        list = []
+
+        while index < len(text):
+            if text[index].isdigit():
+                index += 1
+                while index < len(text) and text[index].isdigit():
+                    node = node * 10 + int(text[index])
+                    index += 1
+                list.append(node)
+            elif text[index] != " ":
+                return -1
+            else:
+                index += 1
+
+        return list
 
     def deleteOldNodes(self, last_node_widgets_list):
         globals.graph_manager.node_widgets.sort(key=lambda node: node.Id)
@@ -450,8 +493,8 @@ class GraphManager:
             last_edge_widgets_list = self.edge_widgets
             self.node_widgets = []
             self.edge_widgets = []
-            node_id = 1
-            line_index = -1
+            line_index = 0
+            matrix= []
 
             if lines:
                 for line in lines:
@@ -463,11 +506,10 @@ class GraphManager:
                                                              # see function description for more information
 
                             if value == -1:
-                                globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
                                 #raise GraphException("Invalid format for the edges list!")
-                                print("Invalid format for the edge list!")
+                                #print("Invalid format for the edge list!")
+                                globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
                                 self.data_graph_is_valid = False
-                                globals.main_view_widget.ids.graph_canvas.clear_widgets()
                                 break
 
                             elif len(value) == 0:
@@ -498,18 +540,18 @@ class GraphManager:
                                 self.deleteOldNodes(last_node_widgets_list)
                                 self.deleteOldEdges(last_edge_widgets_list)
 
-                        elif globals.adjacency_list_input_btn == True or globals.adjacency_matrix_input_btn == True:
+                        elif globals.adjacency_list_input_btn == True:
 
-                            if globals.adjacency_list_input_btn == True:
-                                value = self.interpretAdjacencyList(line)
-                                if value == -1:
-                                    raise GraphException("Invalid format for the adjacency list!")
-                            if globals.adjacency_matrix_input_btn == True:
-                                value = self.interpretAdjacencyMatrix(node_id, line)
-                                node_id += 1
-                                if value == -1:
-                                    raise GraphException("Invalid format for the adjacency matrix!")
-
+                            value = self.interpretAdjacencyList(line)
+                            if value == -1:
+                                #raise GraphException("Invalid format for the adjacency list!")
+                                #print("Invalid format for the adjacency list!")
+                                globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
+                                self.data_graph_is_valid = False
+                                break
+                            else:
+                                self.data_graph_is_valid = True
+                                globals.main_view_widget.ids.input_text.foreground_color = [0, 0, 0, 1]
 
                             self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))
                             nodeWidget = self.getNodeWidgetById(value[0])
@@ -525,15 +567,56 @@ class GraphManager:
                                         nodeWidget.neighbors.append(node)
                                         node.neighbors.append(nodeWidget)
 
+                        elif globals.adjacency_matrix_input_btn == True:
+
+                                if line_index == 1:
+                                    val = self.interpretLineAdjancyMatrix(line)
+                                    if val == -1:
+                                        globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
+                                        self.data_graph_is_valid = False
+                                        break
+                                    else:
+                                        last_number_of_cols = int(val[0])
+                                        matrix.append(val[1])
+                                else:
+                                    val = self.interpretLineAdjancyMatrix(line)
+                                    if val == -1:
+                                        globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
+                                        self.data_graph_is_valid = False
+                                        break
+                                    else:
+                                        matrix.append(val[1])
+                                        number_of_cols = int(val[0])
+                                        if number_of_cols != 0:
+                                            if number_of_cols != last_number_of_cols:
+                                                globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
+                                                self.data_graph_is_valid = False
+                                                break
+                                            else:
+                                                if line_index == number_of_cols:
+                                                    self.data_graph_is_valid = True
+                                                    globals.main_view_widget.ids.input_text.foreground_color = [0, 0, 0,
+                                                                                                                1]
+                                                    self.interpretAdjacencyMatrix(number_of_cols, matrix, last_node_widgets_list)
+                                                else:
+                                                    globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0,
+                                                                                                                1]
+                                                    self.data_graph_is_valid = False
+
+                                        else: # then it is an empty line
+                                            line_index -= 1
+
+
+
+
+
+
                         else: # when globals.costMatrixBtn == True
                             self.interpretCostMatrix()
 
         self.update_canvas()
-
         self.printGraph()
 
-    #def addNodeFromDrawing(self, node):
-    #    self.node_widgets.append(node)
 
     def printGraph(self):
         for node in self.node_widgets:

@@ -51,7 +51,7 @@ class MainViewWidget(Widget):
 
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            print("Touch down")
+            #print("Touch down")
 
             self.ismoved = False
             self.grabbedNode = isOnNode(touch)
@@ -68,7 +68,7 @@ class MainViewWidget(Widget):
                     self.grabbedNode = None
                     touch.ungrab(self)
 
-                    print("Add edge")
+                    #print("Add edge")
 
 
                 elif self.lastSelectedNode == None:
@@ -104,7 +104,7 @@ class MainViewWidget(Widget):
 
     def on_touch_up(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
-            print("Touch Up")
+           # print("Touch Up")
 
             if self.ismoved == True and self.grabbedNode != None:
                 self.grabbedNode.border_width = 5
@@ -141,11 +141,11 @@ class MainViewWidget(Widget):
         self.lastSelectedNode = None
         self.isSelectedANode = False
         self.grabbedNode = None
-        print("Double press")
+        #print("Double press")
 
     def on_single_press(self, touch):
 
-        print("Single press")
+        #print("Single press")
         nx = touch.pos[0] - self.ids.graph_canvas.pos[0] - globals.node_radius
         ny = touch.pos[1] - self.ids.graph_canvas.pos[1] - globals.node_radius
 
@@ -214,8 +214,6 @@ class MainViewWidget(Widget):
 class LabelB(Label):
     background_color = ListProperty(globals.colors['white'])
 
-def make_uchr(code: str):
-    return chr(int(code.lstrip("U+").zfill(8), 16))
 
 class GraphViewerApp(App):
     def build(self):
@@ -271,8 +269,6 @@ class GraphViewerApp(App):
         globals.screen_manager = screen_manager.ScreenManager(transition=FadeTransition(duration=.05))
         globals.screen_manager.add_widget(globals.main_screen)
         globals.screen_manager.add_widget(globals.theory_screen)
-
-        #box_layout = BoxLayout(orientation='vertical')
 
 
         with open("../GraphViewer/theory/chapter1.txt", encoding='utf-8') as f:

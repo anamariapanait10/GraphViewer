@@ -141,7 +141,7 @@ class ListOfEdgesButton(ButtonBehavior):
             globals.adjacency_list_input_btn = False
             globals.adjacency_matrix_input_btn = False
             globals.cost_matrix_input_btn = False
-            globals.main_view_widget.ids.input_nodes.hint_text = "node1Id  node2Id\nnode3Id  node4Id"
+            globals.main_view_widget.ids.input_text.hint_text = "node1  node2\nnode3  node4"
 
 
 class AdjacencyListButton(ButtonBehavior):
@@ -161,7 +161,7 @@ class AdjacencyListButton(ButtonBehavior):
             globals.adjacency_list_input_btn = True
             globals.adjacency_matrix_input_btn = False
             globals.cost_matrix_input_btn = False
-            globals.main_view_widget.ids.input_text.hint_text = "node: neighbor1, neighbor2, ..."
+            globals.main_view_widget.ids.input_text.hint_text = "node: neighbor1,..."
 
         else:   # if it is pressed
             globals.input_drop_down_list.ids.adjacencyList_btn.background_normal: ''
@@ -188,7 +188,7 @@ class AdjacencyMatrixButton(ButtonBehavior):
             globals.adjacency_list_input_btn = False
             globals.adjacency_matrix_input_btn = True
             globals.cost_matrix_input_btn = False
-            globals.main_view_widget.ids.input_nodes.hint_text = "0 1 1 0\n" \
+            globals.main_view_widget.ids.input_text.hint_text = "0 1 1 0\n" \
                                                                "1 0 0 1\n" \
                                                                "0 1 0 1\n" \
                                                                "1 1 1 0"
@@ -219,7 +219,7 @@ class CostMatrixButton(ButtonBehavior):
             globals.adjacency_matrix_input_btn = False
             globals.cost_matrix_input_btn = True
 
-            globals.main_view_widget.ids.input_nodes.hint_text = "0 123 78 62\n" \
+            globals.main_view_widget.ids.input_text.hint_text = "0 123 78 62\n" \
                                                                "13 0 6 198\n" \
                                                                "26 4 0 17\n" \
                                                                "65 143 31 0"
@@ -320,7 +320,7 @@ class BfsButton(ButtonBehavior):
 
         globals.main_view_widget.ids.algorithm_txt_input.visible = True
         globals.main_view_widget.ids.algorithm_txt_lbl.visible = True
-        globals.main_view_widget.ids.down_btns.visible = True
+        #globals.main_view_widget.ids.down_btns.visible = True
         globals.main_view_widget.ids.play_btn.visible = True
         globals.main_view_widget.ids.play_btn.bind(on_press=CircularButton.on_press)
 
