@@ -51,25 +51,26 @@ def __calculateForces():
         for u in node_widgets:
             if v != None and u != None and v.Id != u.Id:
                 d = dist(u, v)
-                sine = (v.pos[1] - u.pos[1]) / d
-                cosine = (v.pos[0] - u.pos[0]) / d
+                if d != 0:
+                    sine = (v.pos[1] - u.pos[1]) / d
+                    cosine = (v.pos[0] - u.pos[0]) / d
 
-                if globals.graph_manager.edgeAlreadyExists(int(u.Id), int(v.Id)):
-                    F = c1 * log(d / c2)  # F is positive towards v
+                    if globals.graph_manager.edgeAlreadyExists(int(u.Id), int(v.Id)):
+                        F = c1 * log(d / c2)  # F is positive towards v
 
-                else:
-                    F = -c3 / (d ** 2)  # Force calculation is based on Coulomb's law for electronically charged particles
+                    else:
+                        F = -c3 / (d ** 2)  # Force calculation is based on Coulomb's law for electronically charged particles
 
-                if u.Id == grabbed_node or v.Id == grabbed_node: #globals.graph_manager.is_directed or
-                    F *= 4
+                    if u.Id == grabbed_node or v.Id == grabbed_node: #globals.graph_manager.is_directed or
+                        F *= 4
 
-                if u.Id != grabbed_node:
-                    u.force[0] += F * cosine
-                    u.force[1] += F * sine
+                    if u.Id != grabbed_node:
+                        u.force[0] += F * cosine
+                        u.force[1] += F * sine
 
-                if v.Id != grabbed_node:
-                    v.force[0] -= F * cosine
-                    v.force[1] -= F * sine
+                    if v.Id != grabbed_node:
+                        v.force[0] -= F * cosine
+                        v.force[1] -= F * sine
 
 
 def __moveNodes():

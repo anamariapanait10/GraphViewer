@@ -45,6 +45,10 @@ class MainViewWidget(Widget):
     isSelectedANode = False
     ismoved = False
 
+    def on_resize(self,  arg1, arg2):
+        print(arg1, arg2)
+
+
     def on_touch_down(self, touch):
         if self.ids.graph_canvas.collide_point(*touch.pos):
             print("Touch down")
@@ -207,7 +211,6 @@ class MainViewWidget(Widget):
         return max_length
 
 
-
 class LabelB(Label):
     background_color = ListProperty(globals.colors['white'])
 
@@ -250,6 +253,9 @@ class GraphViewerApp(App):
         globals.main_view_widget.ids.draw_lbl.multiline = True
 
         globals.main_view_widget.ids.settings_btn.bind(on_release=SettingsButton.on_release)
+
+        globals.main_view_widget.ids.save_btn.bind(on_press=SaveFileButton.on_press)
+        globals.main_view_widget.ids.open_btn.bind(on_press=OpenFileButton.on_press)
 
         globals.NodeWidgetBackgroundColor = globals.colors['white'] # it used to be [0.9, 0.9, 0.9, 1]
         globals.NodeWidgetColor = globals.colors['black'] # it used to be [0, 0, 0, 1]

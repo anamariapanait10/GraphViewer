@@ -15,6 +15,8 @@ popup_window = ObjectProperty()
 popup_widget = None
 error_popup_widget = None
 
+openSaveDialog = None
+
 node_radius = 25
 edge_length = 50
 minimum_distance_between_nodes = 5

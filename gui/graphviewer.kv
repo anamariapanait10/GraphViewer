@@ -392,6 +392,36 @@
                on_release: root.closePopUp()
 
 
+<OpenSaveWidget>:
+     cols: 1
+     rows: 3
+     row_default_height: 40
+     padding: [0, 20, 0, 0]
+     spacing: 10
+     BoxLayout:
+          FileChooserIconView:
+               id: fc
+               on_selection: root.on_select_file()
+
+     TextInput:
+          id: path_input
+          size_hint_y: None
+          height: 30
+          multiline: False
+
+     BoxLayout:
+          size_hint_y: None
+          height: 40
+
+          Button:
+               text: 'Close'
+               on_press: root.closePopup()
+
+          Button:
+               text: root.mode
+               on_press: root.on_opensave()
+
+
 <AlgDropDownList>:
      Button:
           id: bfs_btn
@@ -602,18 +632,20 @@
                                         size_hint_x: None
 
                                    Button:
+                                        text: 'Open'
+                                        id: open_btn
                                         size: 100, 50
                                         pos: self.pos
                                         background_color: 1, 1, 1, 1
-                                        text: 'Open'
                                         size_hint_x: None
                                         #width: 100
 
                                    Button:
+                                        text: 'Save'
+                                        id: save_btn
                                         size: 100, 50
                                         pos: self.pos
                                         background_color: 1, 1, 1, 1
-                                        text: 'Save'
                                         size_hint_x: None
                                         #width: 100
 

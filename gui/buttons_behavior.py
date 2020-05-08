@@ -9,6 +9,7 @@ from graph import edge_widget
 from gui import popup_widget
 from graph import force_layout
 from gui import algorithms
+from gui.open_save_popup import OpenSaveWidget
 
 
 class CircularButton(ToggleButtonBehavior, Widget):
@@ -500,3 +501,18 @@ class PinkButton():
         edge_widget.EdgeWidget.color = globals.colors['pink']
         globals.popup_widget.edge_color_lbl = globals.colors['pink']
         globals.edge_color = globals.colors['pink']
+
+
+
+class OpenFileButton(ButtonBehavior):
+    def on_press(self):
+        self.openWidget = OpenSaveWidget('Open')
+        globals.openSaveDialog = Popup(title='Open', content=self.openWidget, size_hint=(None, None), size=(480, 490), auto_dismiss=False)
+        globals.openSaveDialog.open()
+
+class SaveFileButton(ButtonBehavior):
+    def on_press(self):
+        self.saveWidget = OpenSaveWidget('Save')
+        globals.openSaveDialog = Popup(title='Save', content=self.saveWidget, size_hint=(None, None), size=(480, 490),
+                                       auto_dismiss=False)
+        globals.openSaveDialog.open()

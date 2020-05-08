@@ -1,0 +1,588 @@
+#:kivy 2.0.0
+#:import Factory kivy.factory.Factory
+
+<NodeWidget>:
+     size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
+
+     canvas.before:
+          Color:
+               rgba: root.getNodeWidgetColor()
+          Ellipse:
+               size: root.getNodeRadius() + 5, root.getNodeRadius() + 5 # it used to be 55, 55
+               pos: [self.pos[0] - 2.5, self.pos[1] - 2.5]
+
+          Color:
+               rgba: root.backgroundColor
+          Ellipse:
+               size: root.getNodeRadius(), root.getNodeRadius() # it used to be 50, 50
+               pos: self.pos
+
+     Label:
+          id: nodeId_lbl
+          size: 10, 10
+          color: root.getNodeWidgetColor()
+          pos: [self.parent.pos[0] + root.getNodeRadius() / 2 - 5, self.parent.pos[1] + root.getNodeRadius() / 2 - 5]
+          text: root.getId()
+
+
+<EdgeWidget>:
+     canvas.before:
+          Color:
+               rgba: root.getEdgeWidgetColor()
+
+          Line:
+               points: self.points
+               width: 1.5
+          Triangle:
+               points: self.trianglePoints
+
+     LabelB:
+          text: str("") if root.cost == 0 else str(root.cost)
+          pos: [0, 0] if root.labelPosition == [] else root.labelPosition # [(root.points[0] + root.points[2]) / 2,  (root.points[1] + root.points[3]) / 2]
+          bcolor:0, 0, 0, 1
+          color: 1, 1, 1, 1
+          size: [0, 0] if root.cost == 0 else [20, 20]
+
+#          BorderLabel:
+#               text: "10"
+#               pos: root.getPositionForLabel()
+
+
+<LabelB>:
+     bcolor: 1, 1, 1, 1
+     canvas.before:
+          Color:
+               rgba: self.bcolor
+          RoundedRectangle:
+               pos: self.pos
+               size: self.size
+               radius: 5, 5, 5, 5
+
+#<BorderLabel@Label+BorderBehavior>:
+#     size_hint: None, None
+#     pos: (100,100)
+#     width: 200
+#     height: 100
+#     borders: 3, 'solid', (1,1,1,1)
+
+<PopupWidget>:
+
+     cols: 3
+     rows: 7
+     row_default_height: 40
+     row_force_default: True
+     padding: [0, 20, 0, 0]
+     spacing: 10
+
+     Label:
+          text: 'Node radius'
+          size_hint: 10, 0.2
+          #width: 120
+          color: 1, 1, 1, 1
+     Label:
+          id: nodeRadius_lbl
+          text: str(radiusSlider.value)
+          size: 40, 40
+          size_hint_x: None
+     Slider:
+          id: radiusSlider
+          min: 20
+          max: 70
+          step: 1
+          orientation: 'horizontal'
+          value: root.getRadiusSliderValue()
+          on_value: root.new_radius(*args)
+          size_hint_x: None
+          width: 150
+
+
+     Label:
+          text: 'Edge ideal length'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+     Label:
+          id: edgeLength_lbl
+          text: str(edgeSlider.value)
+          size: 40, 40
+          size_hint_x: None
+     Slider:
+          id: edgeSlider
+          min: 5
+          max: 150
+          step: 1
+          orientation: 'horizontal'
+          value: root.getEdgeSliderValue()
+          on_value: root.new_length(*args)
+          size_hint_x: None
+          width: 150
+
+     Label:
+          text: 'Node background'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+     LabelB:
+          id: nodeWidgetBackground_lbl
+          bcolor: root.getNodeWidgetBackgroundColor()
+          size: 40, 40
+          size_hint_x: None
+     Button:
+          id: changeColor_btn1
+          text: 'Change color'
+          size: 150, 10
+          #background_normal: ''
+          size_hint_x: None
+
+
+     Label:
+          text: 'Node color'
+          size_hint: 0.6, 0.2
+          color: 1, 1, 1, 1
+     LabelB:
+          id: nodeWidgetColor_lbl
+          bcolor: root.getNodeWidgetColor()
+          size: 40, 40
+          size_hint_x: None
+     Button:
+          id: changeColor_btn2
+          text: 'Change color'
+          #size_hint: 0.4, 0.1
+          #background_normal: ''
+          size_hint_x: None
+          size: 150, 40
+
+
+     Label:
+          text: 'Edge color'
+          size_hint_y: None
+          size: 100, 30
+          color: 1, 1, 1, 1
+     LabelB:
+          id: edgeWidgetColor_lbl
+          bcolor: root.getEdgeWidgetColor()
+          size: 40, 40
+          size_hint_x: None
+     Button:
+          id: changeColor_btn3
+          text: 'Change color'
+         # background_normal: ''
+         # size_hint: 0.4, 0.1
+          size_hint_x: None
+          size: 150, 40
+
+     BoxLayout:
+     BoxLayout:
+     BoxLayout:
+     BoxLayout:
+     BoxLayout:
+          #Button:
+           #    text: 'Cancel'
+            #   size_hint_x: None
+             #  size: 100, 50
+              # pos_hint: {'center': 1}
+              # on_release: root.closePopUp()
+     BoxLayout:
+          padding:[50, 0, 0, 0]
+          Button:
+               id:apply_btn
+               text: 'Apply'
+               size_hint_x: None
+               size: 100, 50
+               on_release: root.closePopUp()
+
+
+<AlgDropDownList>:
+     Button:
+          id: bfs_btn
+          text: 'BFS'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('bfs')
+     Button:
+          id: dfs_btn
+          text: 'DFS'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('dfs')
+     Button:
+          id: dijkstra_btn
+          text: 'Dijkstra'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('dijkstra')
+
+<ChangeColorDropDownList>:
+     id: color_dropdown
+     Button:
+          id: white_btn
+          text: 'white'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: black_btn
+          text: 'black'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: red_btn
+          text: 'red'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: yellow_btn
+          text: 'yellow'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: orange_btn
+          text: 'orange'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: blue_btn
+          text: 'blue'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: purple_btn
+          text: 'purple'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: green_btn
+          text: 'green'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+     Button:
+          id: pink_btn
+          text: 'pink'
+          size_hint_y: None
+          height: 44
+          #background_normal: ''
+          #background_color: 0.34, 0.34, 0.34, 1
+
+
+
+<InputDropDownList>:
+     Button:
+          id: listOfEdges_btn
+          text: 'List of edges'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.8, 0.8, 0.8, 1
+          on_release: root.select('edgeList')
+     Button:
+          id: adjacencyList_btn
+          text: 'Adjacency List'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('adjacencyList')
+     Button:
+          id: adjacencyMatrix_btn
+          text: 'Adjacency Matrix'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('adjacencyMatrix')
+     Button:
+          id: costMatrix_btn
+          text: 'Cost Matrix'
+          size_hint_y: None
+          height: 44
+          background_normal: ''
+          background_color: 0.34, 0.34, 0.34, 1
+          on_release: root.select('costMatrix')
+
+
+<MainViewWidget>:
+     canvas.before:
+          Color:
+               rgba: 1, 1, 1, 1
+          Rectangle:
+          # self here refers to the widget i.e FloatLayout
+               pos: self.pos[0], self.pos[1]
+               size: self.size[0], self.size[1]
+
+     GridLayout:
+          size: root.width - 20, root.height - 20
+          # row_default_height: 50
+          # row_force_default: True
+          pos: 10, 10
+          cols: 1
+          rows: 4
+
+          BoxLayout:
+               orientation: 'vertical'
+               size_hint_y: None
+               height: 70
+                # If you put something here it will appear above the slider
+
+               GridLayout:
+                    row_default_height: 40
+                    row_force_default: True
+                    cols: 2
+                    rows: 1
+
+                    BoxLayout:
+                         orientation: 'horizontal'
+                         id: top_btns
+                         spacing: 2
+                         Button :
+                              id: undirected_btn
+                              size: 70, 40
+                              pos:10, 10
+                              background_normal: ''
+                              background_color: 0.8, 0.8, 0.8, 1
+                              text: 'Undirected'
+                         Button :
+                              id: directed_btn
+                              size: 70, 40
+                              pos:10, 10
+                              background_normal: ''
+                              background_color: 0.34, 0.34, 0.34, 1
+                              text: 'Directed'
+
+                         Button :
+                              id: algorithm_btn
+                              size: 70, 40
+                              pos:10, 10
+                              #background_normal: ''
+                              #background_color: 0.34, 0.34, 0.34, 1
+                              text: 'Algorithms'
+                    BoxLayout:
+                         orientation: 'horizontal'
+
+                         AnchorLayout:
+                              anchor_x: 'right'
+
+                              GridLayout:
+                                   rows: 1
+                                   cols: 2
+                                   width: 200
+                                   size_hint_x: None
+                                   Button:
+                                        id: settings_btn
+                                        size: 100, 50
+                                        pos: self.pos
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Settings'
+                                        size_hint_x: None
+
+                                   Button:
+                                        size: 100, 50
+                                        pos: self.pos
+                                        background_color: 1, 1, 1, 1
+                                        text: 'Save'
+                                        size_hint_x: None
+                                        #width: 100
+
+          BoxLayout:
+               height: 1000
+
+               Splitter:
+                    sizable_from: 'right'
+                    min_size: 200
+                    max_size: 600
+
+                    BoxLayout:
+                         orientation: 'vertical'
+                         #size_hint_y: None
+
+                         BoxLayout:
+                              orientation: 'horizontal'
+                              size_hint_y: None
+                              height: 40
+                              padding:[10, 0, 10, 0]
+                              spacing: 20
+
+                              Label:
+                                   size: 50, 40
+                                   text: 'Graph data'
+                                   color: 0, 0, 0, 1
+
+                              Button:
+                                   id: input_btn
+                                   size: 100, 40
+                                   background_color: 1, 1, 1, 1
+                                   text: 'Input'
+
+                         BoxLayout:
+                              orientation: 'horizontal'
+                              #size_hint_y: None
+                              height: 40
+                              ScrollView:
+                                   id:scroller
+                                   do_scroll_x: True
+                                   do_scroll_y: True
+                                   scroll_type: ['bars']
+                                   bar_width: 15
+                                   bar_inactive_color: self.bar_color
+
+                                   TextInput:
+                                        id: input_nodes
+                                        #text:'ScrollviewExample'*100
+                                        width: 1000 #scroller.width
+                                        size_hint: None, None
+                                        height: max(self.minimum_height, scroller.height)
+                                        hint_text:'Enter text'
+                                        #font_size: 30
+                                        #size: 50, 300
+
+                              BoxLayout:
+                                   orientation: 'vertical'
+                                   spacing: 50
+                                   padding: [10, 0, 10, 20]
+                                   #size_hint_y: None
+                                   #height: 90
+
+                                   AnchorLayout:
+                                        anchor_x: 'left'
+                                        anchor_y: 'top'
+
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             size_hint: None, None
+                                             spacing: 10
+                                             Label:
+                                                  #padding: [20, 20]
+                                                  size_hint: None, None
+                                                  size: 80, 10
+                                                  color: 0, 0, 0, 1
+                                                  text: 'Forces:'
+
+                                             Switch:
+                                                  id: switch
+                                                  active: True
+                                                  size_hint: None, None
+                                                  size: 60, 10
+
+                                   LabelB:
+                                        id: draw_lbl
+                                        padding: [20, 20]
+                                        text:'Tap to add nodes, \nDouble top to remove nodes'
+                                        text_size: self.size
+                                        size_hint_y: None
+                                        bcolor: 0.64, 0.7, 1, 1
+                                        color: 0, 0, 0, 1
+                                   BoxLayout:
+                                        orientation: 'horizontal'
+
+                                        Label:
+                                             id: bfs_txt_lbl
+                                             size_hint: None, None
+                                             visible: False
+                                             opacity: 1 if self.visible else 0
+                                             size: 200, 30
+                                             text: 'Enter the starting node:'
+                                             color: 0, 0, 0, 1
+                                        TextInput:
+                                             id: bfs_txt_input
+                                             visible: False
+                                             #hint_text: 'Enter the starting node'
+                                             opacity: 1 if self.visible else 0
+                                             size_hint: None, None
+                                             size: 50, 30
+
+
+                                   GridLayout:
+                                        id: down_btns
+                                        visible:False
+                                        opacity: 1 if self.visible else 0
+                                        row_default_height: 30
+                                        row_force_default: True
+                                        rows: 1
+                                        cols: 3
+                                        height: 30
+                                        width: 400
+                                        size_hint_x: None
+                                        size_hint_y: None
+
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 20
+                                             size_hint_x: None
+                                             width:50
+
+                                             Button :
+                                                  size: 50, 30
+                                                  size_hint_x: None
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '<='
+
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 30
+                                             size_hint_x: None
+                                             width: 120
+                                             Button :
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '<-'
+
+                                             Button :
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '->'
+                                        BoxLayout:
+                                             orientation: 'horizontal'
+                                             height: 30
+                                             spacing: 20
+                                             Button :
+                                                  size_hint_x: None
+                                                  size: 50, 30
+                                                  pos:10, 0
+                                                  background_color: 1, 1, 1, 1
+                                                  text: '=>'
+
+
+               RelativeLayout:
+                    id: graph_canvas
+                    canvas.before:
+                         Color:
+                              rgba: 0.8, 0.9, 0.9, 1
+                         RoundedRectangle:
+                              pos: self.parent.pos[0] - 6, self.parent.pos[1] - 46
+                              size: self.size[0] - 6, self.size[1] - 6
+                              radius: 15, 15, 15, 15
+
+                         Color:
+                              rgba: 0, 0, 0, 0.7
+                         Line:
+                              width: 1
+                              rounded_rectangle: self.parent.pos[0] - 6, self.parent.pos[1] - 46, self.width - 6, self.height - 6, 15
+
+          GridLayout:
+               size_hint_y: None
+               height: 40
+               rows: 1
+               cols: 1
