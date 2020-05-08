@@ -179,10 +179,6 @@ class MainViewWidget(Widget):
         if globals.forces == True:
             recalculatePositions()
 
-    def keyIsEnter(self, text):
-        if text[len(text)-1] == '\n':   # Trebuie adaugat si spatiile/enterurile de la mijolc
-            return True
-        return False
 
     def text_event(self, event, text):
         if text != "":
@@ -223,7 +219,7 @@ class GraphViewerApp(App):
 
         Config.set('input', 'mouse', 'mouse, multitouch_on_demand') # disable multi-touch emulation
 
-        self.icon = '../GraphViewer/images/Icon.png'    # set the app icon
+        self.icon = '../GraphViewer/images/Icon_128x128.ico'    # set the app icon
 
         globals.main_view_widget = MainViewWidget()
         globals.graph_manager = GraphManager(False)
@@ -276,15 +272,6 @@ class GraphViewerApp(App):
         with open("../GraphViewer/theory/chapter1.txt", encoding='utf-8') as f:
 
             line = f.readline(200)
-            try:
-                chr = make_uchr("U+2208")
-                index = line.index(chr)
-                line = list(line)
-                while index:
-                    line[index] = chr
-            except ValueError:
-                pass
-            line = "".join(line)
             while line != "":
 
                 if line.startswith("../GraphViewer/images/") == True:
@@ -307,43 +294,17 @@ class GraphViewerApp(App):
                     number_of_lines = 1
 
                     line = f.readline(200)
-                    try:
-                        chr = make_uchr("U+2208")
-                        index = line.index(chr)
-                        line = list(line)
-                        while index:
-                            line[index] = chr
-                            index = line.index(chr, index + 1)
-                    except ValueError:
-                        pass
-                    line = "".join(line)
+
                     while line != "" and line.startswith("../GraphViewer/images/") == False:
                         text += line
                         number_of_lines += 1
                         line = f.readline(200)
-                        try:
-                            chr = make_uchr("U+2208")
-                            index = line.index(chr)
-                            line = list(line)
-                            while index:
-                                line[index] = chr
-                                index = line.index(chr, index + 1)
-                        except ValueError:
-                            pass
-                        line = "".join(line)
 
-                    lbl = Label(text=text, color= [0, 0, 0, 1], font_size=30, font_name='./font/FreeSans.ttf')
+                    lbl = Label(text=text, color= [0, 0, 0, 1], font_size=25, font_name='./font/FreeSans.ttf')
+                    lbl.text_size = [1100, None]
                     lbl.size_hint_y = None
                     lbl.height = 40 * number_of_lines
                     globals.theory_screen.ids.box_layout.add_widget(lbl)
-
-        s = 0
-        for c in globals.theory_screen.ids.box_layout.children:
-            s += c.height
-            print(c.height)
-
-        #globals.theory_screen.ids.box_layout.width = s
-        print(s)
 
 
         return globals.screen_manager

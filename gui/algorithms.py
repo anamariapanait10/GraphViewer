@@ -1,9 +1,12 @@
+from heapq import *
+import sys
 from globals import globals
 from kivy.clock import Clock
 from functools import partial
 from kivy.uix.popup import Popup
 from gui import popup_widget
 from graph.graph_exception import GraphException
+
 
 class BFS():
 
@@ -31,7 +34,7 @@ class BFS():
 
 
     def start(self):
-        source = globals.main_view_widget.ids.bfs_txt_input.text
+        source = globals.main_view_widget.ids.algorithm_txt_input.text
         isOk = True
 
         if globals.main_view_widget.ids.play_btn.visible == True:
@@ -65,7 +68,7 @@ class BFS():
             elif isOk == True:
                 Clock.schedule_interval(partial(self.BFSUtil, self.queue, self.visited), 1)
 
-
+class DFS:
 
     def DFSUtil(self, v, visited):
 
@@ -83,7 +86,7 @@ class BFS():
 
     def DFS(self, startNode):
 
-        source = globals.main_view_widget.ids.bfs_txt_input.text
+        source = globals.main_view_widget.ids.algorithm_txt_input.text
         isOk = True
 
         if globals.main_view_widget.ids.play_btn.visible == True:
@@ -132,30 +135,48 @@ class BFS():
 
         self.DFSUtil(startNode, visited)  # Call the recursive helper function to print DFS traversal
 
+
+class Dijkstra:
+
+    def dijkstra_util(self, dummy):
+        if len(self.heap) > 0:
+            tmp = heappop(self.heap)
+            u = tmp[1]
+            u_widget = globals.graph_manager.getNodeWidgetById(u)
+
+            for current_edge in globals.graph_manager.edge_widgets:
+                if current_edge.node1.Id == u:
+                    vc = current_edge.node2.Id
+                    vc_widget = globals.graph_manager.getNodeWidgetById(vc)
+                    vc_index = globals.graph_manager.getIndexFromListOfNodes(vc_widget)
+                    dist = current_edge.cost
+                    if self.d[globals.graph_manager.getIndexFromListOfNodes(u_widget)] + dist < self.d[vc_index]:
+                        if self.d[vc] != self.inf:
+                            for p in self.heap[:]:
+                                if p == (self.d[vc], vc):
+                                    self.heap.remove(p)
+
+                        self.d[vc] = self.d[u] + dist
+                        heappush(self.heap, (self.d[vc], vc))
+        else:
+            Clock.unschedule(self.dijkstra_util)
+            print(self.d)
+
+
     def dijkstra(self, src):
+        self.inf = sys.maxsize
+        self.d = [self.inf] * len(globals.graph_manager.node_widgets)
+        self.d[src] = 0
+        self.number_of_neighbors = len(globals.graph_manager.getNodeWidgetById(src).neighbors)
+        self.heap = [(0, src)]
+        heapify(self.heap)
+        Clock.schedule_interval(self.dijkstra_util, 0.1)
 
-        dist = [sys.maxint] * self.V
-        dist[src] = 0
-        sptSet = [False] * self.V
+    def start(self):
+        self.sn = 1
+        try:
+            self.sn = int(globals.main_view_widget.ids.algorithm_txt_input.text)
+        except:
+            raise GraphException('The starting node must be a valid node')
 
-        for cout in range(self.V):
-
-            # Pick the minimum distance vertex from the set of vertices not yet processed.
-            # u is always equal to src in first iteration
-            u = self.minDistance(dist, sptSet)
-
-            # Put the minimum distance vertex in the shotest path tree
-            sptSet[u] = True
-
-            # Update dist value of the adjacent vertices of the picked vertex only if the current
-            # distance is greater than new distance and the vertex in not in the shotest path tree
-            for v in range(self.V):
-                if self.graph[u][v] > 0 and \
-                        sptSet[v] == False and \
-                        dist[v] > dist[u] + self.graph[u][v]:
-                    dist[v] = dist[u] + self.graph[u][v]
-
-        self.printSolution(dist) 
-        
-        
-        
+        self.dijkstra(self.sn)

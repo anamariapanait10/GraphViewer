@@ -10,7 +10,7 @@ used; that is, the force exerted by a spring is:
 where d is the length of the spring, and c1 and c2 are constants. Experience shows that Hookes Law (linear) springs are 
 too strong when the vertices are far apart; the logarithmic force solves this problem. Note that the springs exert no
 force when d = c2. Secondly, we make nonadjacent vertices repel each other. An inverse square law force,
-                                             c3/d2,
+                                             c3/d^2,
 where c3 is constant and d is the distance between the vertices, is suitable. The mechanical system is simulated by the 
 following algorithm:
                                     algorithm SPRING(G:graph);
@@ -55,10 +55,10 @@ def __calculateForces():
                 cosine = (v.pos[0] - u.pos[0]) / d
 
                 if globals.graph_manager.edgeAlreadyExists(int(u.Id), int(v.Id)):
-                    F = c1 * log(d / c2) # F is positive towards v
+                    F = c1 * log(d / c2)  # F is positive towards v
 
                 else:
-                    F = -c3 / (d ** 2)
+                    F = -c3 / (d ** 2)  # Force calculation is based on Coulomb's law for electronically charged particles
 
                 if u.Id == grabbed_node or v.Id == grabbed_node: #globals.graph_manager.is_directed or
                     F *= 4

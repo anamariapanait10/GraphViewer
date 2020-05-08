@@ -1,0 +1,219 @@
+1.2 Moduri de reprezentare la nivelul memoriei
+Există mai multe modalităţi standard de reprezentare a unui graf G=(V, E):
+1. matricea de adiacenţă;
+2. listele de adiacenţă;
+3. matricea ponderilor (costurilor);
+4. lista muchiilor.
+
+	Matricea de adiacenţă este o matrice binară (cu elemente 0 sau 1) care codifică existenţa sau
+nu a muchiei/arcului între oricare pereche de vârfuri din graf. Este indicată ca mod de memorare a
+grafurilor, în special în cazul grafurilor dense, adică cu număr mare de muchii ( |V2|≈E).
+Creare_MA_neorientat(G=(V,E)) /*complexitate: O(V2 + E)*/
+┌pentru i←1, |V| executa
+│ ┌pentru j ← 1 to |V| executa G[i][j] ← 0;
+│ └■
+└■
+┌pentru e = 1,|E| executa
+│ citeste i, j;
+│ G[i][j] ← 1;
+│ G[j][i] ← 1; //instructiunea lipseste in cazul digrafului
+└■
+Implementarea în limbaj a subprogramului care creează matricea de adiacenţă a unui graf
+neorientat ia în considerare următoarele declaraţii:
+const MAX_N=101;
+ MAX_M=1001;
+var n,m:longint;
+G:array[0..max_n,0..max_n] of byte;
+#include <stdio.h>
+#define MAX_N 101
+#define MAX_M 1001
+int N, M,; char G[MAX_N][MAX_N];
+Subprogramul citeste_graf() preia informaţiile din fişierul text graf.in, în felul următor: de pe
+prima linie numărul n de vârfuri şi m de muchii, iar de pe următoarele m linii, perechi de numere
+reprezentând muchiile grafului. Matricea G de adiacenţă se consideră iniţializată cu valoarea 0.
+void citeste_graf(void)
+{
+ int i, j;
+ freopen("graf.in","r", stdin);
+ scanf("%d %d", &N, &M);
+ for (; M > 0; M--)
+ {
+ scanf("%d %d", &i, &j);
+ G[i][j] = G[j][i] = 1;
+ }
+}
+void citeste_graf(void)
+{
+ int i, j;
+ freopen("graf.in","r", stdin);
+ scanf("%d %d", &N, &M);
+ for (; M > 0; M--)
+ {
+ scanf("%d %d", &i, &j);
+ G[i][j] = 1;
+ }
+}
+	Listele de adiacenţă reţin, pentru fiecare nod din graf, toate vârfurile adiacente cu acesta
+(vecine cu el). Ca modalitate de reprezentare se poate folosi un vector LA ale cărui elemente sunt
+adresele de început ale celor |V| liste simplu înlănţuite memorate, una pentru fiecare vârf din V. Lista
+simplu înlănţuită, a cărei adresă de început este reţinută de LA[u] memorează toate vârfurile din G, adiacente cu u şi stocate într-o ordine oarecare.
+Pentru graful alăturat exemplificăm reprezentarea atât în liste de adiacenţă, cât şi în matrice de adiacenţă.
+ poza
+1 0 0 0
+1 1 0 0
+1 0 1 0
+0 1 1 1
+Matricea de adiacenţă (MA)
+ 2 3 4
+ 1 3
+ 1 2
+ 1
+Liste de adiacenţă (LA)
+
+# include <vector>
+using namespace std;
+vector <int> G[MAXN];
+#include <stdio.h>
+#define MAXN 1001
+struct lista
+{ int nod;
+ lista *urm;
+} *G[MAXN];
+
+	Subprogramul citeste_graf() preia informaţiile din fişierul text graf.in, în felul următor: de pe
+prima linie, numărul n de vârfuri şi m de muchii, iar de pe următoarele m linii, perechi de numere
+reprezentând muchiile grafului. La apelul adauga(i,j) se realizează inserarea unui element de informaţie j
+în lista lui vecinilor nodului i. Tabloul G, reprezentând listele de adiacenţă, se consideră iniţializat cu
+constanta NULL (C++).
+void load(){
+ scanf("%d %d\n", &N, &M);
+ for (i=1; i<= M; i++){
+scanf("%d %d\n",&x, &y);
+G[x].push_back(y);
+G[y].push_back(x);
+}
+return;
+}
+void adauga(int i, int j)
+{
+ lista *p;
+ p = new lista; p->nod = j;
+ p->urm = G[i]; G[i] = p;
+}
+void citeste_graf(void)
+{
+ int i, j;
+ freopen("graf.in","r", stdin);
+ scanf("%d %d", &N, &M);
+ for (; M > 0; M--){
+ scanf("%d %d", &i, &j);
+ adauga(i, j); adauga(j, i);
+ }
+}
+Un potenţial dezavantaj al reprezentării sub forma listelor de adiacenţă este modul oarecum anevoios de
+a determina dacă o muchie (u,v) este prezentă sau nu în graf. Eficienţa reprezentării unui graf este dată
+de densitatea acestuia, deci matricea de adiacenţă este viabilă dacă numărul muchiilor este aproximativ
+egal cu |V2|.
+	Matricea costurilor este o matrice cu |V| linii şi |V| coloane, care codifică existenţa sau nu a muchiei/arcului, între oricare pereche de vârfuri din graf, prin costul acesteia. Astfel:
+G[i][ j] = ∝, dacă (i, j) ∉ E
+G[i,][j] = cost < ∝, dacă (i, j) ∈E
+G[i,][j] = 0, dacă i = j
+
+Creare_MC_neorientat(G=(V,E)) /*complexitate: O(V2 + E)*/
+┌pentru i←1, |V| executa
+│ ┌pentru j ← 1 to |V| executa
+│ │ ┌daca i = j atunci G[i][j] ← 0;
+│ │ │altfel G[i][j] ← 
+│ │ └■
+│ └■
+└■
+┌pentru e = 1,|E| executa
+│ citeste i, j, c;
+│ G[i][j] ← c;
+│ G[j][i] ← c; //instructiunea lipseste in cazul digrafului
+└■
+Implementarea în limbaj a subprogramului care creează matricea costurilor unui graf neorientat
+ia în considerare următoarele declaraţii:
+
+#include <algorithm>
+#include <stdio.h>
+#include <vector>
+#define pb push_back
+#define f first
+#define s second
+#define mp make_pair
+#define MAXN 10001
+using namespace std;
+int N, M;
+vector <pair <int, int> > L[MAXN];
+#include <stdio.h>
+#include <string.h>
+#define MAXN 10001
+#define INF 0x3f3f
+int N, M, G[MAXN][MAXN];
+Subprogramul citeste_graf() preia informaţiile din fişierul text graf.in în felul următor: de pe
+prima linie, numerele n de vârfuri şi m de muchii, iar de pe următoarele m linii, câte trei numere i, j, c
+având semnificaţia muchie între i şi j de cost c.
+void load(){
+ scanf("%d %d\n", &N, &M);
+ for (i=1; i<= M; i++){
+ scanf("%d %d %d\n",&x, &y,&c);
+ G[x].pb(mp(y,c));
+ G[y].pb(mp(x,c);
+}
+return;
+}
+void citeste_graf(void) {
+ int i, j, c;
+ freopen("graf.in","r",stdin);
+ scanf("%d %d", &N, &M);
+ for (i = 1; i <= N; i++)
+ for (j = 1; j <= N; j++)
+ G[i][j] = (i != j) * INF;
+ for (; M > 0; M--) {
+ scanf("%d %d %d", &i, &j, &c);
+ G[i][j] = c;
+ G[j][i] = c;
+ }
+}
+ Lista muchiilor este utilizată în cadrul unor algoritmi, ea memorând, pentru fiecare muchie,
+cele două vârfuri incidente şi eventual, costul ei.
+Implementarea în limbaj a subprogramului care creează lista muchiilor unui graf neorientat
+ponderat, ia în considerare următoarele declaraţii:
+#include <algorithm>
+#include <stdio.h>
+#include <vector>
+#define pb push_back
+#define f first
+#define s second
+#define mp make_pair
+using namespace std;
+int N, M;
+vector <pair <int, pair<int, int> > > L;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_N 101
+#define MAX_M 10001
+int N, M, E[MAX_M][3];
+Tabloul E reţine lista muchiilor. Subprogramul citeste_graf() preia informaţiile din fişierul text
+graf.in în felul următor: de pe prima linie, numărul n de vârfuri şi m de muchii, iar de pe următoarele m
+linii, câte trei numere i, j, c având semnificaţia muchie între i şi j de cost c.
+void load(){
+int x, y, c;
+ scanf("%d %d", &N, &M);
+ for (int i = 0; i < M; i++){
+ scanf("%d %d %d",&x, &y, &c);
+ L.pb (mp (c, mp(x, y) ) );
+}
+void citeste_graf(void) {
+int i, j, k, c;
+freopen("graf.in","r",stdin);
+scanf("%d %d", &N, &M);
+for (k = 0; k < M; k++) {
+ scanf("%d %d %d", &i,&j,&c);
+ E[k][0] = i; E[k][1] = j;
+ E[k][2] = c;
+}
+}
+

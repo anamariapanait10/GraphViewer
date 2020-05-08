@@ -11,6 +11,7 @@ class GraphManager:
         self.is_directed = is_directed
         self.node_widgets = []   # the list of nodes
         self.edge_widgets = []   # the list of edges
+        self.data_graph_is_valid = True
 
     def getNodeWidgetList(self):
         return self.node_widgets
@@ -214,14 +215,15 @@ class GraphManager:
 
         globals.main_view_widget.ids.graph_canvas.clear_widgets()
 
-        for edge in self.edge_widgets:
-            if self.is_directed == True:
-                edge.triangle_points = edge.getTrianglePoints()
-            globals.main_view_widget.ids.graph_canvas.add_widget(edge)
+        if self.data_graph_is_valid == True:
+            for edge in self.edge_widgets:
+                if self.is_directed == True:
+                    edge.triangle_points = edge.getTrianglePoints()
+                globals.main_view_widget.ids.graph_canvas.add_widget(edge)
 
-        for node in self.node_widgets:
-            node.set_radius(globals.node_radius)
-            globals.main_view_widget.ids.graph_canvas.add_widget(node)
+            for node in self.node_widgets:
+                node.set_radius(globals.node_radius)
+                globals.main_view_widget.ids.graph_canvas.add_widget(node)
 
 
     def update_text_on_edgeAdd(self):
@@ -449,22 +451,35 @@ class GraphManager:
             self.node_widgets = []
             self.edge_widgets = []
             node_id = 1
+            line_index = -1
 
             if lines:
                 for line in lines:
                     if line != "":
+                        line_index += 1
                         if globals.edge_list_input_btn == True:
                             value = self.interpretLine(line) # on a line can be an isolated node, an unweighted edge, an weighted edge
                                                              # an empty string or invalid syntax
                                                              # see function description for more information
 
                             if value == -1:
-                                raise GraphException("Invalid format for the edges list!")
+                                globals.main_view_widget.ids.input_text.foreground_color = [1, 0, 0, 1]
+                                #raise GraphException("Invalid format for the edges list!")
+                                print("Invalid format for the edge list!")
+                                self.data_graph_is_valid = False
+                                globals.main_view_widget.ids.graph_canvas.clear_widgets()
+                                break
+
                             elif len(value) == 0:
-                                pass
+                                self.data_graph_is_valid = True
+                                globals.main_view_widget.ids.input_text.foreground_color = [0, 0, 0, 1]
                             elif len(value) == 1:
+                                self.data_graph_is_valid = True
+                                globals.main_view_widget.ids.input_text.foreground_color = [0, 0, 0, 1]
                                 self.addNodeWidget(value[0], pos=self.returnOldPosition(value[0], last_node_widgets_list))
                             else:
+                                self.data_graph_is_valid = True
+                                globals.main_view_widget.ids.input_text.foreground_color = [0, 0, 0, 1]
                                 if len(value) == 2:
                                     if value[0] != value[1]:
 

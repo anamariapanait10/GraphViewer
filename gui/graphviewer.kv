@@ -676,6 +676,7 @@
                                    id: input_text
                                    width: scroller.width
                                    size_hint: None, None
+                                   foreground_color: 0, 0, 0, 1
                                    height: max(self.minimum_height, scroller.height)
                                    hint_text:'Enter text'
                                    #font_size: 30
@@ -758,7 +759,7 @@
 
 
                                              Label:
-                                                  id: bfs_txt_lbl
+                                                  id: algorithm_txt_lbl
                                                   size_hint: None, None
                                                   visible: False
                                                   opacity: 1 if self.visible else 0
@@ -766,7 +767,7 @@
                                                   text: 'Enter starting node:'
                                                   color: 0, 0, 0, 1
                                              TextInput:
-                                                  id: bfs_txt_input
+                                                  id: algorithm_txt_input
                                                   visible: False
                                                   opacity: 1 if self.visible else 0
                                                   size_hint: None, None

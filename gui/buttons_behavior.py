@@ -16,9 +16,13 @@ class CircularButton(ToggleButtonBehavior, Widget):
         return Vector(x, y).distance(self.center) <= self.width / 2
 
     def on_press(self):
-        algorithms.BFS().start()
-
-
+        if globals.selected_algorithm == 'BFS':
+            algorithms.BFS().start()
+        elif globals.selected_algorithm == 'DFS':
+            algorithms.DFS().start()
+        elif globals.selected_algorithm == 'Dijkstra':
+            self.dijkstra_object = algorithms.Dijkstra()
+            self.dijkstra_object.start()
 
 class SettingsButton(ButtonBehavior):
 
@@ -156,7 +160,7 @@ class AdjacencyListButton(ButtonBehavior):
             globals.adjacency_list_input_btn = True
             globals.adjacency_matrix_input_btn = False
             globals.cost_matrix_input_btn = False
-            globals.main_view_widget.ids.input_nodes.hint_text = "node: neighbor1, neighbor2, ..."
+            globals.main_view_widget.ids.input_text.hint_text = "node: neighbor1, neighbor2, ..."
 
         else:   # if it is pressed
             globals.input_drop_down_list.ids.adjacencyList_btn.background_normal: ''
@@ -283,10 +287,17 @@ class DijkstraButton(ButtonBehavior):
             # The buttons from the dropdown list can't be pressed at the same time
             globals.algorithms_drop_down_list.ids.bfs_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.algorithms_drop_down_list.ids.dfs_btn.background_color = (0.34, 0.34, 0.34, 1)
+            globals.selected_algorithm = 'Dijkstra'
 
         else:  # if it is pressed
             globals.algorithms_drop_down_list.ids.dijkstra_btn.background_normal: ''
             globals.algorithms_drop_down_list.ids.dijkstra_btn.background_color = (0.34, 0.34, 0.34, 1)
+
+        globals.main_view_widget.ids.algorithm_txt_input.visible = True
+        globals.main_view_widget.ids.algorithm_txt_lbl.visible = True
+        globals.main_view_widget.ids.down_btns.visible = True
+        globals.main_view_widget.ids.play_btn.visible = True
+        globals.main_view_widget.ids.play_btn.bind(on_press=CircularButton.on_press)
 
 
 class BfsButton(ButtonBehavior):
@@ -300,12 +311,14 @@ class BfsButton(ButtonBehavior):
             globals.algorithms_drop_down_list.ids.dfs_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.algorithms_drop_down_list.ids.dijkstra_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.selected_algorithm = 'BFS'
+
         else:  # if it is pressed
             globals.algorithms_drop_down_list.ids.bfs_btn.background_normal: ''
             globals.algorithms_drop_down_list.ids.bfs_btn.background_color = (0.34, 0.34, 0.34, 1)
 
-        globals.main_view_widget.ids.bfs_txt_input.visible = True
-        globals.main_view_widget.ids.bfs_txt_lbl.visible = True
+        globals.main_view_widget.ids.algorithm_txt_input.visible = True
+        globals.main_view_widget.ids.algorithm_txt_lbl.visible = True
         globals.main_view_widget.ids.down_btns.visible = True
         globals.main_view_widget.ids.play_btn.visible = True
         globals.main_view_widget.ids.play_btn.bind(on_press=CircularButton.on_press)
@@ -322,13 +335,15 @@ class DfsButton(ButtonBehavior):
             globals.algorithms_drop_down_list.ids.bfs_btn.background_color = (0.34, 0.34, 0.34, 1)
             globals.algorithms_drop_down_list.ids.dijkstra_btn.background_color = (0.34, 0.34, 0.34, 1)
 
+            globals.selected_algorithm = 'DFS'
+
         else:  # if it is pressed
             globals.algorithms_drop_down_list.ids.dfs_btn.background_normal: ''
             globals.algorithms_drop_down_list.ids.dfs_btn.background_color = (0.34, 0.34, 0.34, 1)
 
-        globals.main_view_widget.ids.bfs_txt_input.visible = True
-        globals.main_view_widget.ids.bfs_txt_lbl.visible = True
-        #globals.graphManager.DFS(globals.mainViewWidget.ids.bfs_txt_input.text)
+        globals.main_view_widget.ids.algorithm_txt_input.visible = True
+        globals.main_view_widget.ids.algorithm_txt_lbl.visible = True
+        #globals.graphManager.DFS(globals.mainViewWidget.ids.algorithm_txt_input.text)
 
 
 
